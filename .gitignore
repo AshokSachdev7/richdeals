@@ -14,3 +14,4 @@ prisma/generated/
 tg-*.json
 tg-*.png
 data/images/
+.do/

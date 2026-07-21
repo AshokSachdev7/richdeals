@@ -26,6 +26,31 @@ export class RevalidateService {
         }
       }),
     );
+    // Ping IndexNow (Bing/Yandex/etc) with the changed public URLs — instant discovery.
+    await this.submitIndexNow(unique);
+  }
+
+  // IndexNow: notifies search engines of new/changed URLs. Prod-only (needs the
+  // key file served at https://<host>/<key>.txt). No-op locally or without a key.
+  async submitIndexNow(paths: string[]): Promise<void> {
+    const key = process.env.INDEXNOW_KEY ?? '';
+    const base = this.base();
+    if (!key || !base.startsWith('https://')) return;
+    const host = new URL(base).host;
+    const urlList = [...new Set(paths.filter(Boolean))]
+      .filter((p) => p.startsWith('/') && !p.startsWith('/api'))
+      .map((p) => `${base}${p}`);
+    if (!urlList.length) return;
+    try {
+      const res = await fetch('https://api.indexnow.org/indexnow', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ host, key, keyLocation: `${base}/${key}.txt`, urlList }),
+      });
+      if (!res.ok) this.log.warn(`indexnow -> ${res.status}`);
+    } catch (e) {
+      this.log.warn(`indexnow failed: ${(e as Error).message}`);
+    }
   }
 
   // Standard set of pages affected when a deal changes.

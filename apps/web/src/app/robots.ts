@@ -3,7 +3,9 @@ import { absUrl } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: ["/search", "/api/"] }],
+    // Wildcard allow keeps AI crawlers (GPTBot, PerplexityBot, ClaudeBot, etc.)
+    // welcome for GEO citations. Only utility routes are blocked.
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/search", "/api/", "/admin"] }],
     sitemap: absUrl("/sitemap.xml"),
     host: absUrl("/"),
   };

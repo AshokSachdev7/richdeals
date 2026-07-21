@@ -124,4 +124,32 @@ export class DealsService {
     });
     return toDealDTO(row);
   }
+
+  // Admin list — every status (LIVE/EXPIRED/PENDING_REVIEW/DRAFT), newest first.
+  async adminList(opts: { limit?: number; cursor?: number; status?: string; q?: string }): Promise<DealDTO[]> {
+    const where: Record<string, unknown> = {};
+    if (opts.cursor) where.id = { lt: opts.cursor };
+    if (opts.status) where.status = opts.status;
+    if (opts.q && opts.q.trim()) where.title = { contains: opts.q.trim(), mode: 'insensitive' };
+    const rows = await this.prisma.deal.findMany({
+      where,
+      orderBy: { id: 'desc' },
+      take: Math.min(opts.limit ?? 50, 100),
+      include: dealInclude,
+    });
+    return rows.map(toDealDTO);
+  }
+
+  async setStatus(id: number, status: string): Promise<DealDTO> {
+    const row = await this.prisma.deal.update({ where: { id }, data: { status: status as never }, include: dealInclude });
+    return toDealDTO(row);
+  }
+
+  // Hard delete — FK children (categories, priceHistory, clicks) cascade.
+  async remove(id: number): Promise<{ id: number }> {
+    const row = await this.prisma.deal.findUnique({ where: { id }, include: dealInclude });
+    if (!row) throw new NotFoundException('Deal not found');
+    await this.prisma.deal.delete({ where: { id } });
+    return { id };
+  }
 }

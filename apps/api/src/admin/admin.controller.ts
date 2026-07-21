@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiKeyGuard } from './api-key.guard';
 import { DealsService } from '../deals/deals.service';
 import { RevalidateService } from '../revalidate/revalidate.service';
@@ -47,5 +47,36 @@ export class AdminController {
     const deal = await this.deals.expire(id);
     await this.revalidate.revalidate(this.revalidate.pathsForDeal(deal.slug, deal.store.slug));
     return { deal };
+  }
+
+  // ---- Admin panel endpoints ----
+  @Get()
+  async list(
+    @Query('limit') limit?: string,
+    @Query('cursor') cursor?: string,
+    @Query('status') status?: string,
+    @Query('q') q?: string,
+  ) {
+    const deals = await this.deals.adminList({
+      limit: limit ? Number(limit) : undefined,
+      cursor: cursor ? Number(cursor) : undefined,
+      status,
+      q,
+    });
+    return { deals };
+  }
+
+  @Post(':id/status')
+  async setStatus(@Param('id', ParseIntPipe) id: number, @Body() body: { status: string }) {
+    const deal = await this.deals.setStatus(id, body.status);
+    await this.revalidate.revalidate(this.revalidate.pathsForDeal(deal.slug, deal.store.slug));
+    return { deal };
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const res = await this.deals.remove(id);
+    await this.revalidate.revalidate(['/']);
+    return res;
   }
 }
