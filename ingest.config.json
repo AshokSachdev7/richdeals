@@ -1,0 +1,22 @@
+{
+  "amazonTag": "ashoksachdev-21",
+  "flipkartAffid": "djhackraj",
+  "cuelinksCid": "527",
+  "cuelinksPrefix": "https://linksredirect.com/?cid={cid}&source=linkkit&url=",
+  "affiliate": {
+    "amazon": "own-tag",
+    "flipkart": "affid",
+    "default": "cuelinks"
+  },
+  "notes": "Flipkart product-feed API returns 500 (discontinued). Use affid on scraped Flipkart URLs. Source = scrapers (freekaamaal curl-ok; indiafreestuff needs headless).",
+  "sources": [
+    "https://www.indiafreestuff.in/category/shopping-sites/amazon",
+    "https://www.indiafreestuff.in/category/shopping-sites/flipkart",
+    "https://www.indiafreestuff.in/category/shopping-sites/myntra",
+    "https://www.indiafreestuff.in/category/shopping-sites/ajio",
+    "https://www.indiafreestuff.in/deals/superdeals"
+  ],
+  "outputDir": "data/deals",
+  "maxDealsPerRun": 60,
+  "requestDelayMs": 1500
+}

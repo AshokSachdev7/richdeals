@@ -1,0 +1,153 @@
+// Deals site schema. MVP: serve deals + SEO. Votes/comments/users come later.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DealType {
+  DEAL
+  FREEBIE
+  COUPON
+  RECHARGE
+}
+
+enum DealStatus {
+  DRAFT
+  PENDING_REVIEW
+  LIVE
+  EXPIRED
+}
+
+enum CategoryType {
+  SHOPPING_CATEGORY
+  SHOPPING_SITE
+}
+
+model Store {
+  id          Int     @id @default(autoincrement())
+  name        String
+  slug        String  @unique
+  logo        String?
+  seoTitle    String?
+  seoDesc     String?
+  affiliateNetwork String? // amazon | flipkart | earnkaro | cuelinks
+  deals       Deal[]
+  createdAt   DateTime @default(now())
+}
+
+model Category {
+  id       Int          @id @default(autoincrement())
+  name     String
+  slug     String
+  type     CategoryType
+  seoDesc  String?
+  parentId Int?
+  parent   Category?    @relation("CatTree", fields: [parentId], references: [id])
+  children Category[]   @relation("CatTree")
+  deals    DealCategory[]
+
+  @@unique([type, slug])
+}
+
+model Deal {
+  id          Int        @id @default(autoincrement())
+  slug        String     @unique
+  sourceSlug  String?    // origin slug on indiafreestuff, for dedup/trace
+  title       String
+  description String?     // our rewritten copy (markdown)
+  howTo       String[]    // "How to get this deal" steps
+  image       String?     // marketplace CDN url only
+  mrp         Int?
+  price       Int?
+  discountPct Int?
+  couponCode  String?
+  couponNote  String?
+  dealType    DealType   @default(DEAL)
+  status      DealStatus @default(PENDING_REVIEW)
+  isSuper     Boolean    @default(false)
+  isHot       Boolean    @default(false)
+  productId   String?    // ASIN / flipkart pid — dedup key
+  affiliateUrl String    // final link with OUR tag
+  clickCount  Int        @default(0)
+  postedBy    String?
+  expiresAt   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  storeId     Int
+  store       Store      @relation(fields: [storeId], references: [id])
+  categories  DealCategory[]
+  priceHistory PriceHistory[]
+  clicks      Click[]
+
+  @@index([status, createdAt])
+  @@index([storeId, status])
+  @@unique([storeId, productId], name: "store_product")
+}
+
+model DealCategory {
+  dealId     Int
+  categoryId Int
+  deal       Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([dealId, categoryId])
+}
+
+model PriceHistory {
+  id       Int      @id @default(autoincrement())
+  dealId   Int
+  price    Int
+  postedAt DateTime @default(now())
+  deal     Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+
+  @@index([dealId, postedAt])
+}
+
+model Click {
+  id      Int      @id @default(autoincrement())
+  dealId  Int
+  ts      DateTime @default(now())
+  referer String?
+  deal    Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+
+  @@index([dealId, ts])
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  title       String
+  body        String    // markdown/MDX
+  excerpt     String?
+  cover       String?
+  author      String    @default("Editorial")
+  seoTitle    String?
+  seoDesc     String?
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  tags        PostTag[]
+
+  @@index([publishedAt])
+}
+
+model Tag {
+  id    Int       @id @default(autoincrement())
+  slug  String    @unique
+  name  String
+  posts PostTag[]
+}
+
+model PostTag {
+  postId Int
+  tagId  Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}

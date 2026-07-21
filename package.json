@@ -1,0 +1,18 @@
+{
+  "name": "deals-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run start:dev -w @deals/api",
+    "dev:web": "npm run dev -w @deals/web",
+    "build": "npm run build -w @deals/api && npm run build -w @deals/web",
+    "db:generate": "npm run prisma:generate -w @deals/api",
+    "db:migrate": "npm run prisma:migrate -w @deals/api",
+    "db:import": "npm run import:deals -w @deals/api",
+    "deals:publish": "node apps/api/scripts/post-deals.mjs",
+    "spaces:upload": "node apps/api/scripts/upload-spaces.mjs"
+  }
+}

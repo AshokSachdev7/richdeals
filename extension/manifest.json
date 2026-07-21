@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "RichDeals Telegram Grabber",
+  "version": "1.0.0",
+  "description": "Watches the RichDeals Telegram deal group and pushes new single-product deals to the site in real time.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://web.telegram.org/*",
+    "http://localhost:4000/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["https://web.telegram.org/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

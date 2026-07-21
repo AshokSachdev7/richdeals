@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.next/
+.env
+.env.local
+*.log
+ruvector.db
+/data/deals/*.json
+!/data/deals/.gitkeep
+generated/
+prisma/generated/
+.pw-profile/
+.playwright-mcp/
+tg-*.json
+tg-*.png
+data/images/
