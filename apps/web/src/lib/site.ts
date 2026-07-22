@@ -39,6 +39,26 @@ export function breadcrumbSchema(crumbs: { name: string; href: string }[]) {
   };
 }
 
+// Build an SEO-friendly <title> from a deal: clean product name + price +
+// discount. Strips our appended " at ₹X – Store", the messy pipe/dash marketing
+// tail, and caps length so Google doesn't truncate. Runs at render, so it
+// applies to every deal — existing and newly ingested — with no DB change.
+export function dealSeoTitle(
+  deal: Pick<DealDTO, "title" | "price" | "discountPct" | "mrp"> & { store: { name: string } },
+): string {
+  let name = deal.title
+    .replace(/\s+(?:at|@)\s*₹?[\d,]+\s*[–-]\s*[\w ]+$/i, "") // drop " at ₹X – Amazon"
+    .split("|")[0]
+    .split(/\s[–-]\s/)[0]
+    .replace(/[,\s]+$/, "")
+    .trim();
+  if (name.length > 48) name = name.slice(0, 48).replace(/\s+\S*$/, "").trim();
+  const disc = discountOf(deal);
+  const price = deal.price != null ? ` @ ${formatINR(deal.price)}` : "";
+  const off = disc != null ? ` (${disc}% Off)` : "";
+  return `${name}${price}${off}`;
+}
+
 // Prefer the API-provided discount; fall back to computing from MRP/price.
 export function discountOf(deal: Pick<DealDTO, "discountPct" | "mrp" | "price">): number | null {
   if (deal.discountPct != null) return deal.discountPct;

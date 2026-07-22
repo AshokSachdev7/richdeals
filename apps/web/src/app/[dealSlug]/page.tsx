@@ -7,7 +7,7 @@ import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import CopyCode from "@/components/CopyCode";
-import { SITE_NAME, absUrl, formatINR, discountOf } from "@/lib/site";
+import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -45,15 +45,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     deal.description?.slice(0, 160) ||
     `${deal.title}${priceBit}${discount != null ? ` — ${discount}% off` : ""} at ${deal.store.name}. Grab this ${deal.dealType.toLowerCase()} on ${SITE_NAME}.`;
   const canonical = absUrl(`/${deal.slug}`);
+  const seoTitle = dealSeoTitle(deal);
 
   return {
-    title: deal.title,
+    title: seoTitle,
     description,
     alternates: { canonical },
     openGraph: {
       type: "website",
       url: canonical,
-      title: `${deal.title} | ${SITE_NAME}`,
+      title: `${seoTitle} | ${SITE_NAME}`,
       description,
       images: deal.image ? [{ url: deal.image, alt: deal.title }] : undefined,
     },
