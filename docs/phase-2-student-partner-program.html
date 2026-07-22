@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 2 — RichDeals Student Partner Program</title>
+<style>
+  :root{--brand:#e63946;--ink:#0f172a;--muted:#64748b;--bg:#f8fafc;--card:#fff;--line:#e2e8f0;--good:#16a34a;--warn:#d97706}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  header{background:linear-gradient(135deg,#e63946,#7a0c15);color:#fff;padding:56px 20px 44px;text-align:center}
+  header .tag{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  header h1{margin:14px 0 6px;font-size:32px;font-weight:800}
+  header p{margin:0;opacity:.9;max-width:620px;margin:0 auto}
+  h2{font-size:20px;margin:38px 0 12px;padding-left:12px;border-left:4px solid var(--brand)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  ol,ul{margin:8px 0;padding-left:22px}
+  li{margin:5px 0}
+  .flow{counter-reset:s;list-style:none;padding:0}
+  .flow li{position:relative;padding:10px 0 10px 44px;border-bottom:1px solid var(--line)}
+  .flow li:last-child{border:0}
+  .flow li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;background:var(--brand);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+  .pill{display:inline-flex;gap:6px;align-items:center;background:#fef2f2;color:var(--brand);border:1px solid #fecaca;padding:8px 14px;border-radius:999px;font-weight:700;font-size:13px;margin:4px 6px 4px 0}
+  .pipe{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+  .pipe .arrow{color:var(--muted)}
+  .warn{background:#fffbeb;border-color:#fde68a}
+  .warn b{color:var(--warn)}
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  th{background:#f1f5f9;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  code{background:#f1f5f9;padding:2px 6px;border-radius:6px;font-size:13px}
+  .verdict{background:linear-gradient(135deg,#052e16,#14532d);color:#dcfce7;border:0}
+  .verdict h2{color:#fff;border-color:#4ade80}
+  .muted{color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<header>
+  <span class="tag">Phase 2 · Idea parked</span>
+  <h1>RichDeals Student Partner Program</h1>
+  <p>Turn students into earners — they share deals, earn a % of revenue, and watch it grow on a live dashboard.</p>
+</header>
+<div class="wrap">
+
+  <h2>The idea in one line</h2>
+  <div class="card">A student signs up, generates a personal affiliate link for any product, shares it, and earns a share of the commission when friends buy — with a dashboard showing <b>Pending → Confirmed → Paid</b> earnings, gated by the return period. Free, viral, pay-only-on-sales distribution. <span class="muted">(Proven model: CashKaro, EarnKaro, GoPaisa. Our edge = curated deals + student niche + clean UX.)</span></div>
+
+  <h2>How a student earns</h2>
+  <div class="card"><ol class="flow">
+    <li>Sign up with Google → gets a unique <code>ref</code> code.</li>
+    <li>Pick any deal → personal link <code>richdeals.in/out/&lt;dealId&gt;?ref=&lt;studentId&gt;</code>.</li>
+    <li>Shares on WhatsApp / Instagram / college groups.</li>
+    <li>Friend clicks → we log it → 302 to store with our affiliate tag.</li>
+    <li>Friend buys → commission tracked against the student's <code>ref</code>.</li>
+    <li>Dashboard updates: Clicks → Pending ₹ → Confirmed ₹ → Paid ₹.</li>
+    <li>UPI payout once confirmed earnings cross a minimum (e.g. ₹250).</li>
+  </ol></div>
+
+  <h2>Earnings lifecycle</h2>
+  <div class="card">
+    <div class="pipe">
+      <span class="pill">👆 Click</span><span class="arrow">→</span>
+      <span class="pill">⏳ Pending (in return window)</span><span class="arrow">→</span>
+      <span class="pill">✅ Confirmed (window closed)</span><span class="arrow">→</span>
+      <span class="pill">💸 Paid (UPI)</span>
+    </div>
+    <p class="muted">Commission confirms only after the 7–30 day return window + the network's monthly cycle. The dashboard shows the pending pool with an expected-confirm date — honest expectations, fewer support tickets. This is the "kitna milega after return period" live showcase.</p>
+  </div>
+
+  <h2>Revenue model</h2>
+  <div class="card">
+    RichDeals earns ~1–8% net from Amazon/Flipkart. Student gets a <b>share of NET</b> — suggest <b>30–50%</b>, not gross.
+    <table><tr><th>Order</th><th>Net commission (4%)</th><th>Student (40%)</th><th>RichDeals</th></tr>
+    <tr><td>₹1,000</td><td>₹40</td><td>₹16</td><td>₹24</td></tr></table>
+    <p class="muted">Only works at volume — the program's job is to create that volume.</p>
+  </div>
+
+  <h2>⚠️ Compliance — the make-or-break</h2>
+  <div class="card warn">
+    <b>Raw Amazon Associates ToS generally bans paying sub-affiliates / incentivised sharing</b> — doing it on a raw Amazon tag risks a permanent account ban.
+    <br><br><b>Fix:</b> route all student links through <b>EarnKaro / Cuelinks</b> — they ARE sub-affiliate networks built for multi-user attribution + payouts + compliance. Build ON TOP of them, never raw Amazon. Flipkart: same via the network.
+  </div>
+
+  <h2>MVP — smallest thing that earns</h2>
+  <div class="card"><ul>
+    <li>Google login for students.</li>
+    <li><code>ref</code> on the existing <code>/out</code> redirect → Click row stores <code>studentId</code>.</li>
+    <li>One dashboard: clicks, pending ₹, confirmed ₹, paid ₹, share link.</li>
+    <li>Manual monthly reconciliation (upload network report → credit) + manual UPI payout.</li>
+  </ul>
+  <p class="muted">Defer: auto-payout, leaderboards, tiers, custom short links, mobile app.</p></div>
+
+  <h2>Risks &amp; mitigations</h2>
+  <div class="card"><table>
+    <tr><th>Risk</th><th>Mitigation</th></tr>
+    <tr><td>Amazon ToS ban</td><td>Route via EarnKaro/Cuelinks, never raw Amazon</td></tr>
+    <tr><td>Thin margin</td><td>Cap student share to % of NET; need volume</td></tr>
+    <tr><td>Fraud / self-clicks</td><td>Device hash, thresholds, reverse on return</td></tr>
+    <tr><td>Payout ops load</td><td>Start manual + monthly, automate later</td></tr>
+    <tr><td>Attribution gaps</td><td>Own redirect + network report reconciliation</td></tr>
+  </table></div>
+
+  <div class="card verdict">
+    <h2>Verdict</h2>
+    Strong growth lever — do it in Phase 2, but <b>build on EarnKaro/Cuelinks</b> (compliance + payout), not raw Amazon. Start with the manual MVP, prove the click → sale → confirm loop, then automate.
+  </div>
+
+  <p class="muted" style="text-align:center;margin-top:30px">RichDeals · Phase 2 planning doc · parked 2026-07-22</p>
+</div>
+</body>
+</html>
