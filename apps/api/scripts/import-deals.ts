@@ -136,7 +136,12 @@ async function main() {
         : null) ?? (await prisma.deal.findUnique({ where: { slug: data.slug } }));
 
     if (existing) {
-      await prisma.deal.update({ where: { id: existing.id }, data: dealData });
+      // Preserve human/DB state: never downgrade an approved status back to
+      // pending-review, and never null out an image we already fetched.
+      const { status: _s, image: _i, ...rest } = dealData;
+      const update: Record<string, unknown> = { ...rest };
+      if (data.image) update.image = data.image; // only overwrite with a real image
+      await prisma.deal.update({ where: { id: existing.id }, data: update });
     } else {
       await prisma.deal.create({ data: dealData });
     }
