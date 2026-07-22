@@ -44,6 +44,7 @@ ${storeLines}
 ${catLines}
 
 ## Data
+- Full deal data (prices, discounts, links): ${absUrl("/llms-full.txt")}
 - Sitemap: ${absUrl("/sitemap.xml")}
 - RSS feed: ${absUrl("/feed.xml")}
 
