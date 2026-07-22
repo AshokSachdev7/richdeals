@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { getStores } from "@/lib/api";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { SITE_NAME, absUrl } from "@/lib/site";
+import JsonLd from "@/components/JsonLd";
+import { SITE_NAME, absUrl, itemListSchema, breadcrumbSchema } from "@/lib/site";
 import { storeLogo } from "@/lib/storeLogos";
 
 export const revalidate = 300;
@@ -17,9 +18,12 @@ export const metadata: Metadata = {
 export default async function StoresPage() {
   const stores = await getStores();
 
+  const crumbs = [{ name: "Home", href: "/" }, { name: "Stores", href: "/stores" }];
   return (
     <div>
-      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Stores", href: "/stores" }]} />
+      <JsonLd data={breadcrumbSchema(crumbs)} />
+      <JsonLd data={itemListSchema(stores.map((s) => `/stores/${s.slug}`))} />
+      <Breadcrumbs items={crumbs} />
       <h1 className="mb-1 text-2xl font-extrabold">All Stores</h1>
       <p className="mb-5 text-sm text-gray-500">
         Pick a store to see its latest deals and coupon codes.

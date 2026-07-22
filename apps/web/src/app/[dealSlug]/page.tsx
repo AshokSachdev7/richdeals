@@ -104,23 +104,34 @@ export default async function DealPage({ params }: Props) {
     { name: deal.title, href: `/${deal.slug}` },
   ];
 
+  // Google requires a numeric price on the Offer for Product rich results;
+  // omit the whole Offer when we have no price rather than emit invalid schema.
+  const offerPrice = deal.price ?? deal.mrp ?? null;
+  const priceValidUntil = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: deal.title,
     image: deal.image ? [deal.image] : undefined,
     description: deal.description || deal.title,
-    brand: { "@type": "Brand", name: deal.store.name },
-    offers: {
-      "@type": "Offer",
-      priceCurrency: "INR",
-      price: deal.price ?? deal.mrp ?? undefined,
-      availability: expired
-        ? "https://schema.org/Discontinued"
-        : "https://schema.org/InStock",
-      url: canonical,
-      seller: { "@type": "Organization", name: deal.store.name },
-    },
+    // NOTE: the marketplace (Amazon/Flipkart) is the seller, not the brand —
+    // real manufacturer is unknown for aggregated deals, so brand is omitted.
+    ...(offerPrice != null
+      ? {
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "INR",
+            price: String(offerPrice),
+            priceValidUntil,
+            itemCondition: "https://schema.org/NewCondition",
+            availability: expired
+              ? "https://schema.org/Discontinued"
+              : "https://schema.org/InStock",
+            url: canonical,
+            seller: { "@type": "Organization", name: deal.store.name },
+          },
+        }
+      : {}),
   };
   const breadcrumbSchema = {
     "@context": "https://schema.org",

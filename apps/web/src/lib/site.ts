@@ -13,6 +13,32 @@ export function formatINR(n: number): string {
   return `₹${n.toLocaleString("en-IN")}`;
 }
 
+// JSON-LD helpers for listing pages (ItemList + BreadcrumbList).
+export function itemListSchema(paths: string[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: paths.map((path, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: absUrl(path),
+    })),
+  };
+}
+
+export function breadcrumbSchema(crumbs: { name: string; href: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      item: absUrl(c.href),
+    })),
+  };
+}
+
 // Prefer the API-provided discount; fall back to computing from MRP/price.
 export function discountOf(deal: Pick<DealDTO, "discountPct" | "mrp" | "price">): number | null {
   if (deal.discountPct != null) return deal.discountPct;
