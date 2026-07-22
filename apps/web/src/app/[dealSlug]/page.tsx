@@ -171,6 +171,21 @@ export default async function DealPage({ params }: Props) {
       {/* Title band */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {StoreChip}
+        {deal.categories
+          .filter((c) => c.type !== "SHOPPING_SITE")
+          .slice(0, 1)
+          .map((c) => (
+            <Link
+              key={c.id}
+              href={`/category/shopping-category/${c.slug}`}
+              className="inline-flex items-center gap-1 rounded-full bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand-dark transition-colors hover:bg-brand/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+            >
+              <svg viewBox="0 0 16 16" className="h-3 w-3" fill="currentColor" aria-hidden="true">
+                <path d="M2 3h5l1.5 2H14v8H2z" />
+              </svg>
+              {c.name}
+            </Link>
+          ))}
         {deal.isSuper && !expired && (
           <span className="inline-flex items-center gap-1 rounded-full bg-savings px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-ink">
             ★ Super Deal
