@@ -12,7 +12,25 @@ their friends buy. They get a **login + dashboard** showing live earnings —
 Reference models that prove demand: CashKaro, EarnKaro, GoPaisa. Our edge =
 curated deals + student niche + clean dashboard UX.
 
-## 2. Student flow
+## 1b. Two ways a partner earns
+- **A) Share** — share a personal link to any existing deal, earn a % of commission on sales (section 2).
+- **B) Contribute** — the partner FINDS a deal themselves, submits it, and earns **₹1 per approved post + commission** on any sales it drives. This doubles as free crowdsourced deal-sourcing (like DesiDime / IndiaFreeStuff community submissions) — it reduces our scraping load AND rewards the partner.
+
+### Contributor flow (find & post)
+1. Partner finds a genuine single-product deal → submits URL + price via dashboard.
+2. System auto-checks: resolves the link, dedups against live deals, validates it's a real single product (ASIN / pid), pulls the image.
+3. Goes to **pending-review** → admin (or auto-rules) approves.
+4. On approval: partner credited **₹1 flat**, and the published deal carries their `ref` so any sale via it also earns them commission.
+5. Live on site + auto-posted to the Telegram channel (credited).
+
+### Anti-spam (critical for ₹1/post)
+- Pay ONLY on **approved, unique, single-product** deals — never on submission.
+- Dedup against existing deals + other pending submissions.
+- Daily submission cap per partner (e.g. 20); quality score; auto-reject category/loot/affiliate-spam links.
+- Reverse the ₹1 if the deal is later found fake/dupe.
+- ₹1 is a small nudge; the real money is the commission — keeps incentive honest.
+
+## 2. Student flow (share mode)
 1. Sign up (Google login) → gets a unique `ref` code.
 2. Paste any product / pick any RichDeals deal → get a personal share link:
    `richdeals.in/out/<dealId>?ref=<studentId>` (or a short link).
