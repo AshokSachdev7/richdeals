@@ -11,6 +11,15 @@ export interface UpsertResult {
   storeSlug: string;
 }
 
+// Admin panel/URLs may send status as kebab or lowercase ("pending-review");
+// the DB enum is UPPER_SNAKE ("PENDING_REVIEW"). Normalise so the query doesn't
+// blow up with a Prisma enum error. Unknown values pass through unchanged.
+const DEAL_STATUSES = ['LIVE', 'EXPIRED', 'PENDING_REVIEW', 'DRAFT'];
+function normStatus(s: string): string {
+  const up = s.trim().toUpperCase().replace(/-/g, '_');
+  return DEAL_STATUSES.includes(up) ? up : s;
+}
+
 export interface DealListQuery {
   feed?: DealFeed;
   cursor?: number;
@@ -130,7 +139,7 @@ export class DealsService {
   async adminList(opts: { limit?: number; cursor?: number; status?: string; q?: string }): Promise<DealDTO[]> {
     const where: Record<string, unknown> = {};
     if (opts.cursor) where.id = { lt: opts.cursor };
-    if (opts.status) where.status = opts.status;
+    if (opts.status) where.status = normStatus(opts.status);
     if (opts.q && opts.q.trim()) where.title = { contains: opts.q.trim(), mode: 'insensitive' };
     const rows = await this.prisma.deal.findMany({
       where,
@@ -142,7 +151,7 @@ export class DealsService {
   }
 
   async setStatus(id: number, status: string): Promise<DealDTO> {
-    const row = await this.prisma.deal.update({ where: { id }, data: { status: status as never }, include: dealInclude });
+    const row = await this.prisma.deal.update({ where: { id }, data: { status: normStatus(status) as never }, include: dealInclude });
     return toDealDTO(row);
   }
 
