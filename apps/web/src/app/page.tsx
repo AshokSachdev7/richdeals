@@ -5,7 +5,10 @@ import Hero from "@/components/Hero";
 import CategoryStrip from "@/components/CategoryStrip";
 import LoadMoreDeals from "@/components/LoadMoreDeals";
 
-export const revalidate = 300;
+// Always SSR fresh: the landing feed must show the newest deals on every load.
+// (ISR + on-demand revalidation was serving stale deals for up to 5 min.)
+// Only 1 API call (limit 30), so per-request render stays fast.
+export const dynamic = "force-dynamic";
 
 // Latest deals lead — freshest drops are what a visitor sees first.
 const TABS: { key: DealFeed; label: string }[] = [

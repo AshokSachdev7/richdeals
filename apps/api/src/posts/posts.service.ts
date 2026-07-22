@@ -27,7 +27,7 @@ export class PostsService {
     const rows = await this.prisma.post.findMany({
       where: { publishedAt: { not: null } },
       orderBy: { publishedAt: 'desc' },
-      take: 50,
+      take: 500,
     });
     return { items: rows.map(toPostDTO), nextCursor: null, total: rows.length };
   }

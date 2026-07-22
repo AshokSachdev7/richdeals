@@ -6,7 +6,7 @@ import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
 import { SITE_NAME, absUrl, itemListSchema, breadcrumbSchema } from "@/lib/site";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Coupon Codes & Promo Offers",
