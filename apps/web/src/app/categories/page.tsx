@@ -5,7 +5,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { SITE_NAME, absUrl, itemListSchema, breadcrumbSchema } from "@/lib/site";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Shop by Category — Deals & Offers",
