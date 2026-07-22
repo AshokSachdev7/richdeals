@@ -311,9 +311,6 @@ export default async function DealPage({ params }: Props) {
                   <path d="M6 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
-              <p className="mt-2 text-center text-xs text-gray-400">
-                Affiliate link • {SITE_NAME} may earn a commission
-              </p>
             </div>
           </div>
 
