@@ -4,7 +4,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BlogCard from "@/components/BlogCard";
 import { SITE_NAME, absUrl } from "@/lib/site";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Blog — Money-Saving Guides & Deal News",
