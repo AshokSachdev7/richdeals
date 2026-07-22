@@ -1,7 +1,8 @@
 import { getStores, getCategories } from "@/lib/api";
 import { absUrl, SITE_NAME } from "@/lib/site";
 
-export const revalidate = 3600;
+// Always render live so a deploy-time API blip never caches an empty file.
+export const dynamic = "force-dynamic";
 
 // llms.txt — a concise, link-rich map of the site for AI assistants
 // (ChatGPT, Perplexity, Claude, Google AI Overviews). Improves GEO/AEO

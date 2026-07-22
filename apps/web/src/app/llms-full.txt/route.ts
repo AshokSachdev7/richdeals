@@ -1,7 +1,8 @@
 import { getDeals, getStores, getCategories } from "@/lib/api";
 import { absUrl, SITE_NAME, formatINR, discountOf } from "@/lib/site";
 
-export const revalidate = 900;
+// Always render live so a deploy-time API blip never caches an empty file.
+export const dynamic = "force-dynamic";
 
 // llms-full.txt — the expanded companion to /llms.txt. Where llms.txt is a
 // concise link index, this inlines the actual live deal data (title, price,
