@@ -30,13 +30,13 @@ const ITEMS: Item[] = [
   },
   {
     label: "Beauty",
-    href: "/category/shopping-category/beauty",
+    href: "/category/shopping-category/beauty-grooming",
     tint: "text-rose-500",
     icon: <path d="M9 3h6v4l2 2v11H7V9l2-2zM9 13h6" />,
   },
   {
     label: "Grocery",
-    href: "/category/shopping-category/grocery",
+    href: "/category/shopping-category/grocery-gourmet",
     tint: "text-green-600",
     icon: <path d="M4 5h2l2 11h10l2-8H7M9 20a1 1 0 100 .01M17 20a1 1 0 100 .01" />,
   },

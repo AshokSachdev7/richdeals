@@ -92,6 +92,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div>
               <h4 className="mb-3 font-display font-bold text-ink">Site</h4>
               <ul className="space-y-2 text-gray-500">
+                <li><Link href="/categories" className="transition-colors hover:text-brand">Categories</Link></li>
+                <li><Link href="/stores" className="transition-colors hover:text-brand">Stores</Link></li>
                 <li><Link href="/about" className="transition-colors hover:text-brand">About</Link></li>
                 <li><Link href="/privacy" className="transition-colors hover:text-brand">Privacy Policy</Link></li>
                 <li><Link href="/terms" className="transition-colors hover:text-brand">Terms</Link></li>

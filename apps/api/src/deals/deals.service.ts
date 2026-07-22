@@ -18,6 +18,7 @@ export interface DealListQuery {
   category?: string;
   q?: string;
   limit?: number;
+  sort?: string;
 }
 
 @Injectable()
@@ -37,7 +38,7 @@ export class DealsService {
         { description: { contains: term, mode: 'insensitive' } },
       ];
     }
-    return paginateDeals(this.prisma, where, q.cursor, q.limit);
+    return paginateDeals(this.prisma, where, q.cursor, q.limit, q.sort);
   }
 
   async getBySlug(slug: string): Promise<DealDTO> {

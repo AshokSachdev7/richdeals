@@ -5,11 +5,15 @@ import { getStore, getDeals } from "@/lib/api";
 import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
+import SortControl from "@/components/SortControl";
 import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const revalidate = 300;
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ sort?: string }>;
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -30,12 +34,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function StorePage({ params }: Props) {
+export default async function StorePage({ params, searchParams }: Props) {
   const { slug } = await params;
   const store = await getStore(slug);
   if (!store) notFound();
+  const { sort } = await searchParams;
 
-  const { items } = await getDeals({ store: store.slug, limit: 40 });
+  const { items } = await getDeals({ store: store.slug, sort, limit: 40 });
 
   const crumbs = [
     { name: "Home", href: "/" },
@@ -69,6 +74,9 @@ export default async function StorePage({ params }: Props) {
             All live {store.name} offers and coupon codes, refreshed daily.
           </p>
         </div>
+      </div>
+      <div className="mb-5 flex justify-end">
+        <SortControl />
       </div>
       <DealGrid deals={items} emptyMessage={`No ${store.name} deals live right now. Check back soon!`} />
     </div>

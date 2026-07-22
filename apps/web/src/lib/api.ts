@@ -32,6 +32,7 @@ export interface DealQuery {
   categoryType?: "shopping-category" | "shopping-site";
   category?: string; // category slug
   q?: string; // free-text search (powers the header search box / SearchAction)
+  sort?: string; // newest (default) | discount | price-asc | price-desc
   cursor?: number;
   limit?: number;
 }
@@ -54,6 +55,7 @@ export function getDeals(params: DealQuery = {}): Promise<Paginated<DealDTO>> {
       categoryType: params.categoryType,
       category: params.category,
       q: params.q,
+      sort: params.sort,
       cursor: params.cursor,
       limit: params.limit,
     })}`,

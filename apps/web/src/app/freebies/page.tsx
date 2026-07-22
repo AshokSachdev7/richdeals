@@ -3,6 +3,7 @@ import { getDeals } from "@/lib/api";
 import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
+import SortControl from "@/components/SortControl";
 import { SITE_NAME, absUrl, itemListSchema, breadcrumbSchema } from "@/lib/site";
 
 export const revalidate = 300;
@@ -13,8 +14,13 @@ export const metadata: Metadata = {
   alternates: { canonical: absUrl("/freebies") },
 };
 
-export default async function FreebiesPage() {
-  const { items } = await getDeals({ type: "FREEBIE", limit: 40 });
+export default async function FreebiesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ sort?: string }>;
+}) {
+  const { sort } = await searchParams;
+  const { items } = await getDeals({ type: "FREEBIE", sort, limit: 40 });
   const crumbs = [{ name: "Home", href: "/" }, { name: "Freebies", href: "/freebies" }];
   return (
     <div>
@@ -22,9 +28,12 @@ export default async function FreebiesPage() {
       <JsonLd data={itemListSchema(items.map((d) => `/${d.slug}`))} />
       <Breadcrumbs items={crumbs} />
       <h1 className="mb-1 text-2xl font-extrabold">Freebies & Free Stuff</h1>
-      <p className="mb-5 text-sm text-gray-500">
+      <p className="mb-4 text-sm text-gray-500">
         Free samples, giveaways and zero-cost offers — while stocks last.
       </p>
+      <div className="mb-5 flex justify-end">
+        <SortControl />
+      </div>
       <DealGrid deals={items} emptyMessage="No freebies live right now. Check back soon!" />
     </div>
   );

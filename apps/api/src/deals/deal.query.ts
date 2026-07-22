@@ -10,6 +10,24 @@ export function clampLimit(limit?: number): number {
   return Math.min(limit, MAX_LIMIT);
 }
 
+export type DealSort = 'newest' | 'discount' | 'price-asc' | 'price-desc';
+
+// orderBy for each sort. id is always the tiebreaker (and the cursor key).
+// ponytail: cursor pagination stays keyed on id, so deep-paging a non-newest
+// sort would drift — our listing pages fetch a single page (limit only), so fine.
+function orderByFor(sort?: string): any {
+  switch (sort) {
+    case 'discount':
+      return [{ discountPct: { sort: 'desc', nulls: 'last' } }, { id: 'desc' }];
+    case 'price-asc':
+      return [{ price: { sort: 'asc', nulls: 'last' } }, { id: 'desc' }];
+    case 'price-desc':
+      return [{ price: { sort: 'desc', nulls: 'last' } }, { id: 'desc' }];
+    default:
+      return { id: 'desc' };
+  }
+}
+
 // Cursor pagination by id desc, shared by deals/stores/categories list endpoints.
 export async function paginateDeals(
   prisma: PrismaService,
@@ -17,13 +35,14 @@ export async function paginateDeals(
   where: any,
   cursor?: number,
   limit?: number,
+  sort?: string,
 ): Promise<Paginated<DealDTO>> {
   const take = clampLimit(limit);
   const [rows, total] = await Promise.all([
     prisma.deal.findMany({
       where,
       include: dealInclude,
-      orderBy: { id: 'desc' },
+      orderBy: orderByFor(sort),
       take: take + 1,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
     }),
