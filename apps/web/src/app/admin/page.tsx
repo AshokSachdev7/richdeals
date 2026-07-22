@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import type { DealDTO } from "@deals/shared";
 import { formatINR } from "@/lib/site";
 import { isAuthed, login, logout, setStatus, remove } from "./actions";
@@ -105,7 +104,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                 <td className="px-3 py-2 text-gray-400">{d.id}</td>
                 <td className="px-3 py-2">
                   <div className="relative h-10 w-10 overflow-hidden rounded bg-gray-50">
-                    {d.image && <Image src={d.image} alt="" fill className="object-contain" sizes="40px" />}
+                    {/* plain img: admin lists deals from many marketplace CDNs; next/image host allowlist would crash on any new host */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    {d.image && <img src={d.image} alt="" className="h-full w-full object-contain" loading="lazy" />}
                   </div>
                 </td>
                 <td className="max-w-[280px] px-3 py-2">
