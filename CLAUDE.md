@@ -85,6 +85,32 @@ ClaudeBot, PerplexityBot, Google-Extended, etc.); `/llms.txt` +
 `/llms-full.txt` route handlers; chunked sitemap + IndexNow (key
 `33f3a9d63ca15676bbd90586ea80e65f`) pinged to api.indexnow.org + Bing.
 
+## Telegram deal sourcing (multi-group)
+
+Source groups live in `data/tg-groups.json` (the "Deals" folder — 7 groups:
+dealdost, NonStopDeals, CoolDeals, CoolzTricks, LootDeals24x7, Rogerkart,
+OMGLoot). Scanned via the logged-in controlled Chrome (chrome-devtools MCP),
+NOT a bot token (channels aren't ours).
+
+Hard-won constraints:
+- The webK client (`web.telegram.org/a/`) will NOT open a different chat via
+  `location.hash` from a script — messages don't load (msgEls 0). Switching
+  chats needs a **trusted click** on the sidebar item, or `navigate_page`.
+- Cheapest reliable read: `take_snapshot` — the sidebar a11y tree shows each
+  group's newest message **with its deal link** in one shot, so all 7 groups'
+  latest deals read from a single snapshot (no per-chat open needed).
+- For deeper history in one group, reload the already-open chat then scrape
+  `.message-content`/`.text-content` (reload keeps the same chat; works).
+
+Per-tick flow (I drive it, agents can't — they lack page tools + hang):
+snapshot sidebar → extract single-product Amazon `/dp/ASIN` (+ resolve
+`amzn.to`/`amazn.lt` shortlinks) → dedup vs `data/tg-multi-seen.json` →
+fetch real `m.media-amazon.com` image via same-origin fetch in a logged-in
+Amazon tab (curl is bot-blocked) → push `/admin/deals/bulk` status:live.
+Skip loot/multi-product/category/`/s?` search posts. Overnight yield is low
+(~1 unique/15min); daytime much higher. deal-ingest (indiafreestuff, hourly,
+~20-28 new/sweep) is the heavier, more reliable source.
+
 ## Hard rules
 
 - Never copy source text/images verbatim — always rewrite; product images
