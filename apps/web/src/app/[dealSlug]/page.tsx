@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
+import ProductImage from "@/components/ProductImage";
 import { getDeal, getDeals } from "@/lib/api";
 import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -211,10 +211,9 @@ export default async function DealPage({ params }: Props) {
         <div>
           <div className="relative aspect-square overflow-hidden rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200/80 sm:p-10 lg:sticky lg:top-6">
             {deal.image ? (
-              <Image
+              <ProductImage
                 src={deal.image}
                 alt={deal.title}
-                fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 520px"
                 className="object-contain"

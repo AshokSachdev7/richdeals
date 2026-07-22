@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { DealDTO } from "@deals/shared";
 import { formatINR, discountOf } from "@/lib/site";
+import ProductImage from "./ProductImage";
 
 const STORE_LOGOS: Record<string, string> = {
   amazon: "/stores/amazon.svg",
@@ -33,12 +33,11 @@ export default function DealCard({ deal }: { deal: DealDTO }) {
         aria-label={deal.title}
       >
         {deal.image ? (
-          <Image
+          <ProductImage
             src={deal.image}
             alt={deal.title}
-            fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 240px"
-            className="object-contain p-4 transition-transform duration-300 group-hover:scale-[1.06]"
+            className="object-contain p-4 group-hover:scale-[1.06]"
           />
         ) : logo ? (
           // no product image (category/loot offer) → show store logo
