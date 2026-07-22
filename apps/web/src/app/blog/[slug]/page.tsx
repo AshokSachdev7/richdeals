@@ -6,6 +6,7 @@ import { getPost, getPosts } from "@/lib/api";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BlogCard from "@/components/BlogCard";
 import JsonLd from "@/components/JsonLd";
+import LazyImage from "@/components/LazyImage";
 import { SITE_NAME, absUrl } from "@/lib/site";
 import { readTime, postCategory, postCover } from "@/lib/blog";
 
@@ -128,8 +129,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* Hero */}
       {cover.type === "image" ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={cover.src} alt={post.title} className="mt-6 aspect-[16/9] w-full rounded-2xl object-cover" />
+        <LazyImage src={cover.src} alt={post.title} className="mt-6 aspect-[16/9] w-full rounded-2xl" />
       ) : (
         <div className={`mt-6 flex aspect-[21/9] w-full items-center justify-center rounded-2xl bg-gradient-to-br ${cover.gradient}`} aria-hidden="true">
           <span className="font-display text-7xl font-black text-white/90">%</span>

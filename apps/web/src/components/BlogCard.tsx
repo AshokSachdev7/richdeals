@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PostDTO } from "@/lib/api";
 import { readTime, postCover } from "@/lib/blog";
+import LazyImage from "./LazyImage";
 
 export default function BlogCard({ post, featured = false }: { post: PostDTO; featured?: boolean }) {
   const cover = postCover(post);
@@ -15,12 +16,10 @@ export default function BlogCard({ post, featured = false }: { post: PostDTO; fe
     >
       <div className={`relative overflow-hidden ${featured ? "sm:w-1/2" : ""}`}>
         {cover.type === "image" ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <LazyImage
             src={cover.src}
-            alt=""
-            className={`w-full object-cover transition-transform duration-300 group-hover:scale-105 ${featured ? "h-full min-h-[220px]" : "aspect-[16/9]"}`}
-            loading="lazy"
+            className={`w-full ${featured ? "h-full min-h-[220px]" : "aspect-[16/9]"}`}
+            imgClassName="group-hover:scale-105"
           />
         ) : (
           <div
