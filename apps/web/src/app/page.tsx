@@ -7,11 +7,11 @@ import LoadMoreDeals from "@/components/LoadMoreDeals";
 
 export const revalidate = 300;
 
-// Super Deals lead — that's what a visitor sees first.
+// Latest deals lead — freshest drops are what a visitor sees first.
 const TABS: { key: DealFeed; label: string }[] = [
+  { key: "latest", label: "Latest" },
   { key: "super", label: "Super Deals" },
   { key: "hot", label: "Hot" },
-  { key: "latest", label: "Latest" },
 ];
 
 const HEADINGS: Record<DealFeed, { title: string; sub: string }> = {
@@ -53,7 +53,7 @@ export default async function HomePage({
   searchParams: Promise<{ feed?: string }>;
 }) {
   const { feed } = await searchParams;
-  const active: DealFeed = isFeed(feed) ? feed : "super";
+  const active: DealFeed = isFeed(feed) ? feed : "latest";
   const { items, nextCursor } = await getDeals({ feed: active, limit: 30 });
   const heading = HEADINGS[active];
 
@@ -79,7 +79,7 @@ export default async function HomePage({
               return (
                 <Link
                   key={t.key}
-                  href={t.key === "super" ? "/" : `/?feed=${t.key}`}
+                  href={t.key === "latest" ? "/" : `/?feed=${t.key}`}
                   role="tab"
                   aria-selected={on}
                   className={`cursor-pointer rounded-full px-4 py-2 text-sm font-bold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 ${
