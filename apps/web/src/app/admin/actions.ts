@@ -20,7 +20,7 @@ export async function isAuthed(): Promise<boolean> {
 }
 
 export async function login(formData: FormData) {
-  const pw = String(formData.get("key") || "");
+  const pw = String(formData.get("key") || "").trim();
   if (pw && pw === process.env.ADMIN_KEY) {
     (await cookies()).set(COOKIE, pw, {
       httpOnly: true,
