@@ -179,7 +179,7 @@ export default async function DealPage({ params }: Props) {
   );
 
   return (
-    <article>
+    <article className="pb-24 lg:pb-0">
       <JsonLd data={productSchema} />
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={faqSchema} />
@@ -187,6 +187,14 @@ export default async function DealPage({ params }: Props) {
 
       {/* Title band */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
+        {!expired && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-xs font-bold text-green-700 ring-1 ring-green-200">
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M9 12.5l2 2 4-4.5M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
+            </svg>
+            Verified deal
+          </span>
+        )}
         {StoreChip}
         {deal.categories
           .filter((c) => c.type !== "SHOPPING_SITE")
@@ -269,10 +277,15 @@ export default async function DealPage({ params }: Props) {
           {/* Price card with savings header */}
           <div className="overflow-hidden rounded-2xl shadow-sm ring-1 ring-gray-200/80">
             {saveAmount != null && (
-              <div className="flex items-center justify-between gap-2 bg-gradient-to-r from-green-600 to-green-500 px-5 py-2 text-white">
-                <span className="text-sm font-bold">You save {formatINR(saveAmount)}</span>
+              <div className="flex items-center justify-between gap-2 bg-gradient-to-r from-green-600 to-green-500 px-5 py-2.5 text-white">
+                <span className="inline-flex items-center gap-1.5 text-sm font-bold">
+                  <svg viewBox="0 0 16 16" className="h-4 w-4" fill="currentColor" aria-hidden="true">
+                    <path d="M8 12.5 3.5 7l1.4-1.4L7 7.7V2h2v5.7l2.1-2.1L12.5 7z" />
+                  </svg>
+                  Price drop — you save {formatINR(saveAmount)}
+                </span>
                 {discount != null && (
-                  <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs font-extrabold tabular-nums">
+                  <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-xs font-extrabold tabular-nums">
                     {discount}% OFF
                   </span>
                 )}
@@ -280,15 +293,25 @@ export default async function DealPage({ params }: Props) {
             )}
             <div className="bg-white p-5">
               {deal.price != null ? (
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="font-display text-4xl font-extrabold tabular-nums text-ink">
-                    {formatINR(deal.price)}
+                <div>
+                  <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+                    {expired ? "Last seen price" : "Deal price"}
                   </span>
-                  {hasStrike && (
-                    <span className="text-lg text-gray-400 line-through tabular-nums">
-                      {formatINR(deal.mrp!)}
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="font-display text-4xl font-extrabold tabular-nums text-ink">
+                      {formatINR(deal.price)}
                     </span>
-                  )}
+                    {hasStrike && (
+                      <span className="text-lg text-gray-400 line-through tabular-nums">
+                        {formatINR(deal.mrp!)}
+                      </span>
+                    )}
+                    {discount != null && !expired && (
+                      <span className="rounded-md bg-brand/10 px-2 py-0.5 text-sm font-extrabold tabular-nums text-brand-dark">
+                        {discount}% OFF
+                      </span>
+                    )}
+                  </div>
                 </div>
               ) : deal.mrp != null ? (
                 <span className="font-display text-3xl font-extrabold tabular-nums text-ink">
@@ -320,9 +343,9 @@ export default async function DealPage({ params }: Props) {
                 href={deal.outUrl}
                 target="_blank"
                 rel="sponsored nofollow noopener"
-                className="mt-4 inline-flex min-h-[54px] w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-6 text-lg font-bold text-white shadow-md shadow-brand/25 transition-all hover:bg-brand-dark active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
+                className="mt-4 inline-flex min-h-[56px] w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-6 text-lg font-extrabold text-white shadow-lg shadow-brand/30 transition-all hover:bg-brand-dark active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
               >
-                Shop Now on {deal.store.name}
+                {expired ? "View deal" : "Get Deal"} on {deal.store.name}
                 <svg viewBox="0 0 16 16" className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M6 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -398,17 +421,23 @@ export default async function DealPage({ params }: Props) {
         </section>
       )}
 
-      {/* FAQ — visible copy matching the FAQPage schema (AEO/GEO) */}
+      {/* FAQ — visible copy matching the FAQPage schema (AEO/GEO).
+          Native <details> accordion: content stays in the DOM when collapsed. */}
       <section className="mt-12">
         <h2 className="font-display text-xl font-bold text-ink">Frequently asked questions</h2>
-        <dl className="mt-4 max-w-2xl divide-y divide-gray-100">
+        <div className="mt-4 max-w-2xl divide-y divide-gray-100 overflow-hidden rounded-2xl bg-white ring-1 ring-gray-200/80">
           {faqs.map((f, i) => (
-            <div key={i} className="py-4">
-              <dt className="font-semibold text-ink">{f.q}</dt>
-              <dd className="mt-1.5 text-[15px] leading-relaxed text-gray-700">{f.a}</dd>
-            </div>
+            <details key={i} open={i === 0} className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-semibold text-ink [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand/50">
+                <span>{f.q}</span>
+                <svg viewBox="0 0 16 16" className="h-4 w-4 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </summary>
+              <p className="px-5 pb-4 text-[15px] leading-relaxed text-gray-700">{f.a}</p>
+            </details>
           ))}
-        </dl>
+        </div>
       </section>
 
       {/* Price history — only meaningful with more than one point */}
@@ -438,6 +467,48 @@ export default async function DealPage({ params }: Props) {
           <DealGrid deals={related} />
         </section>
       )}
+
+      {/* Sticky mobile buy bar — keeps the one primary CTA always reachable.
+          Same /out redirect + rel as the main CTA; hidden on lg where the buy box is in view. */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 shadow-[0_-4px_20px_rgba(0,0,0,0.10)] backdrop-blur lg:hidden"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
+        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2.5">
+          <div className="min-w-0">
+            {deal.price != null ? (
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-display text-xl font-extrabold tabular-nums text-ink">
+                  {formatINR(deal.price)}
+                </span>
+                {hasStrike && (
+                  <span className="text-sm text-gray-400 line-through tabular-nums">
+                    {formatINR(deal.mrp!)}
+                  </span>
+                )}
+              </div>
+            ) : (
+              <span className="text-sm font-semibold text-gray-600">See price on store</span>
+            )}
+            {discount != null && !expired && (
+              <span className="block text-xs font-bold leading-none text-green-600">
+                {discount}% off — you save{saveAmount != null ? ` ${formatINR(saveAmount)}` : ""}
+              </span>
+            )}
+          </div>
+          <a
+            href={deal.outUrl}
+            target="_blank"
+            rel="sponsored nofollow noopener"
+            className="ml-auto inline-flex min-h-[48px] flex-[1_1_50%] cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-brand px-5 text-base font-extrabold text-white shadow-md shadow-brand/25 transition-all hover:bg-brand-dark active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
+          >
+            {expired ? "View deal" : "Get Deal"}
+            <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M6 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </div>
     </article>
   );
 }
