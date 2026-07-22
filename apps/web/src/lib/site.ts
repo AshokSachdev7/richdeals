@@ -68,6 +68,59 @@ export function discountOf(deal: Pick<DealDTO, "discountPct" | "mrp" | "price">)
   return null;
 }
 
+// Clean marketplace product name — strips the " at ₹X – Store" tail + pipe junk.
+export function dealProductName(
+  deal: Pick<DealDTO, "title">,
+): string {
+  const name = deal.title
+    .replace(/\s+(?:at|@)\s*₹?[\d,]+.*$/i, "")
+    .split("|")[0]
+    .split(/\s[–-]\s/)[0]
+    .replace(/[,\s]+$/, "")
+    .trim();
+  return name || deal.title;
+}
+
+// AEO/GEO: build a small, genuinely-useful FAQ from a deal's real fields so
+// deal pages carry FAQPage schema (rich results + AI-answer citations) with
+// visible matching copy. No fabricated facts — everything comes from the deal.
+export function dealFaq(
+  deal: Pick<DealDTO, "title" | "price" | "mrp" | "discountPct" | "couponNote"> & {
+    store: { name: string };
+  },
+): { q: string; a: string }[] {
+  const name = dealProductName(deal);
+  const store = deal.store.name;
+  const disc = discountOf(deal);
+  const price = deal.price != null ? formatINR(deal.price) : null;
+  const cheaper =
+    deal.mrp != null && deal.price != null && deal.mrp > deal.price
+      ? ` (down from ${formatINR(deal.mrp)}${disc != null ? `, ${disc}% off` : ""})`
+      : "";
+  return [
+    {
+      q: `What is the price of ${name}?`,
+      a: price
+        ? `${name} is available for ${price}${cheaper} through ${SITE_NAME}'s ${store} link. Prices change quickly during sales, so confirm the live price before you order.`
+        : `Tap Shop Now to see the current live price of ${name} on ${store}. ${SITE_NAME} always links to the latest marketplace price.`,
+    },
+    {
+      q: `Is this ${name} deal still available?`,
+      a: `Yes — this deal is live on ${SITE_NAME} right now. Offers like this can sell out or expire once the promotion ends, so grab it soon if the price works for you.`,
+    },
+    {
+      q: `Is ${price ? `${price} ` : "this "}the best price for ${name}?`,
+      a: `It is among the best live prices we have tracked for ${name} on ${store}. We monitor prices continuously, but they fluctuate — compare the current price and apply any coupon before buying.`,
+    },
+    {
+      q: `How do I get this ${store} deal?`,
+      a: `Tap the Get Deal button to open ${store}, add ${name} to your cart and check out.${
+        deal.couponNote ? ` ${deal.couponNote}` : ""
+      } The discounted price is applied on the ${store} checkout page.`,
+    },
+  ];
+}
+
 // Human labels for category URL segments.
 export const CATEGORY_TYPE_LABEL: Record<string, string> = {
   "shopping-category": "Category",

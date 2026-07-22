@@ -58,6 +58,33 @@ Agent: `.claude/agents/deal-ingest.md` (spawn as `deal-ingest`).
   currently placeholder — REAL Amazon Associates tag + EarnKaro account
   still needed).
 
+## Deal-page SEO / AEO / GEO
+
+Every deal page (`/{deal-slug}`, `apps/web/src/app/[dealSlug]/page.tsx`)
+ships three JSON-LD blocks + matching visible copy so it ranks AND gets
+cited by AI answer engines:
+- **Product + Offer** schema (price, INR currency, `priceValidUntil` +14d,
+  availability = InStock / Discontinued when expired, seller = store). Offer
+  omitted entirely when there's no price (invalid schema otherwise).
+- **BreadcrumbList** schema.
+- **FAQPage** schema — built by `dealFaq(deal)` in `lib/site.ts` from the
+  deal's REAL fields (price, mrp, discount, store, couponNote); 4 Q&As
+  (price / still available / best price / how to get it). A **visible** FAQ
+  `<section>` renders the same Q&As (Google requires visible matching copy;
+  schema-only = manual action risk). No fabricated facts — everything comes
+  from the deal row.
+- Titles via `dealSeoTitle()` (clean product name + `@ ₹price (N% Off)`,
+  name capped 48 chars); unique meta description per deal; canonical to
+  `/{slug}`; OG/Twitter summary_large_image with the marketplace image.
+- `dealProductName()` strips the `" at ₹X – Store"` tail for clean anchors.
+- FAQPage is template-generated on the page, so all deals (existing + new)
+  get it with no DB migration and no per-deal storage.
+
+Site-wide AEO/GEO: `robots.ts` explicitly allows all AI crawlers (GPTBot,
+ClaudeBot, PerplexityBot, Google-Extended, etc.); `/llms.txt` +
+`/llms-full.txt` route handlers; chunked sitemap + IndexNow (key
+`33f3a9d63ca15676bbd90586ea80e65f`) pinged to api.indexnow.org + Bing.
+
 ## Hard rules
 
 - Never copy source text/images verbatim — always rewrite; product images

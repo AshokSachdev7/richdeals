@@ -7,7 +7,7 @@ import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import CopyCode from "@/components/CopyCode";
-import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle } from "@/lib/site";
+import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle, dealFaq } from "@/lib/site";
 
 // Always SSR fresh: ISR + broken on-demand revalidation was serving stale deal
 // pages (old prices, removed UI) for far longer than the revalidate window.
@@ -147,6 +147,18 @@ export default async function DealPage({ params }: Props) {
       item: absUrl(c.href),
     })),
   };
+  // AEO/GEO: FAQPage schema + visible FAQ (below) so AI answers and Google
+  // rich results can cite this deal. Built from real deal fields, no fabrication.
+  const faqs = dealFaq(deal);
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
 
   const storeLogo = STORE_LOGOS[deal.store.slug.toLowerCase()];
   const hasStrike = deal.mrp != null && deal.price != null && deal.mrp > deal.price;
@@ -170,6 +182,7 @@ export default async function DealPage({ params }: Props) {
     <article>
       <JsonLd data={productSchema} />
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={faqSchema} />
       <Breadcrumbs items={crumbs} />
 
       {/* Title band */}
@@ -384,6 +397,19 @@ export default async function DealPage({ params }: Props) {
           </p>
         </section>
       )}
+
+      {/* FAQ — visible copy matching the FAQPage schema (AEO/GEO) */}
+      <section className="mt-12">
+        <h2 className="font-display text-xl font-bold text-ink">Frequently asked questions</h2>
+        <dl className="mt-4 max-w-2xl divide-y divide-gray-100">
+          {faqs.map((f, i) => (
+            <div key={i} className="py-4">
+              <dt className="font-semibold text-ink">{f.q}</dt>
+              <dd className="mt-1.5 text-[15px] leading-relaxed text-gray-700">{f.a}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       {/* Price history — only meaningful with more than one point */}
       {deal.priceHistory.length > 1 && (
