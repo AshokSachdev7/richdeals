@@ -10,7 +10,11 @@ import LazyImage from "@/components/LazyImage";
 import { SITE_NAME, absUrl } from "@/lib/site";
 import { readTime, postCategory, postCover } from "@/lib/blog";
 
-export const revalidate = 300;
+// force-dynamic: ISR/on-demand revalidation is structurally broken on this app
+// (web /api/revalidate shadowed by the /api→NestJS ingress), so revalidate=300
+// left blog pages stale for far longer — e.g. Article JSON-LD missing the cover
+// image after covers were generated. Each render is one cached API call.
+export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ slug: string }> };
 
