@@ -2,9 +2,10 @@ import type { MetadataRoute } from "next";
 import { getDeals, getStores, getCategories, getPosts } from "@/lib/api";
 import { absUrl } from "@/lib/site";
 
-// Render live every request so a deploy-time API blip never caches a
-// near-empty sitemap (only static routes). Sitemaps are low-traffic.
-export const dynamic = "force-dynamic";
+// ISR-cached (not force-dynamic): with ~2000 deals the per-request render is
+// ~33 sequential API calls and was timing out. Cache for 30min instead.
+// ponytail: if a deploy-blip caches an empty sitemap, next revalidate fixes it.
+export const revalidate = 1800;
 
 // The public API caps limit at 60, so page through every LIVE deal by cursor
 // to get all deal URLs into the sitemap (bounded for safety).
