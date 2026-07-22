@@ -4,6 +4,7 @@ import { Rubik, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
 import SiteHeader from "@/components/SiteHeader";
+import Analytics from "@/components/Analytics";
 import { SITE_NAME, SITE_URL, SITE_TAGLINE, absUrl } from "@/lib/site";
 
 const rubik = Rubik({
@@ -72,6 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${rubik.variable} ${nunito.variable}`}>
       <body>
+        <Analytics />
         <JsonLd data={orgSchema} />
         <JsonLd data={websiteSchema} />
 
