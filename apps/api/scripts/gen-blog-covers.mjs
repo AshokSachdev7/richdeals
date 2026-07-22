@@ -49,7 +49,8 @@ function svg(title, cat, seed) {
 }
 
 const p = new PrismaClient();
-const posts = await p.post.findMany({ select: { id: true, slug: true, title: true, cover: true } });
+const ONLY_MISSING = process.env.ALL_COVERS !== '1';
+const posts = await p.post.findMany({ where: ONLY_MISSING ? { cover: null } : {}, select: { id: true, slug: true, title: true, cover: true } });
 let done = 0;
 for (const post of posts) {
   const png = await sharp(Buffer.from(svg(post.title, category(post.title), post.slug))).png().toBuffer();
