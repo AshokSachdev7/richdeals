@@ -9,7 +9,10 @@ import JsonLd from "@/components/JsonLd";
 import CopyCode from "@/components/CopyCode";
 import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle } from "@/lib/site";
 
-export const revalidate = 300;
+// Always SSR fresh: ISR + broken on-demand revalidation was serving stale deal
+// pages (old prices, removed UI) for far longer than the revalidate window.
+// Each view is 2 bounded API calls, so force-dynamic stays fast.
+export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ dealSlug: string }> };
 
