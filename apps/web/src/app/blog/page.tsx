@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
 import { getPosts } from "@/lib/api";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import BlogCard from "@/components/BlogCard";
 import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const revalidate = 300;
@@ -19,34 +18,25 @@ export default async function BlogPage() {
   return (
     <div>
       <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Blog", href: "/blog" }]} />
-      <h1 className="mb-1 text-2xl font-extrabold">Blog</h1>
-      <p className="mb-5 text-sm text-gray-500">Guides, tips and deal news to help you save more.</p>
+
+      <header className="mb-8 max-w-2xl">
+        <h1 className="font-display text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
+          The RichDeals Blog
+        </h1>
+        <p className="mt-2 text-base leading-relaxed text-gray-500">
+          Straight-talking shopping guides, coupon tricks and deal breakdowns — written to help you
+          pay less, every time you buy.
+        </p>
+      </header>
 
       {items.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-white p-10 text-center text-gray-500">
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center text-gray-500">
           No articles published yet. Check back soon!
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:shadow-md"
-            >
-              {post.coverImage && (
-                <div className="relative aspect-video bg-gray-50">
-                  <Image src={post.coverImage} alt={post.title} fill className="object-cover" sizes="400px" />
-                </div>
-              )}
-              <div className="flex flex-col gap-1 p-4">
-                <h2 className="font-bold leading-tight">{post.title}</h2>
-                {post.excerpt && <p className="line-clamp-2 text-sm text-gray-500">{post.excerpt}</p>}
-                <time className="mt-1 text-xs text-gray-400" dateTime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString("en-IN")}
-                </time>
-              </div>
-            </Link>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((post, i) => (
+            <BlogCard key={post.slug} post={post} featured={i === 0} />
           ))}
         </div>
       )}
