@@ -1,16 +1,19 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="RichDeals">
+<svg width="248" height="64" viewBox="0 0 248 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="RichDeals">
   <defs>
-    <linearGradient id="rd-mark" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+    <linearGradient id="rd-w" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#f14b57"/>
       <stop offset="0.55" stop-color="#e63946"/>
       <stop offset="1" stop-color="#c1121f"/>
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="16" fill="url(#rd-mark)"/>
+  <rect width="64" height="64" rx="16" fill="url(#rd-w)"/>
   <g transform="rotate(-12 32 33)">
     <rect x="17" y="18" width="30" height="30" rx="7.5" fill="#ffffff"/>
     <circle cx="25.5" cy="26.5" r="3.4" fill="#c1121f"/>
     <text x="35.5" y="43.5" font-family="'Arial Black', Arial, sans-serif" font-size="23" font-weight="900" fill="#c1121f" text-anchor="middle">%</text>
   </g>
   <path d="M50 9.5l1.7 4.1 4.1 1.7-4.1 1.7L50 21.1l-1.7-4.1L44.2 15.3l4.1-1.7z" fill="#ffd166"/>
+  <text x="78" y="42" font-family="'Segoe UI', Rubik, Arial, sans-serif" font-size="34" font-weight="800" letter-spacing="-1">
+    <tspan fill="#ffffff">Rich</tspan><tspan fill="#ffd166">Deals</tspan>
+  </text>
 </svg>

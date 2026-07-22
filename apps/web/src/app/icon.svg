@@ -1,15 +1,14 @@
-<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="rd-i" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#e63946"/>
-      <stop offset="1" stop-color="#c1121f"/>
+    <linearGradient id="ic" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f14b57"/><stop offset="0.55" stop-color="#e63946"/><stop offset="1" stop-color="#c1121f"/>
     </linearGradient>
   </defs>
-  <rect x="0" y="0" width="48" height="48" rx="12" fill="url(#rd-i)"/>
-  <g transform="rotate(-12 24 24)">
-    <rect x="13.5" y="12.5" width="21" height="21" rx="5.5" fill="#ffffff"/>
-    <circle cx="19" cy="18" r="2.3" fill="url(#rd-i)"/>
-    <text x="25.5" y="30" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800" fill="#c1121f" text-anchor="middle">%</text>
+  <rect width="64" height="64" rx="16" fill="url(#ic)"/>
+  <g transform="rotate(-12 32 33)">
+    <rect x="17" y="18" width="30" height="30" rx="7.5" fill="#ffffff"/>
+    <circle cx="25.5" cy="26.5" r="3.4" fill="#c1121f"/>
+    <text x="35.5" y="43.5" font-family="'Arial Black', Arial, sans-serif" font-size="23" font-weight="900" fill="#c1121f" text-anchor="middle">%</text>
   </g>
-  <path d="M37 8.2l1.25 2.9 2.9 1.25-2.9 1.25L37 17.5l-1.25-2.9-2.9-1.25 2.9-1.25L37 8.2z" fill="#f59e0b"/>
+  <path d="M50 9.5l1.7 4.1 4.1 1.7-4.1 1.7L50 21.1l-1.7-4.1L44.2 15.3l4.1-1.7z" fill="#ffd166"/>
 </svg>
