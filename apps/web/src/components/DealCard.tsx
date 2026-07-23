@@ -87,32 +87,37 @@ export default function DealCard({ deal }: { deal: DealDTO }) {
           </Link>
         </h3>
 
-        <div className="mt-2 flex items-baseline gap-2">
+        {/* Price row: bold price + struck MRP + inline green save pill */}
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
           {deal.price != null && (
             <span className="font-display text-xl font-extrabold tabular-nums text-ink">{formatINR(deal.price)}</span>
           )}
           {deal.mrp != null && deal.price != null && deal.mrp > deal.price && (
             <span className="text-sm text-gray-400 line-through tabular-nums">{formatINR(deal.mrp)}</span>
           )}
+          {save != null && (
+            <span className="rounded-md bg-savings/15 px-1.5 py-0.5 text-[11px] font-bold tabular-nums text-savings-dark">
+              ↓ {formatINR(save)}
+            </span>
+          )}
         </div>
 
-        {save != null ? (
-          <p className="mt-0.5 text-xs font-semibold text-green-600">
-            Save {formatINR(save)}{discount != null ? ` (${discount}% off)` : ""}
-          </p>
-        ) : (
-          <div className="mt-0.5 h-4" aria-hidden="true" />
-        )}
-
+        {/* Coupon (optional) — button is pinned to bottom so this never
+            misaligns the CTA across cards. */}
         {deal.couponCode ? (
           <div className="mt-2 flex items-center gap-1.5 rounded-lg border border-dashed border-brand/50 bg-brand/5 px-2 py-1 text-xs text-brand-dark">
             <span className="text-gray-500">Code</span>
             <span className="font-mono font-bold tracking-wider">{deal.couponCode}</span>
           </div>
         ) : deal.couponNote ? (
-          <p className="mt-2 line-clamp-1 text-xs text-gray-500">{deal.couponNote}</p>
+          <p className="mt-1.5 line-clamp-1 text-xs font-medium text-green-700">
+            🏷 {deal.couponNote}
+          </p>
         ) : null}
 
+        {/* spacer fills the flexible gap so every card's CTA sits at the same
+            baseline — fixes ragged buttons when only some cards have a coupon */}
+        <div className="mt-auto" aria-hidden="true" />
         <a
           href={deal.outUrl}
           target="_blank"
