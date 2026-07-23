@@ -5,6 +5,7 @@ import "./globals.css";
 import JsonLd from "@/components/JsonLd";
 import SiteHeader from "@/components/SiteHeader";
 import Analytics from "@/components/Analytics";
+import TelegramModal from "@/components/TelegramModal";
 import { SITE_NAME, SITE_URL, SITE_TAGLINE, absUrl } from "@/lib/site";
 
 const rubik = Rubik({
@@ -78,6 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={websiteSchema} />
 
         <SiteHeader />
+        <TelegramModal />
 
         <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
 
@@ -96,7 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {SITE_TAGLINE}. Handpicked, verified deals with live prices from Amazon, Flipkart &amp; 100+ Indian stores — updated all day.
               </p>
               <a
-                href="https://web.telegram.org/a/#-1004416895404"
+                href="https://t.me/+aYRmCknf4_w0MGVl"
                 target="_blank"
                 rel="noopener"
                 className="mt-5 inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
