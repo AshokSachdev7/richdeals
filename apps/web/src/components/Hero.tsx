@@ -12,42 +12,49 @@ const CHIPS: { label: string; href: string }[] = [
   { label: "Fashion", href: "/category/shopping-category/fashion" },
 ];
 
-// Live-stat trust chips. Static marketing figures (same as the source site) —
-// numbers are directional, not a live DB count.
 const STATS: { value: string; label: string; tint: string; tintBg: string; icon: React.ReactNode }[] = [
   { value: "2,400+", label: "live deals", tint: "text-brand-dark", tintBg: "bg-brand/10", icon: <path d="M13 2 3 14h7l-1 8 10-12h-7z" /> },
   { value: "100+", label: "stores", tint: "text-savings-dark", tintBg: "bg-savings/15", icon: <path d="M4 7h16l-1 5H5zM5 12v8h14v-8M9 20v-4h6v4" /> },
   { value: "Every few min", label: "fresh drops", tint: "text-green-700", tintBg: "bg-green-100", icon: <path d="M12 7v5l3 2M12 3a9 9 0 100 18 9 9 0 000-18z" /> },
 ];
 
-// Compact, product-first hero: white card, brand red accent, two columns on
-// desktop (copy left, rotating Superdeal card right) so deals start high on the
-// page. Async server component — the page is force-dynamic, so the hourly pick
-// re-rolls on every request. Red-on-white text uses brand-dark (#c1121f, 6.2:1).
+// Product-first hero: brand-red gradient wash + faint grid texture, copy left,
+// rotating Superdeal card right (aligned TOP so no dead space), and a full-width
+// auto-scrolling ticker of real live deals along the bottom for "prices moving
+// now" energy. Async server component — force-dynamic re-rolls the pick + ticker
+// every request. Red-on-white text uses brand-dark (#c1121f, 6.2:1).
 export default async function Hero() {
-  // Best live deals: needs an image + a discount so the card looks good.
-  const { items } = await getDeals({ limit: 24 });
+  const { items } = await getDeals({ limit: 32 });
   const pool = items
     .filter((d) => d.image && discountOf(d) != null)
     .sort((a, b) => (discountOf(b) ?? 0) - (discountOf(a) ?? 0))
-    .slice(0, 12);
-  // Deterministic hourly rotation — force-dynamic re-picks each hour.
+    .slice(0, 16);
   const hot = pool.length ? pool[new Date().getHours() % pool.length] : null;
   const hotDiscount = hot ? discountOf(hot) : null;
+  // Ticker = the rest of the hot pool (skip the featured one), deduped by slug.
+  const ticker = pool.filter((d) => d.slug !== hot?.slug).slice(0, 10);
 
   return (
     <section className="relative isolate overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
-      {/* Soft brand + amber glows for retail energy — subtle, never a colored band. */}
+      {/* Atmosphere: brand-red top-right wash, warm savings glow, faint grid grain */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-        <div className="absolute -right-16 -top-24 h-64 w-64 rounded-full bg-brand/10 blur-3xl" />
-        <div className="absolute -left-12 top-1/2 h-56 w-56 rounded-full bg-savings/10 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.07] via-white to-savings/[0.06]" />
+        <div className="absolute -right-20 -top-28 h-72 w-72 rounded-full bg-brand/15 blur-3xl" />
+        <div className="absolute -left-16 bottom-8 h-56 w-56 rounded-full bg-savings/10 blur-3xl" />
+        <div
+          className="absolute inset-0 opacity-[0.035]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, #0a0a0a 1px, transparent 1px), linear-gradient(to bottom, #0a0a0a 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
       </div>
 
-      <div className="grid items-center gap-6 px-5 py-6 sm:px-8 sm:py-8 lg:grid-cols-[1.4fr_1fr] lg:gap-8">
+      <div className="grid items-start gap-6 px-5 pt-7 pb-5 sm:px-8 sm:pt-9 lg:grid-cols-[1.35fr_1fr] lg:gap-10">
         {/* ── Left: copy ─────────────────────────────────────────── */}
         <div>
-          {/* Live trust badge */}
-          <span className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-3 py-1 text-xs font-bold text-brand-dark ring-1 ring-inset ring-brand/20">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs font-bold text-brand-dark ring-1 ring-inset ring-brand/25 backdrop-blur">
             <span className="relative flex h-2 w-2" aria-hidden="true">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-brand" />
@@ -55,20 +62,23 @@ export default async function Hero() {
             Live prices · updated every few minutes
           </span>
 
-          <h1 className="mt-3 font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-ink sm:text-4xl">
-            India&apos;s best deals,{" "}
-            <span className="text-brand-dark">handpicked &amp; verified</span>
+          <h1 className="mt-4 font-display text-[2rem] font-extrabold leading-[1.05] tracking-tight text-ink sm:text-[2.75rem]">
+            India&apos;s best deals,
+            <br className="hidden sm:block" />{" "}
+            <span className="relative inline-block text-brand-dark">
+              handpicked &amp; verified
+              <span className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-gradient-to-r from-brand to-savings" aria-hidden="true" />
+            </span>
           </h1>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-gray-600 sm:text-base">
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-gray-600 sm:text-base">
             Real, working discounts from Amazon, Flipkart &amp; 100+ Indian stores — live prices, zero junk.
           </p>
 
-          {/* Live-stat chips */}
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-wrap gap-2">
             {STATS.map((s) => (
               <div
                 key={s.label}
-                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 shadow-sm"
+                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/90 px-3 py-1.5 shadow-sm backdrop-blur"
               >
                 <span className={`flex h-5 w-5 items-center justify-center rounded-full ${s.tintBg} ${s.tint}`}>
                   <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -82,8 +92,7 @@ export default async function Hero() {
             ))}
           </div>
 
-          {/* Primary CTA → scroll to feed, plus a secondary link */}
-          <div className="mt-5 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+          <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:items-center">
             <Link
               href="#deals-heading"
               className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-dark px-6 py-3 text-base font-bold text-white shadow-md shadow-brand/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
@@ -95,20 +104,19 @@ export default async function Hero() {
             </Link>
             <Link
               href="/coupons"
-              className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-gray-300 bg-white px-6 py-3 text-base font-bold text-ink transition-colors duration-200 hover:border-brand/40 hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+              className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-gray-300 bg-white/90 px-6 py-3 text-base font-bold text-ink backdrop-blur transition-colors duration-200 hover:border-brand/40 hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
             >
               Coupons &amp; Offers
             </Link>
           </div>
 
-          {/* Quick-filter chips */}
-          <div className="mt-4 flex flex-wrap items-center gap-2">
+          <div className="mt-5 flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Popular</span>
             {CHIPS.map((c) => (
               <Link
                 key={c.label}
                 href={c.href}
-                className="inline-flex min-h-[44px] items-center rounded-full border border-gray-200 bg-white px-4 text-sm font-semibold text-ink-soft shadow-sm transition-colors duration-200 hover:border-brand/40 hover:bg-brand/5 hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+                className="inline-flex min-h-[44px] items-center rounded-full border border-gray-200 bg-white/90 px-4 text-sm font-semibold text-ink-soft shadow-sm backdrop-blur transition-colors duration-200 hover:border-brand/40 hover:bg-brand/5 hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
               >
                 {c.label}
               </Link>
@@ -118,18 +126,18 @@ export default async function Hero() {
 
         {/* ── Right: rotating Superdeal of the hour ──────────────── */}
         {hot && (
-          <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-md shadow-gray-200/60">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-brand-dark">
+          <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-lg shadow-gray-300/40 ring-1 ring-black/[0.02]">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-white shadow-sm shadow-brand/30">
               ⚡ Superdeal of the hour
             </span>
 
             <Link href={`/${hot.slug}`} className="mt-3 block" aria-label={hot.title}>
-              <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-50">
+              <div className="relative aspect-square overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-gray-100">
                 <ProductImage
                   src={hot.image!}
                   alt={hot.title}
                   sizes="(max-width: 1024px) 90vw, 340px"
-                  className="object-contain p-4"
+                  className="object-contain p-4 transition-transform duration-500 hover:scale-105"
                 />
                 {hotDiscount != null && (
                   <span className="absolute left-2 top-2 rounded-md bg-brand px-2 py-1 text-xs font-extrabold text-white shadow-sm">
@@ -166,6 +174,48 @@ export default async function Hero() {
           </div>
         )}
       </div>
+
+      {/* ── Bottom: live deal ticker (real deals, auto-scroll) ─── */}
+      {ticker.length >= 4 && (
+        <div className="relative mt-1 border-t border-gray-200/80 bg-white/60 py-2.5 backdrop-blur">
+          {/* edge fades */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white to-transparent" aria-hidden="true" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white to-transparent" aria-hidden="true" />
+          <div className="flex items-center gap-2 overflow-hidden">
+            <span className="ml-4 hidden shrink-0 items-center gap-1.5 rounded-full bg-brand/10 px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-brand-dark sm:inline-flex">
+              🔥 Hot now
+            </span>
+            <div className="rd-ticker flex shrink-0 items-center gap-3 pl-3">
+              {/* duplicated once for a seamless loop */}
+              {[...ticker, ...ticker].map((d, i) => {
+                const off = discountOf(d);
+                return (
+                  <Link
+                    key={`${d.slug}-${i}`}
+                    href={`/${d.slug}`}
+                    className="inline-flex shrink-0 items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs shadow-sm transition-colors hover:border-brand/40 hover:bg-brand/5"
+                  >
+                    <span className="max-w-[180px] truncate font-semibold text-ink-soft">{d.title}</span>
+                    {d.price != null && (
+                      <span className="font-display font-extrabold tabular-nums text-ink">{formatINR(d.price)}</span>
+                    )}
+                    {off != null && (
+                      <span className="rounded bg-savings/15 px-1.5 py-0.5 font-bold text-savings-dark">{off}%</span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+          {/* Marquee keyframes, paused on hover, disabled for reduced-motion. */}
+          <style>{`
+            .rd-ticker{animation:rd-marquee 40s linear infinite;will-change:transform}
+            .rd-ticker:hover{animation-play-state:paused}
+            @keyframes rd-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+            @media (prefers-reduced-motion:reduce){.rd-ticker{animation:none}}
+          `}</style>
+        </div>
+      )}
     </section>
   );
 }
