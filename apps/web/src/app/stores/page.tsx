@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { getStores } from "@/lib/api";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -41,9 +40,11 @@ export default async function StoresPage() {
               href={`/stores/${s.slug}`}
               className="flex flex-col items-center gap-2 rounded-lg border border-gray-200 bg-white p-4 text-center transition hover:shadow-md"
             >
-              <div className="relative h-12 w-full">
+              <div className="flex h-12 w-full items-center justify-center">
                 {storeLogo(s.slug) ?? s.logo ? (
-                  <Image src={(storeLogo(s.slug) ?? s.logo)!} alt={s.name} fill className="object-contain p-1" sizes="120px" />
+                  // plain img — next/image optimizer 400s on these local logos on DO
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={(storeLogo(s.slug) ?? s.logo)!} alt={s.name} className="max-h-10 w-auto max-w-[80%] object-contain" loading="lazy" />
                 ) : (
                   <div className="flex h-full items-center justify-center text-lg font-bold text-gray-400">
                     {s.name.charAt(0)}
