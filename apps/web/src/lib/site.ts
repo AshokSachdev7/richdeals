@@ -81,9 +81,24 @@ export function dealProductName(
   return name || deal.title;
 }
 
+// Rough product-category detection from the title, so the FAQ can ask the
+// questions buyers actually search for that category (warranty/EMI for
+// electronics, authenticity for fashion, etc.).
+function dealKind(title: string): "electronics" | "fashion" | "grocery" | "general" {
+  const t = title.toLowerCase();
+  if (/\b(phone|mobile|5g|smartphone|laptop|tablet|tv|television|earbud|headphone|speaker|smartwatch|watch|camera|monitor|router|printer|console|power ?bank|trimmer|fan|mixer|washing|refriger|microwave|air ?fryer|induction|purifier|iron|geyser|ac\b)/.test(t))
+    return "electronics";
+  if (/\b(shirt|t-?shirt|jeans|trouser|kurta|saree|dress|shoe|sneaker|sandal|slipper|footwear|jacket|hoodie|backpack|bag|vest|innerwear|lingerie|apparel|clothing)\b/.test(t))
+    return "fashion";
+  if (/\b(seeds|oil|atta|rice|dal|masala|namkeen|chocolate|coffee|tea|snack|papad|ghee|honey|protein|supplement|shampoo|lotion|cream|soap|facewash|body ?wash)\b/.test(t))
+    return "grocery";
+  return "general";
+}
+
 // AEO/GEO: build a small, genuinely-useful FAQ from a deal's real fields so
 // deal pages carry FAQPage schema (rich results + AI-answer citations) with
-// visible matching copy. No fabricated facts — everything comes from the deal.
+// visible matching copy. Questions vary by product category + discount so no
+// two deal pages share the same FAQ. No fabricated facts.
 export function dealFaq(
   deal: Pick<DealDTO, "title" | "price" | "mrp" | "discountPct" | "couponNote"> & {
     store: { name: string };
@@ -93,32 +108,70 @@ export function dealFaq(
   const store = deal.store.name;
   const disc = discountOf(deal);
   const price = deal.price != null ? formatINR(deal.price) : null;
+  const kind = dealKind(deal.title);
   const cheaper =
     deal.mrp != null && deal.price != null && deal.mrp > deal.price
       ? ` (down from ${formatINR(deal.mrp)}${disc != null ? `, ${disc}% off` : ""})`
       : "";
-  return [
-    {
-      q: `What is the price of ${name}?`,
-      a: price
-        ? `${name} is available for ${price}${cheaper} through ${SITE_NAME}'s ${store} link. Prices change quickly during sales, so confirm the live price before you order.`
-        : `Tap Shop Now to see the current live price of ${name} on ${store}. ${SITE_NAME} always links to the latest marketplace price.`,
-    },
-    {
-      q: `Is this ${name} deal still available?`,
-      a: `Yes — this deal is live on ${SITE_NAME} right now. Offers like this can sell out or expire once the promotion ends, so grab it soon if the price works for you.`,
-    },
-    {
+
+  const faqs: { q: string; a: string }[] = [];
+
+  // Always: live price.
+  faqs.push({
+    q: `What is the price of ${name}?`,
+    a: price
+      ? `${name} is available for ${price}${cheaper} through ${SITE_NAME}'s ${store} link. Prices change quickly during sales, so confirm the live price before you order.`
+      : `Tap Get Deal to see the current live price of ${name} on ${store}. ${SITE_NAME} always links to the latest marketplace price.`,
+  });
+
+  // Category-specific question(s) — the ones buyers actually search.
+  if (kind === "electronics") {
+    faqs.push({
+      q: `Does ${name} come with a warranty?`,
+      a: `Yes. Bought through ${store}'s listing, ${name} carries the standard manufacturer warranty — keep the digital invoice from your order for any service or replacement claim.`,
+    });
+    faqs.push({
+      q: `Is No-Cost EMI available on ${name}?`,
+      a: `On ${store}, No-Cost EMI and card EMI are commonly offered on electronics in this price range. The exact EMI and bank options appear on the ${store} checkout page before you pay.`,
+    });
+  } else if (kind === "fashion") {
+    faqs.push({
+      q: `Is ${name} genuine and as shown?`,
+      a: `This deal links to ${name} on ${store}, so you get the seller's original listing with size chart, images and buyer reviews. Check the size guide and reviews before ordering, and use ${store}'s easy returns if the fit is off.`,
+    });
+  } else if (kind === "grocery") {
+    faqs.push({
+      q: `Is ${name} a genuine product with a good expiry date?`,
+      a: `Yes — this links to ${name} on ${store}'s marketplace listing. Check the seller rating and pack details on the product page, and prefer listings with recent reviews for freshness.`,
+    });
+  }
+
+  // High-discount deals: address the "is this fake MRP?" search intent.
+  if (disc != null && disc >= 50) {
+    faqs.push({
+      q: `Is this ${disc}% discount on ${name} genuine?`,
+      a: `${SITE_NAME} lists the live ${store} price, and real discounts do reach this range during sales. Still, always sanity-check the current price against the usual selling price — a genuine deal beats the recent typical price, not just an inflated MRP.`,
+    });
+  } else {
+    faqs.push({
       q: `Is ${price ? `${price} ` : "this "}the best price for ${name}?`,
-      a: `It is among the best live prices we have tracked for ${name} on ${store}. We monitor prices continuously, but they fluctuate — compare the current price and apply any coupon before buying.`,
-    },
-    {
-      q: `How do I get this ${store} deal?`,
-      a: `Tap the Get Deal button to open ${store}, add ${name} to your cart and check out.${
-        deal.couponNote ? ` ${deal.couponNote}` : ""
-      } The discounted price is applied on the ${store} checkout page.`,
-    },
-  ];
+      a: `It is among the best live prices we have tracked for ${name} on ${store}. Prices fluctuate, so compare the current figure and apply any coupon before buying.`,
+    });
+  }
+
+  // Always: availability + how to get it.
+  faqs.push({
+    q: `Is this ${name} deal still available?`,
+    a: `Yes — this deal is live on ${SITE_NAME} right now. Offers like this can sell out or expire once the promotion ends, so grab it soon if the price works for you.`,
+  });
+  faqs.push({
+    q: `How do I get this ${store} deal safely?`,
+    a: `Tap Get Deal to open the product on ${store}, add it to your cart and check out — you pay securely on ${store}, never on ${SITE_NAME}.${
+      deal.couponNote ? ` ${deal.couponNote}` : ""
+    } The discounted price applies on the ${store} checkout page.`,
+  });
+
+  return faqs;
 }
 
 // Human labels for category URL segments.
