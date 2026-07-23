@@ -3,38 +3,38 @@
 import { useEffect, useState } from "react";
 
 const JOIN = "https://t.me/+aYRmCknf4_w0MGVl";
-const KEY = "rd_tg_modal_v1"; // bump to re-show after changes
+const JOINED = "rd_tg_joined";       // set once they click Join → never show again
+const COUNT = "rd_tg_dismiss_v1";    // times dismissed via Close → cap at MAX_SHOWS
+const MAX_SHOWS = 7;
 
-// One-time join-our-Telegram modal. Shows ~7s after load (or on first scroll),
-// once per visitor (localStorage). Dismissible; never blocks the page on repeat.
+// Join-our-Telegram modal. Shows shortly after each landing, up to 7 times per
+// visitor. Clicking Join = never show again. Clicking Close counts toward the 7.
 export default function TelegramModal() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (localStorage.getItem(KEY)) return;
-
-    let fired = false;
-    const show = () => {
-      if (fired) return;
-      fired = true;
-      setOpen(true);
-    };
-    const t = setTimeout(show, 7000);
-    const onScroll = () => {
-      if (window.scrollY > 600) show();
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener("scroll", onScroll);
-    };
+    if (localStorage.getItem(JOINED)) return;               // already joined → done
+    const count = Number(localStorage.getItem(COUNT) || "0");
+    if (count >= MAX_SHOWS) return;                          // dismissed 7 times → stop
+    const t = setTimeout(() => setOpen(true), 2500);        // show on landing
+    return () => clearTimeout(t);
   }, []);
 
+  // Close = a dismissal; increments the counter toward the 7-show cap.
   const close = () => {
     setOpen(false);
     try {
-      localStorage.setItem(KEY, "1");
+      const count = Number(localStorage.getItem(COUNT) || "0");
+      localStorage.setItem(COUNT, String(count + 1));
+    } catch {}
+  };
+
+  // Join = they took the action → stop showing forever.
+  const join = () => {
+    setOpen(false);
+    try {
+      localStorage.setItem(JOINED, "1");
     } catch {}
   };
 
@@ -91,7 +91,7 @@ export default function TelegramModal() {
             href={JOIN}
             target="_blank"
             rel="noopener"
-            onClick={close}
+            onClick={join}
             className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-[#229ED9] px-5 text-base font-bold text-white shadow-md shadow-[#229ED9]/30 transition-all hover:bg-[#1c8dc2] active:scale-[0.99]"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
