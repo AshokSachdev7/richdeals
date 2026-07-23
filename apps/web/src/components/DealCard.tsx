@@ -87,23 +87,23 @@ export default function DealCard({ deal }: { deal: DealDTO }) {
           </Link>
         </h3>
 
-        {/* Price row: bold price + struck MRP + inline green save pill */}
-        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
+        {/* Price row: bold price + struck MRP + inline green save pill.
+            nowrap keeps it one line so card heights stay consistent. */}
+        <div className="mt-2 flex items-center gap-x-2 overflow-hidden">
           {deal.price != null && (
             <span className="font-display text-xl font-extrabold tabular-nums text-ink">{formatINR(deal.price)}</span>
           )}
           {deal.mrp != null && deal.price != null && deal.mrp > deal.price && (
-            <span className="text-sm text-gray-400 line-through tabular-nums">{formatINR(deal.mrp)}</span>
+            <span className="truncate text-sm text-gray-400 line-through tabular-nums">{formatINR(deal.mrp)}</span>
           )}
           {save != null && (
-            <span className="rounded-md bg-savings/15 px-1.5 py-0.5 text-[11px] font-bold tabular-nums text-savings-dark">
+            <span className="shrink-0 rounded-md bg-savings/15 px-1.5 py-0.5 text-[11px] font-bold tabular-nums text-savings-dark">
               ↓ {formatINR(save)}
             </span>
           )}
         </div>
 
-        {/* Coupon (optional) — button is pinned to bottom so this never
-            misaligns the CTA across cards. */}
+        {/* Coupon (optional, one line) */}
         {deal.couponCode ? (
           <div className="mt-2 flex items-center gap-1.5 rounded-lg border border-dashed border-brand/50 bg-brand/5 px-2 py-1 text-xs text-brand-dark">
             <span className="text-gray-500">Code</span>
@@ -115,21 +115,31 @@ export default function DealCard({ deal }: { deal: DealDTO }) {
           </p>
         ) : null}
 
-        {/* spacer fills the flexible gap so every card's CTA sits at the same
-            baseline — fixes ragged buttons when only some cards have a coupon */}
-        <div className="mt-auto" aria-hidden="true" />
-        <a
-          href={deal.outUrl}
-          target="_blank"
-          rel="sponsored nofollow noopener"
-          aria-label={`Shop ${deal.title} on ${deal.store.name}`}
-          className="mt-3 inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg bg-brand px-4 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-dark active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
-        >
-          Grab Deal
-          <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M6 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </a>
+        {/* Footer pinned to bottom: divider + trust meta anchors the CTA so the
+            equal-height gap reads as a designed footer, not empty space. */}
+        <div className="mt-auto pt-3">
+          <div className="mb-2 flex items-center justify-between border-t border-gray-100 pt-2 text-[11px] text-gray-400">
+            <span className="truncate">on {deal.store.name}</span>
+            <span className="inline-flex shrink-0 items-center gap-0.5 font-semibold text-green-600">
+              <svg viewBox="0 0 20 20" className="h-3 w-3" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 011.4-1.4l3.1 3.1 6.8-6.8a1 1 0 011.4 0z" clipRule="evenodd" />
+              </svg>
+              Verified
+            </span>
+          </div>
+          <a
+            href={deal.outUrl}
+            target="_blank"
+            rel="sponsored nofollow noopener"
+            aria-label={`Shop ${deal.title} on ${deal.store.name}`}
+            className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-lg bg-brand px-4 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-dark active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
+          >
+            Grab Deal
+            <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M6 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        </div>
       </div>
     </article>
   );
