@@ -51,7 +51,7 @@ export default async function Hero() {
         />
       </div>
 
-      <div className="grid items-start gap-6 px-5 pt-7 pb-5 sm:px-8 sm:pt-9 lg:grid-cols-[1.35fr_1fr] lg:gap-10">
+      <div className="grid items-start gap-5 px-5 pt-4 pb-4 sm:px-7 sm:pt-5 lg:grid-cols-[1.45fr_1fr] lg:gap-8">
         {/* ── Left: copy ─────────────────────────────────────────── */}
         <div>
           <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs font-bold text-brand-dark ring-1 ring-inset ring-brand/25 backdrop-blur">
@@ -62,19 +62,18 @@ export default async function Hero() {
             Live prices · updated every few minutes
           </span>
 
-          <h1 className="mt-4 font-display text-[2rem] font-extrabold leading-[1.05] tracking-tight text-ink sm:text-[2.75rem]">
-            India&apos;s best deals,
-            <br className="hidden sm:block" />{" "}
+          <h1 className="mt-2.5 font-display text-2xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-[1.9rem]">
+            India&apos;s best deals,{" "}
             <span className="relative inline-block text-brand-dark">
               handpicked &amp; verified
-              <span className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-gradient-to-r from-brand to-savings" aria-hidden="true" />
+              <span className="absolute -bottom-0.5 left-0 h-[2px] w-full rounded-full bg-gradient-to-r from-brand to-savings" aria-hidden="true" />
             </span>
           </h1>
-          <p className="mt-4 max-w-lg text-sm leading-relaxed text-gray-600 sm:text-base">
+          <p className="mt-2 max-w-lg text-sm leading-snug text-gray-600">
             Real, working discounts from Amazon, Flipkart &amp; 100+ Indian stores — live prices, zero junk.
           </p>
 
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="mt-3.5 flex flex-wrap gap-2">
             {STATS.map((s) => (
               <div
                 key={s.label}
@@ -92,7 +91,7 @@ export default async function Hero() {
             ))}
           </div>
 
-          <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+          <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:items-center">
             <Link
               href="#deals-heading"
               className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-dark px-6 py-3 text-base font-bold text-white shadow-md shadow-brand/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
@@ -110,7 +109,7 @@ export default async function Hero() {
             </Link>
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center gap-2">
+          <div className="mt-3.5 flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Popular</span>
             {CHIPS.map((c) => (
               <Link
@@ -126,45 +125,49 @@ export default async function Hero() {
 
         {/* ── Right: rotating Superdeal of the hour ──────────────── */}
         {hot && (
-          <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-lg shadow-gray-300/40 ring-1 ring-black/[0.02]">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-white shadow-sm shadow-brand/30">
+          <div className="rounded-2xl border border-gray-200 bg-white p-3 shadow-lg shadow-gray-300/40 ring-1 ring-black/[0.02]">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide text-white shadow-sm shadow-brand/30">
               ⚡ Superdeal of the hour
             </span>
 
-            <Link href={`/${hot.slug}`} className="mt-3 block" aria-label={hot.title}>
-              <div className="relative aspect-square overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-gray-100">
-                <ProductImage
-                  src={hot.image!}
-                  alt={hot.title}
-                  sizes="(max-width: 1024px) 90vw, 340px"
-                  className="object-contain p-4 transition-transform duration-500 hover:scale-105"
-                />
-                {hotDiscount != null && (
-                  <span className="absolute left-2 top-2 rounded-md bg-brand px-2 py-1 text-xs font-extrabold text-white shadow-sm">
-                    {hotDiscount}% OFF
-                  </span>
-                )}
-              </div>
-            </Link>
-
-            <h2 className="mt-3 line-clamp-2 text-sm font-semibold leading-snug text-ink">
-              <Link href={`/${hot.slug}`} className="transition-colors hover:text-brand-dark">
-                {hot.title}
+            {/* Compact: image left, details right — keeps the card short */}
+            <div className="mt-2.5 flex gap-3">
+              <Link href={`/${hot.slug}`} className="block shrink-0" aria-label={hot.title}>
+                <div className="relative h-28 w-28 overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 sm:h-32 sm:w-32">
+                  <ProductImage
+                    src={hot.image!}
+                    alt={hot.title}
+                    sizes="140px"
+                    className="object-contain p-2 transition-transform duration-500 hover:scale-105"
+                  />
+                  {hotDiscount != null && (
+                    <span className="absolute left-1 top-1 rounded bg-brand px-1.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
+                      {hotDiscount}% OFF
+                    </span>
+                  )}
+                </div>
               </Link>
-            </h2>
 
-            <div className="mt-2 flex items-baseline gap-2">
-              {hot.price != null && (
-                <span className="font-display text-2xl font-extrabold tabular-nums text-ink">{formatINR(hot.price)}</span>
-              )}
-              {hot.mrp != null && hot.price != null && hot.mrp > hot.price && (
-                <span className="text-sm text-gray-400 line-through tabular-nums">{formatINR(hot.mrp)}</span>
-              )}
+              <div className="min-w-0 flex-1">
+                <h2 className="line-clamp-3 text-sm font-semibold leading-snug text-ink">
+                  <Link href={`/${hot.slug}`} className="transition-colors hover:text-brand-dark">
+                    {hot.title}
+                  </Link>
+                </h2>
+                <div className="mt-1.5 flex items-baseline gap-2">
+                  {hot.price != null && (
+                    <span className="font-display text-xl font-extrabold tabular-nums text-ink">{formatINR(hot.price)}</span>
+                  )}
+                  {hot.mrp != null && hot.price != null && hot.mrp > hot.price && (
+                    <span className="text-xs text-gray-400 line-through tabular-nums">{formatINR(hot.mrp)}</span>
+                  )}
+                </div>
+              </div>
             </div>
 
             <Link
               href={`/${hot.slug}`}
-              className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center gap-1.5 rounded-xl bg-brand px-5 text-base font-bold text-white shadow-sm transition-all hover:bg-brand-dark active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
+              className="mt-2.5 inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl bg-brand px-5 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-dark active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
             >
               Grab Deal
               <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
