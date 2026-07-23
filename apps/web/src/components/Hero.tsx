@@ -9,45 +9,71 @@ const CHIPS: { label: string; href: string }[] = [
   { label: "Fashion", href: "/category/shopping-category/fashion" },
 ];
 
-// Premium marketing hero: deep ink base with layered red/amber glows for depth
-// (no flat gradient band). One primary CTA — search lives in the site header,
-// so no second search box here. Chips are the quick-filter row.
+// Live-stat trust chips. Static marketing figures (same as the source site) —
+// numbers are directional, not a live DB count.
+const STATS: { value: string; label: string; tint: string; tintBg: string; icon: React.ReactNode }[] = [
+  { value: "2,400+", label: "live deals", tint: "text-brand-dark", tintBg: "bg-brand/10", icon: <path d="M13 2 3 14h7l-1 8 10-12h-7z" /> },
+  { value: "100+", label: "stores", tint: "text-savings-dark", tintBg: "bg-savings/15", icon: <path d="M4 7h16l-1 5H5zM5 12v8h14v-8M9 20v-4h6v4" /> },
+  { value: "Every few min", label: "fresh drops", tint: "text-green-700", tintBg: "bg-green-100", icon: <path d="M12 7v5l3 2M12 3a9 9 0 100 18 9 9 0 000-18z" /> },
+];
+
+// Light, compact, product-first hero (CashKaro/DesiDime vibe): white card, brand
+// red as a lively accent (not a band), live-stat chips, one primary CTA that
+// scrolls to the deal feed. Deliberately short so deals start high on the page.
+// Red-on-white text uses brand-dark (#c1121f, 6.2:1) — the lighter brand red
+// (4.17:1) is reserved for decorative glows/borders only. Search is in the
+// header, so no second search box here.
 export default function Hero() {
   return (
-    <section className="relative isolate overflow-hidden rounded-3xl bg-ink shadow-xl shadow-ink/20">
-      {/* Layered depth: soft brand glow + amber glow + dotted texture */}
-      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div className="absolute -left-24 -top-28 h-72 w-72 rounded-full bg-brand/40 blur-3xl" />
-        <div className="absolute -right-20 top-1/3 h-72 w-72 rounded-full bg-savings/25 blur-3xl" />
-        <div className="hero-dots absolute inset-0 opacity-40" />
+    <section className="relative isolate overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
+      {/* Soft brand + amber glows for retail energy — subtle, never a colored band. */}
+      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+        <div className="absolute -right-16 -top-24 h-64 w-64 rounded-full bg-brand/10 blur-3xl" />
+        <div className="absolute -left-12 top-1/2 h-56 w-56 rounded-full bg-savings/10 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto flex max-w-2xl flex-col items-center px-5 py-12 text-center sm:px-8 sm:py-16">
+      <div className="px-5 py-8 sm:px-9 sm:py-10">
         {/* Live trust badge */}
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white ring-1 ring-inset ring-white/20 backdrop-blur">
+        <span className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-3 py-1.5 text-xs font-bold text-brand-dark ring-1 ring-inset ring-brand/20">
           <span className="relative flex h-2 w-2" aria-hidden="true">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-savings opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-savings" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-brand" />
           </span>
           Live prices · updated every few minutes
         </span>
 
-        <h1 className="mt-5 font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-5xl">
+        <h1 className="mt-4 max-w-2xl font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-ink sm:text-4xl">
           India&apos;s best deals,{" "}
-          <span className="bg-gradient-to-r from-brand-accent to-savings bg-clip-text text-transparent">
-            handpicked
-          </span>{" "}
-          &amp; verified
+          <span className="text-brand-dark">handpicked &amp; verified</span>
         </h1>
-        <p className="mt-4 max-w-lg text-base leading-relaxed text-white/80 sm:text-lg">
-          Real, working discounts from Amazon, Flipkart &amp; 100+ Indian stores. Live prices, zero junk.
+        <p className="mt-3 max-w-xl text-base leading-relaxed text-gray-600">
+          Real, working discounts from Amazon, Flipkart &amp; 100+ Indian stores — live prices, zero junk.
         </p>
 
-        {/* One primary CTA + a secondary link */}
-        <div className="mt-7 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-center">
+        {/* Live-stat chips */}
+        <div className="mt-5 flex flex-wrap gap-2.5">
+          {STATS.map((s) => (
+            <div
+              key={s.label}
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3.5 py-2 shadow-sm"
+            >
+              <span className={`flex h-6 w-6 items-center justify-center rounded-full ${s.tintBg} ${s.tint}`}>
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  {s.icon}
+                </svg>
+              </span>
+              <span className="text-sm font-bold text-ink">
+                {s.value} <span className="font-medium text-gray-500">{s.label}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Primary CTA → scroll to feed, plus a secondary link */}
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Link
             href="#deals-heading"
-            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-base font-bold text-brand-dark shadow-lg shadow-black/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-dark px-6 py-3 text-base font-bold text-white shadow-md shadow-brand/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
           >
             Browse Today&apos;s Deals
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -56,20 +82,20 @@ export default function Hero() {
           </Link>
           <Link
             href="/coupons"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-white/10 px-6 py-3 text-base font-bold text-white ring-1 ring-inset ring-white/25 backdrop-blur transition-colors duration-200 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+            className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-gray-300 bg-white px-6 py-3 text-base font-bold text-ink transition-colors duration-200 hover:border-brand/40 hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
           >
             Coupons &amp; Offers
           </Link>
         </div>
 
         {/* Quick-filter chips */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-          <span className="text-xs font-medium text-white/55">Popular:</span>
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Popular</span>
           {CHIPS.map((c) => (
             <Link
               key={c.label}
               href={c.href}
-              className="cursor-pointer rounded-full bg-white/10 px-3 py-2 text-xs font-semibold text-white ring-1 ring-inset ring-white/20 backdrop-blur transition-colors duration-200 hover:bg-white hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="inline-flex min-h-[44px] items-center rounded-full border border-gray-200 bg-white px-4 text-sm font-semibold text-ink-soft shadow-sm transition-colors duration-200 hover:border-brand/40 hover:bg-brand/5 hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
             >
               {c.label}
             </Link>
