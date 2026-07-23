@@ -57,18 +57,19 @@ const ITEMS: Item[] = [
 export default function CategoryStrip() {
   return (
     <section aria-labelledby="shop-by" className="mt-10">
-      <h2 id="shop-by" className="mb-4 font-display text-xl font-bold text-ink sm:text-2xl">
+      <h2 id="shop-by" className="mb-1 font-display text-xl font-bold text-ink sm:text-2xl">
         Shop by store &amp; category
       </h2>
-      <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-4 sm:overflow-visible sm:px-0 lg:grid-cols-8">
+      <p className="mb-4 text-sm text-gray-500">Jump straight to the deals you care about.</p>
+      <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3 lg:grid-cols-8">
         {ITEMS.map((it) => (
           <Link
             key={it.label}
             href={it.href}
-            className="group flex min-w-[104px] shrink-0 snap-start flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-white p-4 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg hover:shadow-brand/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 sm:min-w-0"
+            className="group flex flex-col items-center gap-2.5 rounded-2xl border border-gray-200 bg-white p-3 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg hover:shadow-brand/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 sm:p-4"
           >
             <span
-              className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 ${it.tint} transition-colors duration-200 group-hover:bg-brand/10`}
+              className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gray-50 ${it.tint} transition-colors duration-200 group-hover:bg-brand/10 sm:h-12 sm:w-12`}
             >
               <svg
                 viewBox="0 0 24 24"

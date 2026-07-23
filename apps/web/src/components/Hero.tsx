@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-// Popular quick-searches → each links to /search or a category/store page.
+// Popular quick-filters → each links to a store/category/search page.
 const CHIPS: { label: string; href: string }[] = [
   { label: "Amazon", href: "/stores/amazon" },
   { label: "Flipkart", href: "/stores/flipkart" },
@@ -9,64 +9,72 @@ const CHIPS: { label: string; href: string }[] = [
   { label: "Fashion", href: "/category/shopping-category/fashion" },
 ];
 
-// Compact banner — headline + a modest search, chips inline. Deliberately slim
-// so the deal grid sits high on the page (deals are the star, not the search).
+// Premium marketing hero: deep ink base with layered red/amber glows for depth
+// (no flat gradient band). One primary CTA — search lives in the site header,
+// so no second search box here. Chips are the quick-filter row.
 export default function Hero() {
   return (
-    <section className="relative isolate overflow-hidden rounded-2xl bg-gradient-to-r from-brand via-brand-dark to-savings-dark shadow-lg shadow-brand/20">
-      <div className="hero-dots pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />
-      <div className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full bg-savings/40 blur-3xl" aria-hidden="true" />
+    <section className="relative isolate overflow-hidden rounded-3xl bg-ink shadow-xl shadow-ink/20">
+      {/* Layered depth: soft brand glow + amber glow + dotted texture */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute -left-24 -top-28 h-72 w-72 rounded-full bg-brand/40 blur-3xl" />
+        <div className="absolute -right-20 top-1/3 h-72 w-72 rounded-full bg-savings/25 blur-3xl" />
+        <div className="hero-dots absolute inset-0 opacity-40" />
+      </div>
 
-      <div className="relative flex flex-col gap-4 px-5 py-6 sm:px-8 sm:py-7 lg:flex-row lg:items-center lg:justify-between">
-        <div className="max-w-xl">
-          <h1 className="font-display text-xl font-extrabold leading-tight tracking-tight text-white drop-shadow-sm sm:text-2xl">
-            Loot Deals, Coupons &amp; Freebies — <span className="text-amber-200">Handpicked Daily</span>
-          </h1>
-          <p className="mt-1 text-sm text-white/85">
-            Verified live prices from Amazon, Flipkart &amp; 100+ Indian stores. Zero junk.
-          </p>
-          {/* Popular chips */}
-          <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            {CHIPS.map((c) => (
-              <Link
-                key={c.label}
-                href={c.href}
-                className="cursor-pointer rounded-full bg-white/15 px-2.5 py-1 text-xs font-semibold text-white ring-1 ring-inset ring-white/25 backdrop-blur transition-colors duration-200 hover:bg-white hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              >
-                {c.label}
-              </Link>
-            ))}
-          </div>
+      <div className="relative mx-auto flex max-w-2xl flex-col items-center px-5 py-12 text-center sm:px-8 sm:py-16">
+        {/* Live trust badge */}
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white ring-1 ring-inset ring-white/20 backdrop-blur">
+          <span className="relative flex h-2 w-2" aria-hidden="true">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-savings opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-savings" />
+          </span>
+          Live prices · updated every few minutes
+        </span>
+
+        <h1 className="mt-5 font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-5xl">
+          India&apos;s best deals,{" "}
+          <span className="bg-gradient-to-r from-brand-accent to-savings bg-clip-text text-transparent">
+            handpicked
+          </span>{" "}
+          &amp; verified
+        </h1>
+        <p className="mt-4 max-w-lg text-base leading-relaxed text-white/80 sm:text-lg">
+          Real, working discounts from Amazon, Flipkart &amp; 100+ Indian stores. Live prices, zero junk.
+        </p>
+
+        {/* One primary CTA + a secondary link */}
+        <div className="mt-7 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-center">
+          <Link
+            href="#deals-heading"
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-base font-bold text-brand-dark shadow-lg shadow-black/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+          >
+            Browse Today&apos;s Deals
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </Link>
+          <Link
+            href="/coupons"
+            className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-white/10 px-6 py-3 text-base font-bold text-white ring-1 ring-inset ring-white/25 backdrop-blur transition-colors duration-200 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+          >
+            Coupons &amp; Offers
+          </Link>
         </div>
 
-        {/* Modest search — full width on mobile, fixed on desktop */}
-        <form
-          action="/search"
-          method="GET"
-          role="search"
-          className="flex w-full items-center gap-2 rounded-xl bg-white p-1.5 shadow-md ring-1 ring-black/5 focus-within:ring-2 focus-within:ring-savings lg:w-80 lg:shrink-0"
-        >
-          <span className="pl-1.5 text-gray-400" aria-hidden="true">
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3-3" strokeLinecap="round" />
-            </svg>
-          </span>
-          <label htmlFor="hero-search" className="sr-only">Search deals, products or stores</label>
-          <input
-            id="hero-search"
-            type="search"
-            name="q"
-            placeholder="Search deals or stores…"
-            className="min-w-0 flex-1 bg-transparent px-1 py-1.5 text-sm text-ink placeholder:text-gray-400 focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="inline-flex h-9 shrink-0 cursor-pointer items-center rounded-lg bg-brand px-3.5 text-sm font-bold text-white transition-colors duration-200 hover:bg-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-brand"
-          >
-            Search
-          </button>
-        </form>
+        {/* Quick-filter chips */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+          <span className="text-xs font-medium text-white/55">Popular:</span>
+          {CHIPS.map((c) => (
+            <Link
+              key={c.label}
+              href={c.href}
+              className="cursor-pointer rounded-full bg-white/10 px-3 py-2 text-xs font-semibold text-white ring-1 ring-inset ring-white/20 backdrop-blur transition-colors duration-200 hover:bg-white hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              {c.label}
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );
