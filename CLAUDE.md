@@ -58,6 +58,27 @@ Agent: `.claude/agents/deal-ingest.md` (spawn as `deal-ingest`).
   currently placeholder — REAL Amazon Associates tag + EarnKaro account
   still needed).
 
+### Second source: DesiDime (desidime.com)
+
+Same ingest pattern as indiafreestuff, different site. Fetches fine via curl
+with a browser UA (Cloudflare serves 200 — no JS challenge for the HTML).
+- **Discover**: homepage `https://www.desidime.com/` lists deal links shaped
+  `/deals/{slug}-{id}` (id is the trailing number, e.g.
+  `apply-16499-samsung-galaxy-s25-2141749` → id `2141749`).
+- **Resolve outbound**: the "Buy Now" button →
+  `https://visit.desidime.com/visit/deals-1/{id}` (their affiliate redirect).
+  `curl -Ls -w %{url_effective}` it → the REAL merchant URL. The merchant URL
+  is also embedded in the deal-page HTML as a fallback.
+- **Filter HARD — DesiDime is mostly junk**: skip Play-Store-app promos,
+  gift-card/cashback/quiz/loot posts, grocery (Blinkit/BigBasket/Zepto), and
+  anything that resolves to `play.google.com` or a non-Amazon/Flipkart store.
+  Keep only single-product Amazon (`/dp/ASIN`) or Flipkart (`?pid=`).
+- **Affiliate swap**: their Flipkart params are `affid=salescueli` +
+  `affExtParam1/2` — keep `pid`, drop those, add ours (`affid=djhackraj`).
+  Amazon: strip their `tag`, add `ashoksachdev-21`.
+- Title/price live on the deal page (`<h1>`, `₹` price). Rewrite originally.
+  Output/dedup/pending-review flow identical to indiafreestuff.
+
 ## Deal-page SEO / AEO / GEO
 
 Every deal page (`/{deal-slug}`, `apps/web/src/app/[dealSlug]/page.tsx`)
