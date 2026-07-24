@@ -114,9 +114,14 @@ export default async function DealPage({ params }: Props) {
   const priceValidUntil = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
   const validFrom = new Date().toISOString().slice(0, 10);
   // Google Merchant Listings caps Product 'name' at 150 chars; the raw deal
-  // title (with its "at ₹X – Store" tail) overran it on long items, so use the
-  // cleaned product name, hard-capped. Fixes "Invalid string length" warnings.
-  const productName = dealProductName(deal).slice(0, 150);
+  // title (with its "at ₹X – Store" tail) overran it on long items. Use the
+  // cleaned name, truncated at a WORD boundary well under the limit (~110) so
+  // we never sit at the exact cap or cut mid-word. Fixes "Invalid string length".
+  const cleanName = dealProductName(deal);
+  const productName =
+    cleanName.length <= 110
+      ? cleanName
+      : cleanName.slice(0, 110).replace(/\s+\S*$/, "").replace(/[\s,;:–-]+$/, "");
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
