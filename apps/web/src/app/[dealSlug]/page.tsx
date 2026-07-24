@@ -7,7 +7,7 @@ import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import CopyCode from "@/components/CopyCode";
-import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle, dealFaq } from "@/lib/site";
+import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle, dealFaq, dealProductName } from "@/lib/site";
 
 // Always SSR fresh: ISR + broken on-demand revalidation was serving stale deal
 // pages (old prices, removed UI) for far longer than the revalidate window.
@@ -112,10 +112,15 @@ export default async function DealPage({ params }: Props) {
   // omit the whole Offer when we have no price rather than emit invalid schema.
   const offerPrice = deal.price ?? deal.mrp ?? null;
   const priceValidUntil = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
+  const validFrom = new Date().toISOString().slice(0, 10);
+  // Google Merchant Listings caps Product 'name' at 150 chars; the raw deal
+  // title (with its "at ₹X – Store" tail) overran it on long items, so use the
+  // cleaned product name, hard-capped. Fixes "Invalid string length" warnings.
+  const productName = dealProductName(deal).slice(0, 150);
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: deal.title,
+    name: productName,
     image: deal.image ? [deal.image] : undefined,
     description: deal.description || deal.title,
     // NOTE: the marketplace (Amazon/Flipkart) is the seller, not the brand —
@@ -127,6 +132,7 @@ export default async function DealPage({ params }: Props) {
             priceCurrency: "INR",
             price: String(offerPrice),
             priceValidUntil,
+            validFrom,
             itemCondition: "https://schema.org/NewCondition",
             availability: expired
               ? "https://schema.org/Discontinued"

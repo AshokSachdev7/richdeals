@@ -65,9 +65,10 @@ const items = html.split('<li class="product-item').slice(1);
 const batch = [];
 for (const raw of items) {
   const block = raw.split('</li>')[0];
-  const inrLink = (block.match(/<a\s+href="(https:\/\/inr\.deals\/track[^"]+)"/) || [])[1];
+  const inrLink = (block.match(/<a\b[^>]*?\bhref="(https:\/\/inr\.deals\/track[^"]+)"/) || [])[1];
   const title0 = dec((block.match(/title="([^"]+)"/) || [])[1] || '');
-  const img = (block.match(/class="product_image">\s*<img src="([^"]+)"/) || block.match(/<img src="([^"]+)"[^>]*class="img"/) || [])[1];
+  // product thumbnail = inrdeals CDN /production/<id>/<imgid>._SX###_.jpg (store logo is *-logo-*.png, skip)
+  const img = (block.match(/<img\s+src="([^"]+\/production\/[^"]+\._S[XY]\d+_[^"]*)"/) || [])[1];
   const price = num((block.match(/original_price"[^>]*>(?:<[^>]+>)*\s*([0-9,]+)/) || [])[1]);
   const mrp = num((block.match(/original_price_cut"[^>]*>(?:<[^>]+>)*\s*([0-9,]+)/) || [])[1]);
   let disc = num((block.match(/original_price_p"[^>]*>\s*([0-9]{1,2})\s*%/) || [])[1]);
