@@ -108,8 +108,11 @@ export default async function DealPage({ params }: Props) {
     { name: deal.title, href: `/${deal.slug}` },
   ];
 
-  // Google requires a numeric price on the Offer for Product rich results;
-  // omit the whole Offer when we have no price rather than emit invalid schema.
+  // Google requires a numeric price on the Offer for Product rich results, AND
+  // a Product with no offers/review/aggregateRating is itself invalid ("Either
+  // 'offers', 'review' or 'aggregateRating' should be specified" — GSC critical).
+  // We never fabricate ratings or reviews, so a price-less deal gets NO Product
+  // block at all; BreadcrumbList + FAQPage still carry the page.
   const offerPrice = deal.price ?? deal.mrp ?? null;
   const priceValidUntil = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
   const validFrom = new Date().toISOString().slice(0, 10);
@@ -122,16 +125,17 @@ export default async function DealPage({ params }: Props) {
     cleanName.length <= 110
       ? cleanName
       : cleanName.slice(0, 110).replace(/\s+\S*$/, "").replace(/[\s,;:–-]+$/, "");
-  const productSchema = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: productName,
-    image: deal.image ? [deal.image] : undefined,
-    description: deal.description || deal.title,
-    // NOTE: the marketplace (Amazon/Flipkart) is the seller, not the brand —
-    // real manufacturer is unknown for aggregated deals, so brand is omitted.
-    ...(offerPrice != null
-      ? {
+  const productSchema =
+    offerPrice == null
+      ? null
+      : {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: productName,
+          image: deal.image ? [deal.image] : undefined,
+          description: deal.description || deal.title,
+          // NOTE: the marketplace (Amazon/Flipkart) is the seller, not the brand —
+          // real manufacturer is unknown for aggregated deals, so brand is omitted.
           offers: {
             "@type": "Offer",
             priceCurrency: "INR",
@@ -145,9 +149,7 @@ export default async function DealPage({ params }: Props) {
             url: canonical,
             seller: { "@type": "Organization", name: deal.store.name },
           },
-        }
-      : {}),
-  };
+        };
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -191,7 +193,7 @@ export default async function DealPage({ params }: Props) {
 
   return (
     <article className="pb-24 lg:pb-0">
-      <JsonLd data={productSchema} />
+      {productSchema ? <JsonLd data={productSchema} /> : null}
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={faqSchema} />
       <Breadcrumbs items={crumbs} />
