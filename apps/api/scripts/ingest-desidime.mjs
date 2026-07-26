@@ -50,7 +50,11 @@ const seen = new Set();
 const found = [];
 for (const list of LISTS) {
   const html = curl(list);
-  for (const c of cards(html)) if (!seen.has(c.id) && !dead.has(c.id)) { seen.add(c.id); found.push(c); }
+  const got = cards(html);
+  // curl() swallows failures and returns '' — without this line a dead leg just
+  // halves the sweep silently, which reads as "DesiDime posted less tonight".
+  if (!got.length) console.log(`  WARN ${list} gave 0 cards (${html.length} bytes) — fetch likely failed`);
+  for (const c of got) if (!seen.has(c.id) && !dead.has(c.id)) { seen.add(c.id); found.push(c); }
   sleep(GAP);
 }
 const junk = found.filter((c) => JUNK.test(c.title) || GROCERY.test(c.title));

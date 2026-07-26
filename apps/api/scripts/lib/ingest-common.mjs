@@ -14,7 +14,9 @@ export const cue = (url) =>
   `https://linksredirect.com/?cid=${CUELINKS_CID}&source=linkkit&url=${encodeURIComponent(url)}`;
 
 // Titles that are never a single product: app promos, cashback games, store-wide sales.
-export const JUNK = /gift\s*card|cashback|quiz|answers|loot|free\s*fire|diamonds|recharge|refer|coupon|play\s*store|app\s*download|whatsapp|telegram\s*channel|blinkit|bigbasket|zepto|instamart|swiggy|zomato|prime\s*membership|subscription|upto\s*\d+%|flat\s*\d+%\s*off|buy\s*\d+\s*get|sale\s*is\s*live|up\s*to\s*\d+%|deals?\s*up\s*to|\bhaul\b|\bfest\b|starting\s*from\s*(rs|₹)/i;
+// "free on Rs100 bill" / "free with purchase" is a coupon-conditional freebie:
+// it can never carry a price, so it burns a redirect resolve on every sweep.
+export const JUNK = /free\s*(on|with|above)\b|gift\s*card|cashback|quiz|answers|loot|free\s*fire|diamonds|recharge|refer|coupon|play\s*store|app\s*download|whatsapp|telegram\s*channel|blinkit|bigbasket|zepto|instamart|swiggy|zomato|prime\s*membership|subscription|upto\s*\d+%|flat\s*\d+%\s*off|buy\s*\d+\s*get|sale\s*is\s*live|up\s*to\s*\d+%|deals?\s*up\s*to|\bhaul\b|\bfest\b|starting\s*from\s*(rs|₹)/i;
 
 // Groceries and perishables: low ticket, location-locked, price swings daily.
 export const GROCERY = /\b(oil|atta|maida|rice|dal|pulses|masala|saunf|fennel|jeera|haldi|rambutan|mango|banana|fruits?|vegetable|dry\s*fruits|almond|cashew|kaju|badam|ghee|sugar|salt|milk|paneer|honey|biscuit|namkeen|noodles|juice|detergent)\b/i;
