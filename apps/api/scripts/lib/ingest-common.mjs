@@ -27,6 +27,15 @@ const NOT_A_STORE = /play\.google|apps\.apple|youtube|t\.me|telegram|facebook|in
 const NOT_A_PRODUCT = /\/(s|search|b|events?|promotion|gp\/browse|offers?|store|deals|brand|shop|c|discover|collections?)\/|\/s\?|\/b\?|[?&](k|rf|q|node)=|\/h\/rewards\/|sale\.html|-sale\b/i;
 
 export function affiliate(finalUrl) {
+  // Flipkart deeplinks are dl.flipkart.com/dl/<absolute url>, and following them
+  // leaves the real URL nested in the path:
+  //   https://dl.flipkart.com/dlhttps://dl.flipkart.com/blue-star.../p/itm123
+  // The tail is the product; the head is a redirect artifact. Without this the
+  // nested copy still contains '/p/itm', so it passed the product check below
+  // and produced a 404 affiliate link.
+  const nested = finalUrl.lastIndexOf('http');
+  if (nested > 0) finalUrl = finalUrl.slice(nested);
+
   let u; try { u = new URL(finalUrl); } catch { return null; }
   const h = u.hostname.replace(/^www\./, '');
   if (NOT_A_STORE.test(h)) return null;
@@ -39,9 +48,14 @@ export function affiliate(finalUrl) {
 
   if (/flipkart\.com/.test(h)) {
     const pid = u.searchParams.get('pid');
-    // real product paths are /<slug>/p/itm<hash>; /desidime/p/desidime_deals is a tracking landing
-    if (!pid || !/\/p\/itm/.test(u.pathname)) return null;
-    return { store: 'Flipkart', productId: pid, affiliateUrl: `https://www.flipkart.com${u.pathname}?pid=${pid}&affid=${FLIPKART_AFFID}` };
+    // real product paths are /<slug>/p/itm<hash>; /desidime/p/desidime_deals is a
+    // tracking landing. Anchored, so a redirect artifact glued onto the front
+    // (see the deeplink note above) can't smuggle a bad path through.
+    if (!pid || !/^\/[a-z0-9.-]+\/p\/itm[a-z0-9]+$/i.test(u.pathname)) return null;
+    // page (no affid) is what we curl for the price — the resolved URL can be a
+    // dl.flipkart.com redirect stub that carries no Product ld+json at all.
+    const path = `https://www.flipkart.com${u.pathname}?pid=${pid}`;
+    return { store: 'Flipkart', productId: pid, affiliateUrl: `${path}&affid=${FLIPKART_AFFID}`, page: path };
   }
 
   // any other merchant — still has to be a single product page

@@ -24,6 +24,12 @@ const dec = (s) => s ? s.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace
 const num = (s) => (s ? +String(s).replace(/[,\s]/g, '') : null);
 
 function cards(html) {
+  // DesiDime sometimes answers the listing with a Turbo-stream payload
+  // (content-type text/javascript) that carries the same markup as a JS string
+  // literal — quotes and slashes escaped. Every attribute regex below matches on
+  // "..." so an escaped card yields nothing, and the sweep silently halved.
+  if (html.includes('\\"')) html = html.replace(/\\"/g, '"').replace(/\\\//g, '/').replace(/\\n/g, '\n');
+
   return html.split(/<article /).slice(1).map((b) => {
     const id = (b.match(/data-gtm-deal-id="(\d+)"/) || [])[1];
     const store = (b.match(/data-gtm-store="([^"]*)"/) || [])[1];
