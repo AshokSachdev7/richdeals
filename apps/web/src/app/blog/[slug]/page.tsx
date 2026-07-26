@@ -78,7 +78,9 @@ export default async function BlogPostPage({ params }: Props) {
     image: post.coverImage ? [post.coverImage] : undefined,
     datePublished: post.publishedAt,
     dateModified: post.updatedAt || post.publishedAt,
-    author: { "@type": "Organization", name: post.author || SITE_NAME },
+    // url resolves the byline to a real entity — an unresolvable author name is
+    // an E-E-A-T dead end for both Google and answer engines.
+    author: { "@type": "Organization", name: post.author || SITE_NAME, url: absUrl("/about") },
     publisher: { "@type": "Organization", name: SITE_NAME, logo: { "@type": "ImageObject", url: absUrl("/logo.png") } },
     mainEntityOfPage: canonical,
   };

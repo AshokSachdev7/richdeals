@@ -7,7 +7,7 @@ import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import CopyCode from "@/components/CopyCode";
-import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle, dealFaq, dealProductName } from "@/lib/site";
+import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle, dealFaq, dealProductName, dealSummary } from "@/lib/site";
 
 // Always SSR fresh: ISR + broken on-demand revalidation was serving stale deal
 // pages (old prices, removed UI) for far longer than the revalidate window.
@@ -439,15 +439,19 @@ export default async function DealPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Description */}
-      {deal.description && (
-        <section className="mt-12">
-          <h2 className="font-display text-xl font-bold text-ink">About this deal</h2>
+      {/* Description — always rendered: dealSummary() is built from real deal
+          fields, so even a description-less deal gets a citable passage. */}
+      <section className="mt-12">
+        <h2 className="font-display text-xl font-bold text-ink">About this deal</h2>
+        {deal.description && (
           <p className="mt-3 max-w-2xl whitespace-pre-line text-[15px] leading-relaxed text-gray-700">
             {deal.description}
           </p>
-        </section>
-      )}
+        )}
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-gray-700">
+          {dealSummary(deal)}
+        </p>
+      </section>
 
       {/* FAQ — visible copy matching the FAQPage schema (AEO/GEO).
           Native <details> accordion: content stays in the DOM when collapsed. */}

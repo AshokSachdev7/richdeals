@@ -95,6 +95,58 @@ function dealKind(title: string): "electronics" | "fashion" | "grocery" | "gener
   return "general";
 }
 
+// GEO: a self-contained factual paragraph an answer engine can lift whole.
+// Ingested descriptions are ~35 words — below the range that actually gets
+// cited — so this adds the concrete numbers (price, MRP, saving, store,
+// category) in plain prose. Every clause comes from a real field; clauses
+// with no data are dropped rather than filled in.
+export function dealSummary(
+  deal: Pick<DealDTO, "title" | "price" | "mrp" | "discountPct" | "couponNote" | "dealType" | "status"> & {
+    store: { name: string };
+    categories: { name: string }[];
+  },
+): string {
+  const name = dealProductName(deal);
+  const store = deal.store.name;
+  const disc = discountOf(deal);
+  const cat = deal.categories.find((c) => c.name)?.name;
+  const parts: string[] = [];
+
+  if (deal.price != null) {
+    const saving = deal.mrp != null && deal.mrp > deal.price ? deal.mrp - deal.price : null;
+    parts.push(
+      `${name} is listed at ${formatINR(deal.price)} on ${store}` +
+        (deal.mrp != null && deal.mrp > deal.price
+          ? `, down from a maximum retail price of ${formatINR(deal.mrp)}` +
+            (saving ? ` — a saving of ${formatINR(saving)}${disc != null ? ` (${disc}% off)` : ""}` : "")
+          : "") +
+        ".",
+    );
+  } else {
+    parts.push(`${name} is currently listed on ${store}; tap Get Deal to see the live price.`);
+  }
+
+  parts.push(
+    `${SITE_NAME} tracks this ${deal.dealType.toLowerCase()} directly from the ${store} listing, so the figure above is the marketplace price rather than a quoted or estimated one.`,
+  );
+
+  if (deal.couponNote) parts.push(deal.couponNote.trim().replace(/\.?$/, "."));
+
+  if (cat) {
+    parts.push(
+      `It sits in our ${cat} section, alongside other verified ${cat.toLowerCase()} offers refreshed through the day.`,
+    );
+  }
+
+  parts.push(
+    deal.status === "EXPIRED"
+      ? `This offer has since ended — the page stays up for price reference, and the ${store} link still points at the same product.`
+      : `Stock and pricing on ${store} move quickly, so check the final amount on the ${store} checkout page before paying; the deal ends whenever the seller withdraws it.`,
+  );
+
+  return parts.join(" ");
+}
+
 // AEO/GEO: build a small, genuinely-useful FAQ from a deal's real fields so
 // deal pages carry FAQPage schema (rich results + AI-answer citations) with
 // visible matching copy. Questions vary by product category + discount so no

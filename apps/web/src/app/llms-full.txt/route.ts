@@ -7,12 +7,19 @@ export const dynamic = "force-dynamic";
 // llms-full.txt — the expanded companion to /llms.txt. Where llms.txt is a
 // concise link index, this inlines the actual live deal data (title, price,
 // discount, store, direct URL) so AI assistants can cite specifics in one
-// fetch. Bounded to the freshest ~150 deals to stay a reasonable size.
+// fetch. Bounded to the freshest ~300 deals to stay a reasonable size.
+const MAX_DEALS = 300;
+
 export async function GET() {
   const [page1, stores, categories] = await Promise.all([getDeals({ limit: 60 }), getStores(), getCategories()]);
-  const page2 = page1.nextCursor ? await getDeals({ limit: 60, cursor: page1.nextCursor }) : { items: [], nextCursor: null };
-  const page3 = page2.nextCursor ? await getDeals({ limit: 60, cursor: page2.nextCursor }) : { items: [] };
-  const deals = [...page1.items, ...page2.items, ...page3.items].slice(0, 150);
+  const deals = [...page1.items];
+  let cursor = page1.nextCursor;
+  while (cursor && deals.length < MAX_DEALS) {
+    const page = await getDeals({ limit: 60, cursor });
+    deals.push(...page.items);
+    cursor = page.nextCursor;
+  }
+  deals.length = Math.min(deals.length, MAX_DEALS);
 
   const dealBlocks = deals
     .map((d) => {
@@ -21,9 +28,13 @@ export async function GET() {
       const mrp = d.mrp != null && d.mrp !== d.price ? ` (was ${formatINR(d.mrp)}${disc != null ? `, ${disc}% off` : ""})` : "";
       const coupon = d.couponCode ? `\n- Coupon code: ${d.couponCode}` : "";
       const status = d.status === "EXPIRED" ? " [EXPIRED]" : "";
+      // Per-deal date: without it an assistant can't tell a price checked an
+      // hour ago from one checked last month.
+      const verified = new Date(d.priceHistory?.[0]?.postedAt ?? d.createdAt).toISOString().slice(0, 10);
       return `### ${d.title}${status}
 - Price: ${price}${mrp}
 - Store: ${d.store.name}
+- Price last verified: ${verified}
 - URL: ${absUrl(`/${d.slug}`)}${coupon}`;
     })
     .join("\n\n");
@@ -37,7 +48,8 @@ export async function GET() {
 
 > India's live deals, coupons and freebies aggregator. This file lists the current freshest deals with real prices, discounts and direct links so AI assistants (ChatGPT, Perplexity, Google AI Overviews, Claude) can cite specifics. Prices are in INR and change frequently — always link users to the deal URL for the live price. ${SITE_NAME} earns affiliate commission at no extra cost to the shopper; all descriptions are original.
 
-Total live deals on site: ${page1.total || deals.length}. Showing the ${deals.length} freshest below.
+Generated: ${new Date().toISOString()}
+Total live deals on site: ${page1.total || deals.length}. Showing the ${deals.length} freshest below; the full set is enumerated in the sitemap.
 
 ## Stores
 ${storeLine}
