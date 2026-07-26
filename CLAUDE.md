@@ -60,24 +60,29 @@ Agent: `.claude/agents/deal-ingest.md` (spawn as `deal-ingest`).
 
 ### Second source: DesiDime (desidime.com)
 
-Same ingest pattern as indiafreestuff, different site. Fetches fine via curl
-with a browser UA (Cloudflare serves 200 — no JS challenge for the HTML).
-- **Discover**: homepage `https://www.desidime.com/` lists deal links shaped
-  `/deals/{slug}-{id}` (id is the trailing number, e.g.
-  `apply-16499-samsung-galaxy-s25-2141749` → id `2141749`).
-- **Resolve outbound**: the "Buy Now" button →
-  `https://visit.desidime.com/visit/deals-1/{id}` (their affiliate redirect).
-  `curl -Ls -w %{url_effective}` it → the REAL merchant URL. The merchant URL
-  is also embedded in the deal-page HTML as a fallback.
-- **Filter HARD — DesiDime is mostly junk**: skip Play-Store-app promos,
-  gift-card/cashback/quiz/loot posts, grocery (Blinkit/BigBasket/Zepto), and
-  anything that resolves to `play.google.com` or a non-Amazon/Flipkart store.
-  Keep only single-product Amazon (`/dp/ASIN`) or Flipkart (`?pid=`).
-- **Affiliate swap**: their Flipkart params are `affid=salescueli` +
-  `affExtParam1/2` — keep `pid`, drop those, add ours (`affid=djhackraj`).
-  Amazon: strip their `tag`, add `ashoksachdev-21`.
-- Title/price live on the deal page (`<h1>`, `₹` price). Rewrite originally.
-  Output/dedup/pending-review flow identical to indiafreestuff.
+Script: `apps/api/scripts/ingest-desidime.mjs` (cron every 30 min, `7,37 * * * *`).
+Agent doc: `.claude/agents/desidime-ingest.md`. Fetches fine via curl with a
+browser UA (Cloudflare serves 200 — no JS challenge for the HTML).
+
+- **Discover**: `https://www.desidime.com/new` + homepage, ~39 cards/sweep.
+  **Do NOT fetch per-deal pages** — every `<article>` card is self-sufficient:
+  `data-gtm-deal-id`, `data-gtm-store`, `data-permalink`, title, `₹` price,
+  line-through MRP, a CDN image whose filename keeps the marketplace image id,
+  and its own Buy Now link.
+- **Resolve outbound**: Buy Now → `https://visit.desidime.com/visit/{path}/{id}`,
+  `curl -sL -o NUL -w %{url_effective}` → the REAL merchant URL.
+- **Filter HARD — DesiDime is mostly junk**: `JUNK` regex kills gift-card /
+  cashback / quiz / loot / recharge / app-promo / "flat N% off" titles;
+  `GROCERY` regex kills perishables and low-ticket FMCG (price swings daily,
+  location-locked). Reject Flipkart `/desidime/p/desidime_deals` (tracking
+  landing, not a product).
+- **Affiliate swap**: their Amazon tag is `desidime01-21`, Flipkart
+  `affid=salescueli&affExtParam1/2` — strip and apply ours. All other stores
+  go through Cuelinks (see the ALL STORES hard rule).
+- **Verify before push**: non-Amazon via `productLd()` (ld+json price, ±₹1,
+  InStock); Amazon in the logged-in browser tab. Dedup by resolved `productId`
+  against the live DB via Prisma (no admin dedup endpoint exists). Push
+  `status:live`.
 
 ## Deal-page SEO / AEO / GEO
 
@@ -110,16 +115,24 @@ ClaudeBot, PerplexityBot, Google-Extended, etc.); `/llms.txt` +
 
 Source groups live in `data/tg-groups.json` (the "Deals" folder — 7 groups:
 dealdost, NonStopDeals, CoolDeals, CoolzTricks, LootDeals24x7, Rogerkart,
-OMGLoot). Scanned via the logged-in controlled Chrome (chrome-devtools MCP),
-NOT a bot token (channels aren't ours).
+OMGLoot). Scanned in a logged-in browser, NOT a bot token (channels aren't ours).
+
+**Browser: use the Playwright MCP (`playwright`), profile "richDeals"** —
+`.mcp.json` pins `--browser chrome --user-data-dir F:\new_projects\deals\.pw-profile`,
+a persistent profile already logged in to Telegram Web AND Amazon.in. That
+survives session restarts; the chrome-devtools MCP does NOT (its tabs are gone
+every new session, `list_pages` shows only `about:blank`). Flow: `browser_navigate`
+to `web.telegram.org/a/`, second tab (`browser_tabs new`) for Amazon PDPs,
+read with `browser_evaluate`.
 
 Hard-won constraints:
 - The webK client (`web.telegram.org/a/`) will NOT open a different chat via
   `location.hash` from a script — messages don't load (msgEls 0). Switching
   chats needs a **trusted click** on the sidebar item, or `navigate_page`.
-- Cheapest reliable read: `take_snapshot` — the sidebar a11y tree shows each
-  group's newest message **with its deal link** in one shot, so all 7 groups'
-  latest deals read from a single snapshot (no per-chat open needed).
+- Cheapest reliable read (~1k tokens): ONE `browser_evaluate` over
+  `.chat-list .ListItem.Chat`, returning `{title, last}` per row from
+  `.title h3` + `.subtitle .last-message`. All groups' newest deal in one call.
+  (`take_snapshot` also works but costs ~20x.) Never reload an open chat list.
 - For deeper history in one group, reload the already-open chat then scrape
   `.message-content`/`.text-content` (reload keeps the same chat; works).
 
@@ -132,7 +145,46 @@ Skip loot/multi-product/category/`/s?` search posts. Overnight yield is low
 (~1 unique/15min); daytime much higher. deal-ingest (indiafreestuff, hourly,
 ~20-28 new/sweep) is the heavier, more reliable source.
 
+## Blog publishing
+
+Agent: `.claude/agents/blogger.md` (spawn as `blogger`). Model is `Post`
+(not `Blog`). Pipeline already exists — the agent orchestrates it, never
+rebuilds it: deep keyword research (WebSearch + top-3 SERP read + our own
+deal clusters) → original 900-1600 word post → `<slug>.md` +
+`<slug>.meta.json` → `apps/api/scripts/insert-blog-mdmeta.mjs` (upsert +
+tags + IndexNow ping) → `apps/api/scripts/gen-blog-covers.mjs` (1200x630
+branded cover → DO Spaces → `post.cover`; covers only `cover IS NULL` by
+default, `ALL_COVERS=1` to redo all). `blog/[slug]/page.tsx` already renders
+`alt={post.title}` + Article JSON-LD.
+
 ## Hard rules
+
+- BLOG: 2-3 original posts published EVERY day (never 0, never >4).
+  Every post MUST have a cover image and alt text; in-body markdown images
+  need real alt text (`![Orient BLDC fan in a bedroom](url)`, never `![](url)`).
+  Every publish MUST ping IndexNow — that means going through
+  `insert-blog-mdmeta.mjs`, not a hand-rolled insert. Keyword research is
+  mandatory before writing; unique seoTitle (≤60 chars) + seoDesc (150-160)
+  per post; ≥1 real internal link to a live deal page or `/offers`.
+
+- ALL STORES, not just Amazon/Flipkart (owner directive 2026-07-27:
+  "jitne store ki deal mile sab uthana khali amazon and flipkart ki nai").
+  Every ingest (indiafreestuff, DesiDime, Telegram) takes deals from ANY
+  merchant — Myntra, Ajio, Croma, Nykaa, Tata Cliq, Meesho, JioMart,
+  Reliance Digital, Vijay Sales, Boat/Noise/brand D2C stores, whatever
+  resolves. Affiliate matrix (`ingest.config.json`):
+  - Amazon → `?tag=ashoksachdev-21` on `/dp/ASIN`
+  - Flipkart → `?pid=…&affid=djhackraj` (path must be `/p/itm…`)
+  - **everything else → Cuelinks**
+    `https://linksredirect.com/?cid=527&source=linkkit&url=<encoded clean url>`
+  Price verification: non-Amazon merchants serve
+  `<script type="application/ld+json">` `Product.offers.price` to plain curl —
+  parse it and reject on drift (>₹1) or non-InStock. Amazon still needs the
+  logged-in browser tab (curl is bot-blocked). Shared code:
+  `affiliate()` + `productLd()` in `ingest-desidime.mjs` /
+  `ingest-ifs-proper.mjs`.
+  Still reject: category/search/sale-hub pages (`/s?`, `/b/`, `/offers/`,
+  brand landing), app-store links, and non-store hosts. Single product only.
 
 - Never copy source text/images verbatim — always rewrite; product images
   from the marketplace CDN (m.media-amazon.com etc.), never
@@ -140,3 +192,32 @@ Skip loot/multi-product/category/`/s?` search posts. Overnight yield is low
 - Rate limit their domain: ≥2.5s between requests; back off on 403/429.
 - Affiliate links on our pages must be `rel="sponsored nofollow"`.
 - Expired deals: keep pages live with EXPIRED banner (never 404).
+- AUTO-APPROVE (owner directive 2026-07-24): NO manual review gate. Every
+  ingested deal auto-publishes LIVE — do NOT ask for approval, do NOT leave
+  deals sitting in `pending-review`. The broadcast cron flips any
+  PENDING_REVIEW → LIVE at the start of each run (`tg-broadcast.mjs`), so new
+  deals from any source go live + reach the channel automatically. Prefer
+  pushing new ingests as `status:live` directly. Only skip a deal for real
+  quality reasons (multi-product/loot/junk, dead link, price mismatch).
+
+- CEO MODE / SHIP WITHOUT ASKING (owner directive 2026-07-27): run the whole
+  business, don't wait to be told. Standing authorization — **push to
+  `origin/master` and deploy to production without asking**. Deploy path:
+  the DO app builds from GitHub `master`, so `git push origin master` FIRST,
+  then kill whatever listens on :4000 (managed PG has ~22 connection slots),
+  then `doctl apps create-deployment cd95718d-e1e8-4912-bcba-c9b97ce54b9c
+  --force-rebuild`, then restart the local API. Same for content: publish
+  blogs and deals on cadence, backfill missing data, fix what is broken.
+  Report what was done, don't ask permission first.
+  Still ask before: anything that spends the owner's money, touches
+  credentials/secrets, deletes production data, or posts as the owner to an
+  outside platform (Reddit/Quora/email outreach).
+
+- CEO AUDIT (same directive): the hard rule is **check everyone's work**.
+  On every tick, if something outside that tick is rotting, say so in the
+  same reply. Audit set: posts-per-day (never 0), coverless/seo-less posts,
+  deals with null price or null image, PENDING_REVIEW backlog, broadcast
+  cursor vs DB max, prod endpoints (`/`, `/offers`, `/blog`, `/sitemap.xml`,
+  `/feed.xml`, `/api/deals`), unpushed commits. The blog rule broke silently
+  for 3 days (2026-07-25 → 07-27) because no BLOG tick existed and nobody
+  looked — that is the failure mode this rule exists to prevent.
