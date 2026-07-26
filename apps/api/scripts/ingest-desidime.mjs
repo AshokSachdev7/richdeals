@@ -41,7 +41,9 @@ function cards(html) {
 // Cards we already resolved to a non-product (sale hub, promo page, tracking
 // landing) stay on the listing for days — remember them so we don't burn a
 // redirect on the same junk every 30 minutes.
-const DEAD = '../../data/dd-dead.json';
+// Anchored to the script, not the CWD — '../../data' resolved to apps/data and
+// blew up with ENOENT after a full sweep had already run.
+const DEAD = new URL('../../../data/dd-dead.json', import.meta.url);
 const dead = new Set(fs.existsSync(DEAD) ? JSON.parse(fs.readFileSync(DEAD, 'utf8')) : []);
 
 const seen = new Set();
