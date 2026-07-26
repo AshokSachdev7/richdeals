@@ -1,16 +1,24 @@
-// Join ifs-candidates.json with the browser price/image verification results
-// and emit only rows that passed. Descriptions are written here, from real
-// fields — never lifted from the source site.
+// Join a candidates file with the browser price/image verification results and
+// emit only rows that passed. Descriptions are written here, from real fields
+// — never lifted from the source site.
+//   node build-verified.mjs <candidates.json> <out.json> <verified1.json> ...
+// Works for any source (indiafreestuff, desidime, telegram) — the shapes match.
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const cands = JSON.parse(readFileSync('./ifs-candidates.json', 'utf8'));
-const amz = [
-  ...JSON.parse(readFileSync('../../../amz-a.json', 'utf8')),
-  ...JSON.parse(readFileSync('../../../amz-b.json', 'utf8')),
-];
+const [candFile = './ifs-candidates.json', outFile = './ifs-verified.json', ...verifyFiles] = process.argv.slice(2);
+const cands = JSON.parse(readFileSync(candFile, 'utf8'));
+const amz = verifyFiles.flatMap((f) => JSON.parse(readFileSync(f, 'utf8')));
 const byAsin = new Map(amz.map((r) => [r.asin, r]));
 
 const inr = (n) => `₹${n.toLocaleString('en-IN')}`;
+
+// Colour/size variants share a title, so the ASIN has to be in the slug or the
+// second variant collides with the first. Source slugs carry the SOURCE's id
+// (desidime's numeric one) — swap it for ours.
+const withAsin = (slug, asin) =>
+  !/^B0[A-Z0-9]{8}$/.test(asin || '') || slug.includes(asin.toLowerCase())
+    ? slug
+    : `${slug.replace(/-\d{5,}$/, '')}-${asin.toLowerCase()}`;
 
 // Marketplace titles are keyword-stuffed run-ons — trim to the readable head so
 // the description opens with a product name, not a spec dump.
@@ -30,17 +38,20 @@ function describe(name, price, mrp, store) {
 const out = [];
 for (const c of cands) {
   if (c.store === 'Amazon') {
+    // We publish the price we read off the PDP ourselves, so a stale source
+    // card price is not a reason to drop the deal — only a missing price is.
     const v = byAsin.get(c.productId);
-    if (!v || !v.ok || !v._img) continue;
+    const img = v && (v._img || v.img);
+    if (!v || !(v.live > 0) || !img) continue;
     const price = Math.round(v.live);
     out.push({
-      slug: c.slug, title: c.title, store: c.store, productId: c.productId,
-      affiliateUrl: c.affiliateUrl, image: v._img, price, mrp: v.mrp,
+      slug: withAsin(c.slug, c.productId), title: c.title, store: c.store, productId: c.productId,
+      affiliateUrl: c.affiliateUrl, image: img, price, mrp: v.mrp,
       description: describe(shortName(c.title), price, v.mrp, c.store),
     });
   } else if (c.verify === 'ok' && c.liveImage) {
     out.push({
-      slug: c.slug, title: c.title, store: c.store, productId: c.productId,
+      slug: withAsin(c.slug, c.productId), title: c.title, store: c.store, productId: c.productId,
       affiliateUrl: c.affiliateUrl, image: c.liveImage,
       price: Math.round(c.livePrice), mrp: c.mrp,
       description: describe(shortName(c.title), Math.round(c.livePrice), c.mrp, c.store),
@@ -48,5 +59,5 @@ for (const c of cands) {
   }
 }
 
-writeFileSync('./ifs-verified.json', JSON.stringify(out, null, 1));
+writeFileSync(outFile, JSON.stringify(out, null, 1));
 console.log(`${out.length}/${cands.length} passed verification`);
