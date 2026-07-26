@@ -6,24 +6,29 @@ import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
+import Pager from "@/components/Pager";
 import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const revalidate = 300;
 
 type Props = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ sort?: string }>;
+  searchParams: Promise<{ sort?: string; cursor?: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { slug } = await params;
   const store = await getStore(slug);
   if (!store) return { title: "Store not found" };
+  // Deeper pages exist to be crawled (they carry the only links to older
+  // deals), not to be indexed — noindex,follow keeps them out of the index.
+  const { cursor } = await searchParams;
   const title = `${store.name} Deals, Offers & Coupons`;
   const description = `Latest ${store.name} deals, discount coupons and loot offers — verified and updated daily on ${SITE_NAME}.`;
   return {
     title,
     description,
+    robots: cursor ? { index: false, follow: true } : undefined,
     alternates: { canonical: absUrl(`/stores/${store.slug}`) },
     openGraph: {
       title: `${title} | ${SITE_NAME}`,
@@ -38,9 +43,14 @@ export default async function StorePage({ params, searchParams }: Props) {
   const { slug } = await params;
   const store = await getStore(slug);
   if (!store) notFound();
-  const { sort } = await searchParams;
+  const { sort, cursor } = await searchParams;
 
-  const { items } = await getDeals({ store: store.slug, sort, limit: 40 });
+  const { items, nextCursor } = await getDeals({
+    store: store.slug,
+    sort,
+    cursor: cursor ? Number(cursor) : undefined,
+    limit: 40,
+  });
 
   const crumbs = [
     { name: "Home", href: "/" },
@@ -79,6 +89,7 @@ export default async function StorePage({ params, searchParams }: Props) {
         <SortControl />
       </div>
       <DealGrid deals={items} emptyMessage={`No ${store.name} deals live right now. Check back soon!`} />
+      <Pager basePath={`/stores/${store.slug}`} cursor={nextCursor} params={{ sort }} />
     </div>
   );
 }

@@ -44,15 +44,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const discount = discountOf(deal);
   const priceBit = deal.price != null ? ` @ ${formatINR(deal.price)}` : "";
+  // Cut at a word boundary — a hard slice(0,160) was ending descriptions
+  // mid-word ("...or a col"), which AI snippet generation skips over.
+  const raw = deal.description || "";
   const description =
-    deal.description?.slice(0, 160) ||
+    (raw.length > 160 ? raw.slice(0, 160).replace(/\s+\S*$/, "").replace(/[\s,;:–-]+$/, "") + "…" : raw) ||
     `${deal.title}${priceBit}${discount != null ? ` — ${discount}% off` : ""} at ${deal.store.name}. Grab this ${deal.dealType.toLowerCase()} on ${SITE_NAME}.`;
   const canonical = absUrl(`/${deal.slug}`);
   const seoTitle = dealSeoTitle(deal);
 
+  // Expired deals stay live (owner rule: never 404) but drop out of the index —
+  // same for thin rows with neither a price nor an image. Links still followed.
+  const indexable = deal.status !== "EXPIRED" && !(deal.price == null && !deal.image);
+
   return {
     title: seoTitle,
     description,
+    robots: { index: indexable, follow: true },
     alternates: { canonical },
     openGraph: {
       type: "website",
@@ -125,14 +133,16 @@ export default async function DealPage({ params }: Props) {
     cleanName.length <= 110
       ? cleanName
       : cleanName.slice(0, 110).replace(/\s+\S*$/, "").replace(/[\s,;:–-]+$/, "");
+  // `image` is a REQUIRED Product field — emitting the block without one is a
+  // GSC critical error, so imageless deals get no Product schema either.
   const productSchema =
-    offerPrice == null
+    offerPrice == null || !deal.image
       ? null
       : {
           "@context": "https://schema.org",
           "@type": "Product",
           name: productName,
-          image: deal.image ? [deal.image] : undefined,
+          image: [deal.image],
           description: deal.description || deal.title,
           // NOTE: the marketplace (Amazon/Flipkart) is the seller, not the brand —
           // real manufacturer is unknown for aggregated deals, so brand is omitted.
@@ -408,7 +418,12 @@ export default async function DealPage({ params }: Props) {
                   <circle cx="8" cy="8" r="6" />
                   <path d="M8 5v3l2 1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                Updated {relativeTime(postedIso)}
+                {/* absolute dateTime too: date extractors (htmldate et al.) can't
+                    read "6 minutes ago", and were guessing 2022 off an image URL */}
+                Updated{" "}
+                <time dateTime={new Date(postedIso).toISOString()}>
+                  {relativeTime(postedIso)}
+                </time>
               </span>
             )}
             {deal.categories.map((c) => (

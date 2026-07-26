@@ -4,23 +4,32 @@ import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
+import Pager from "@/components/Pager";
 import { SITE_NAME, absUrl, itemListSchema, breadcrumbSchema } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Free Stuff & Freebies",
-  description: `Free samples, free products and giveaway offers in India — grab them fast on ${SITE_NAME}.`,
-  alternates: { canonical: absUrl("/freebies") },
-};
+type Props = { searchParams: Promise<{ sort?: string; cursor?: string }> };
 
-export default async function FreebiesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ sort?: string }>;
-}) {
-  const { sort } = await searchParams;
-  const { items } = await getDeals({ type: "FREEBIE", sort, limit: 40 });
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  // Paged variants are crawl paths to older freebies, not index targets.
+  const { cursor } = await searchParams;
+  return {
+    title: "Free Stuff & Freebies",
+    description: `Free samples, free products and giveaway offers in India — grab them fast on ${SITE_NAME}.`,
+    robots: cursor ? { index: false, follow: true } : undefined,
+    alternates: { canonical: absUrl("/freebies") },
+  };
+}
+
+export default async function FreebiesPage({ searchParams }: Props) {
+  const { sort, cursor } = await searchParams;
+  const { items, nextCursor } = await getDeals({
+    type: "FREEBIE",
+    sort,
+    cursor: cursor ? Number(cursor) : undefined,
+    limit: 40,
+  });
   const crumbs = [{ name: "Home", href: "/" }, { name: "Freebies", href: "/freebies" }];
   return (
     <div>
@@ -35,6 +44,7 @@ export default async function FreebiesPage({
         <SortControl />
       </div>
       <DealGrid deals={items} emptyMessage="No freebies live right now. Check back soon!" />
+      <Pager basePath="/freebies" cursor={nextCursor} params={{ sort }} />
     </div>
   );
 }

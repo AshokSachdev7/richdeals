@@ -34,6 +34,8 @@ export default function ProductImage({
         fill
         sizes={sizes}
         priority={priority}
+        // next/image's `priority` only preloads; it does NOT set fetchPriority
+        fetchPriority={priority ? "high" : undefined}
         onLoad={() => setLoaded(true)}
         onError={() => setLoaded(true)}
         className={`${className} transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}

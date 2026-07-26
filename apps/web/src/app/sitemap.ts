@@ -43,7 +43,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const dealRoutes: MetadataRoute.Sitemap = allDeals.map((d) => ({
     url: absUrl(`/${d.slug}`),
-    lastModified: new Date(d.createdAt),
+    // last price sighting, not first publish — a deal repriced today should
+    // read as changed today
+    lastModified: new Date(d.priceHistory?.[0]?.postedAt ?? d.createdAt),
     changeFrequency: "daily",
     priority: 0.7,
   }));

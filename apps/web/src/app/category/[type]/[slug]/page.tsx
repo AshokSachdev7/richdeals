@@ -5,6 +5,7 @@ import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
+import Pager from "@/components/Pager";
 import { SITE_NAME, absUrl, CATEGORY_TYPE_LABEL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ export const dynamic = "force-dynamic";
 type CatType = "shopping-category" | "shopping-site";
 type Props = {
   params: Promise<{ type: string; slug: string }>;
-  searchParams: Promise<{ sort?: string }>;
+  searchParams: Promise<{ sort?: string; cursor?: string }>;
 };
 
 function isType(v: string): v is CatType {
@@ -23,9 +24,11 @@ function titleize(slug: string): string {
   return slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { type, slug } = await params;
   if (!isType(type)) return { title: "Not found" };
+  // Paginated pages are crawl paths to older deals, not index targets.
+  const { cursor } = await searchParams;
   const cat = await getCategory(type, slug);
   const name = cat?.name || titleize(slug);
   const label = CATEGORY_TYPE_LABEL[type];
@@ -34,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    robots: cursor ? { index: false, follow: true } : undefined,
     alternates: { canonical: absUrl(`/category/${type}/${slug}`) },
     openGraph: { title: `${title} | ${SITE_NAME}`, description, type: "website" },
   };
@@ -42,11 +46,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { type, slug } = await params;
   if (!isType(type)) notFound();
-  const { sort } = await searchParams;
+  const { sort, cursor } = await searchParams;
 
   const cat = await getCategory(type, slug);
   const name = cat?.name || titleize(slug);
-  const { items } = await getDeals({ categoryType: type, category: slug, sort, limit: 40 });
+  const { items, nextCursor } = await getDeals({
+    categoryType: type,
+    category: slug,
+    sort,
+    cursor: cursor ? Number(cursor) : undefined,
+    limit: 40,
+  });
 
   const crumbs = [
     { name: "Home", href: "/" },
@@ -79,6 +89,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         <SortControl />
       </div>
       <DealGrid deals={items} emptyMessage={`No ${name} deals live right now. Check back soon!`} />
+      <Pager basePath={`/category/${type}/${slug}`} cursor={nextCursor} params={{ sort }} />
     </div>
   );
 }

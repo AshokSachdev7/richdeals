@@ -85,7 +85,7 @@ export default async function SearchPage({
           <p className="mb-6 mt-1 text-sm text-gray-500">
             {total.toLocaleString("en-IN")} {total === 1 ? "deal" : "deals"} found
           </p>
-          <LoadMoreDeals key={query} initialItems={items} initialCursor={nextCursor} q={query} />
+          <LoadMoreDeals key={query} initialItems={items} initialCursor={nextCursor} q={query} basePath="/search" />
         </>
       ) : (
         <>

@@ -1,9 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import type { DealFeed } from "@deals/shared";
 import { getDeals } from "@/lib/api";
 import Hero from "@/components/Hero";
 import CategoryStrip from "@/components/CategoryStrip";
 import LoadMoreDeals from "@/components/LoadMoreDeals";
+import JsonLd from "@/components/JsonLd";
+import { absUrl } from "@/lib/site";
 
 // Always SSR fresh: the landing feed must show the newest deals on every load.
 // (ISR + on-demand revalidation was serving stale deals for up to 5 min.)
@@ -50,18 +53,41 @@ function isFeed(v: string | undefined): v is DealFeed {
   return v === "latest" || v === "hot" || v === "super";
 }
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ feed?: string }>;
-}) {
-  const { feed } = await searchParams;
+type Props = { searchParams: Promise<{ feed?: string; cursor?: string }> };
+
+// Feed/paged variants are crawl paths to older deals, not index targets —
+// only the bare "/" should compete for the homepage query.
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const { feed, cursor } = await searchParams;
+  if (!cursor && !feed) return {};
+  return { robots: { index: false, follow: true }, alternates: { canonical: absUrl("/") } };
+}
+
+export default async function HomePage({ searchParams }: Props) {
+  const { feed, cursor } = await searchParams;
   const active: DealFeed = isFeed(feed) ? feed : "latest";
-  const { items, nextCursor } = await getDeals({ feed: active, limit: 30 });
+  const { items, nextCursor } = await getDeals({
+    feed: active,
+    cursor: cursor ? Number(cursor) : undefined,
+    limit: 30,
+  });
   const heading = HEADINGS[active];
+
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: heading.title,
+    itemListElement: items.map((d, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: absUrl(`/${d.slug}`),
+      name: d.title,
+    })),
+  };
 
   return (
     <div className="space-y-2">
+      <JsonLd data={itemListSchema} />
       <Hero />
 
       <CategoryStrip />
@@ -100,7 +126,7 @@ export default async function HomePage({
 
         <div className="mt-6">
           <LoadMoreDeals
-            key={active}
+            key={`${active}-${cursor ?? ""}`}
             initialItems={items}
             initialCursor={nextCursor}
             feed={active}

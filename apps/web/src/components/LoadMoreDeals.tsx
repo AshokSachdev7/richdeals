@@ -16,11 +16,13 @@ export default function LoadMoreDeals({
   initialCursor,
   feed,
   q,
+  basePath = "/",
 }: {
   initialItems: DealDTO[];
   initialCursor: number | null;
   feed?: DealFeed;
   q?: string;
+  basePath?: string;
 }) {
   const [items, setItems] = useState<DealDTO[]>(initialItems);
   const [cursor, setCursor] = useState<number | null>(initialCursor);
@@ -47,6 +49,16 @@ export default function LoadMoreDeals({
     } finally {
       setLoading(false);
     }
+  }
+
+  // Same element for crawler and human: a real href to the next page (the only
+  // way deals past #30 get internal links) that JS upgrades to append-in-place.
+  function nextHref(): string {
+    const sp = new URLSearchParams();
+    if (feed && feed !== "latest") sp.set("feed", feed);
+    if (q) sp.set("q", q);
+    sp.set("cursor", String(cursor));
+    return `${basePath}?${sp.toString()}`;
   }
 
   if (!items.length && !loading) {
@@ -90,11 +102,15 @@ export default function LoadMoreDeals({
         )}
 
         {cursor != null ? (
-          <button
-            type="button"
-            onClick={loadMore}
-            disabled={loading}
-            className="inline-flex min-h-[48px] cursor-pointer items-center gap-2 rounded-full bg-ink px-8 text-sm font-bold text-white shadow-lg transition-all duration-200 hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+          <a
+            href={nextHref()}
+            rel="next"
+            aria-disabled={loading}
+            onClick={(e) => {
+              e.preventDefault();
+              loadMore();
+            }}
+            className="inline-flex min-h-[48px] cursor-pointer items-center gap-2 rounded-full bg-ink px-8 text-sm font-bold text-white shadow-lg transition-all duration-200 hover:bg-ink-soft aria-disabled:cursor-not-allowed aria-disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
           >
             {loading ? (
               <>
@@ -112,7 +128,7 @@ export default function LoadMoreDeals({
                 </svg>
               </>
             )}
-          </button>
+          </a>
         ) : (
           items.length > 0 && (
             <p className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500">

@@ -138,6 +138,7 @@ export default async function Hero() {
                     src={hot.image!}
                     alt={hot.title}
                     sizes="140px"
+                    priority
                     className="object-contain p-2 transition-transform duration-500 hover:scale-105"
                   />
                   {hotDiscount != null && (
