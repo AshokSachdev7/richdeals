@@ -152,12 +152,13 @@ export function dealSummary(
 // visible matching copy. Questions vary by product category + discount so no
 // two deal pages share the same FAQ. No fabricated facts.
 export function dealFaq(
-  deal: Pick<DealDTO, "title" | "price" | "mrp" | "discountPct" | "couponNote"> & {
+  deal: Pick<DealDTO, "title" | "price" | "mrp" | "discountPct" | "couponNote" | "status"> & {
     store: { name: string };
   },
 ): { q: string; a: string }[] {
   const name = dealProductName(deal);
   const store = deal.store.name;
+  const expired = deal.status === "EXPIRED";
   const disc = discountOf(deal);
   const price = deal.price != null ? formatINR(deal.price) : null;
   const kind = dealKind(deal.title);
@@ -172,7 +173,9 @@ export function dealFaq(
   faqs.push({
     q: `What is the price of ${name}?`,
     a: price
-      ? `${name} is available for ${price}${cheaper} through ${SITE_NAME}'s ${store} link. Prices change quickly during sales, so confirm the live price before you order.`
+      ? expired
+        ? `${name} was last tracked at ${price}${cheaper} on ${store}. That offer has ended, so the current price on the ${store} listing will be higher — the figure is kept here for price reference.`
+        : `${name} is available for ${price}${cheaper} through ${SITE_NAME}'s ${store} link. Prices change quickly during sales, so confirm the live price before you order.`
       : `Tap Get Deal to see the current live price of ${name} on ${store}. ${SITE_NAME} always links to the latest marketplace price.`,
   });
 
@@ -214,13 +217,17 @@ export function dealFaq(
   // Always: availability + how to get it.
   faqs.push({
     q: `Is this ${name} deal still available?`,
-    a: `Yes — this deal is live on ${SITE_NAME} right now. Offers like this can sell out or expire once the promotion ends, so grab it soon if the price works for you.`,
+    a: expired
+      ? `No — this offer has ended. The page stays up so you can see what ${name} sold for, and the ${store} link still opens the same product if you want the current price.`
+      : `Yes — this deal is live on ${SITE_NAME} right now. Offers like this can sell out or expire once the promotion ends, so grab it soon if the price works for you.`,
   });
   faqs.push({
-    q: `How do I get this ${store} deal safely?`,
-    a: `Tap Get Deal to open the product on ${store}, add it to your cart and check out — you pay securely on ${store}, never on ${SITE_NAME}.${
-      deal.couponNote ? ` ${deal.couponNote}` : ""
-    } The discounted price applies on the ${store} checkout page.`,
+    q: expired ? `Where can I still buy ${name}?` : `How do I get this ${store} deal safely?`,
+    a: expired
+      ? `Tap Get Deal to open ${name} on ${store} at whatever it costs today, or watch ${SITE_NAME} for the next drop on it — we re-post the product when the price falls again.`
+      : `Tap Get Deal to open the product on ${store}, add it to your cart and check out — you pay securely on ${store}, never on ${SITE_NAME}.${
+          deal.couponNote ? ` ${deal.couponNote}` : ""
+        } The discounted price applies on the ${store} checkout page.`,
   });
 
   return faqs;
