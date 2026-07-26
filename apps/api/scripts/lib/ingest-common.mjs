@@ -67,7 +67,9 @@ export function productLd(html) {
   return null;
 }
 
-// Sets d.verify to 'ok' or a reason. Card price must match the live price within ₹1.
+// Sets d.verify to 'ok' or a reason. We publish livePrice, read off the merchant
+// page — a stale source card is not a reason to drop the deal, only a missing
+// price or an out-of-stock listing is.
 export function verifyFromHtml(d, html) {
   const ld = productLd(html);
   const offer = [].concat(ld?.offers || []).find((o) => o?.price || o?.lowPrice);
@@ -76,7 +78,7 @@ export function verifyFromHtml(d, html) {
   d.livePrice = live;
   d.liveTitle = ld.name;
   d.liveImage = Array.isArray(ld.image) ? ld.image[0] : ld.image;
-  d.verify = Math.abs(live - (d.price ?? 0)) <= 1 ? 'ok' : `price-drift card ₹${d.price} live ₹${live}`;
+  d.verify = live > 0 ? 'ok' : 'no-price';
   if (offer.availability && !/InStock/i.test(offer.availability)) d.verify = 'out-of-stock';
   return d;
 }
