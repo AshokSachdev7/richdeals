@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Headers, Post, Res, UnauthorizedException } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
+import type { DealSubmission } from './auth.service';
+import { uploadDataUrl } from './upload';
 import { COOKIE, cookieOptions, signToken, userIdFromCookieHeader } from './auth.util';
 
 @Controller('auth')
@@ -44,8 +46,13 @@ export class AuthController {
   }
 
   @Post('submit-deal')
-  submitDeal(@Body() body: { url?: string }, @Headers('cookie') cookie?: string) {
-    return this.auth.submitDeal(this.uid(cookie), body.url ?? '');
+  submitDeal(@Body() body: DealSubmission, @Headers('cookie') cookie?: string) {
+    return this.auth.submitDeal(this.uid(cookie), body ?? {});
+  }
+
+  @Post('upload-image')
+  async uploadImage(@Body() body: { image?: string }, @Headers('cookie') cookie?: string) {
+    return { url: await uploadDataUrl(body?.image ?? '', this.uid(cookie)) };
   }
 
   @Get('ledger')

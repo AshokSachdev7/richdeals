@@ -3,6 +3,18 @@ import { PrismaService } from '../prisma/prisma.service';
 import { hashPassword, istDay, makeRefCode, verifyPassword } from './auth.util';
 import { fetchLivePrice, parseSubmission } from './submit';
 import { DealsService } from '../deals/deals.service';
+import { RevalidateService } from '../revalidate/revalidate.service';
+
+/** What the /submit form posts. Only `url` is required — the rest overrides what we scrape. */
+export type DealSubmission = {
+  url?: string;
+  title?: string;
+  description?: string;
+  price?: number | string;
+  mrp?: number | string;
+  couponCode?: string;
+  image?: string;
+};
 
 // 1 point = ₹1. No conversion anywhere — the number a member sees IS the rupees.
 // Redeem is deliberately NOT implemented — points accrue, nothing pays out yet.
@@ -21,6 +33,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly deals: DealsService,
+    private readonly revalidate: RevalidateService,
   ) {}
 
   /**
@@ -85,7 +98,18 @@ export class AuthService {
     const today = await this.prisma.pointEvent.findUnique({
       where: { dedupeKey: `daily:${userId}:${istDay()}` },
     });
-    return { ...user, redeemAt: POINTS.redeemAt, checkedInToday: !!today };
+    // Deals of theirs still waiting on a price check. The points are real but unpaid —
+    // showing them as pending is the difference between "waiting" and "ignored".
+    const pending = await this.prisma.deal.count({
+      where: { submittedById: userId, status: 'PENDING_REVIEW' as never },
+    });
+    return {
+      ...user,
+      redeemAt: POINTS.redeemAt,
+      checkedInToday: !!today,
+      pendingDeals: pending,
+      pendingPoints: pending * POINTS.dealSubmit,
+    };
   }
 
   async checkIn(userId: number) {
@@ -100,9 +124,30 @@ export class AuthService {
    * Points are NOT credited here: the sweep in tg-broadcast.mjs pays out once the deal is LIVE,
    * so nobody earns for a deal that never gets published.
    */
-  async submitDeal(userId: number, rawUrl: string) {
-    const parsed = parseSubmission(rawUrl ?? '');
+  async submitDeal(userId: number, body: DealSubmission) {
+    const parsed = parseSubmission(body?.url ?? '');
     if ('error' in parsed) throw new BadRequestException(parsed.error);
+
+    const num = (v: unknown) => {
+      const n = Number(String(v ?? '').replace(/[^\d.]/g, ''));
+      return Number.isFinite(n) && n > 0 ? Math.round(n) : null;
+    };
+    const text = (v: unknown, max: number) => {
+      const s = String(v ?? '').trim();
+      return s ? s.slice(0, max) : null;
+    };
+    // Only our own CDN — an off-site <img> src from a form is an open redirect for hotlinks.
+    const own = text(body?.image, 400);
+    const image = own && /^https:\/\/[\w.-]*digitaloceanspaces\.com\//.test(own) ? own : null;
+    const given = {
+      title: text(body?.title, 140),
+      description: text(body?.description, 2000),
+      price: num(body?.price),
+      mrp: num(body?.mrp),
+      couponCode: text(body?.couponCode, 40)?.toUpperCase() ?? null,
+      image,
+    };
+    if (given.mrp && given.price && given.mrp <= given.price) given.mrp = null;
 
     // Dedup on the product id AND on the destination url — the same Myntra/Ajio product
     // reaches us with a different id depending on which ingest found it first.
@@ -129,38 +174,57 @@ export class AuthService {
       ],
     };
 
-    if (parsed.store === 'amazon') {
-      const slug = `amazon-deal-${parsed.productId.toLowerCase()}`;
-      const { deal } = await this.deals.upsertFromIngest({
-        ...base,
-        slug,
-        title: `Amazon ${parsed.productId} — submitted deal`,
-        status: 'pending-review',
-      } as never);
-      await this.prisma.deal.update({ where: { id: deal.id }, data: { submittedById: userId } });
-      return { status: 'pending', points: 0, message: 'Amazon deal queued for a price check — points land once it goes live.' };
+    // Amazon bot-blocks our server, so there is no price to read — those wait for a
+    // human check. Every other store gets its price off the live page.
+    const live = parsed.store === 'amazon' ? null : await fetchLivePrice(parsed.cleanUrl);
+    if (live && 'error' in live) {
+      // A member who filled in the price themselves does not deserve a dead end;
+      // their deal just waits for review like an Amazon one.
+      if (!given.price) throw new BadRequestException(live.error);
     }
+    const scraped = live && !('error' in live) ? live : null;
 
-    const live = await fetchLivePrice(parsed.cleanUrl);
-    if ('error' in live) throw new BadRequestException(live.error);
-
-    const name = (live.title || `${parsed.store} deal`).replace(/\s*[|\-–]\s*(Buy|Shop|Price|Online).*$/i, '').slice(0, 120);
-    const pct = live.mrp && live.mrp > live.price ? Math.round(((live.mrp - live.price) / live.mrp) * 100) : null;
+    const name = (given.title ?? scraped?.title ?? `${parsed.store} deal`)
+      .replace(/\s*[|\-–]\s*(Buy|Shop|Price|Online).*$/i, '')
+      .slice(0, 120);
+    const price = given.price ?? scraped?.price ?? null;
+    const mrp = given.mrp ?? scraped?.mrp ?? null;
+    const pct = mrp && price && mrp > price ? Math.round(((mrp - price) / mrp) * 100) : null;
     const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)}-${parsed.productId.toLowerCase()}`.slice(0, 100);
+
+    // Trust the store's own number, not the member's: publish straight away only when we
+    // read the price ourselves and the member did not contradict it by more than ₹1.
+    const verified = !!scraped?.price && (!given.price || Math.abs(scraped.price - given.price) <= 1);
 
     const { deal } = await this.deals.upsertFromIngest({
       ...base,
       slug,
-      title: `${name} at ₹${live.price}`,
-      description: `${name} is live at ₹${live.price}${pct ? ` (${pct}% off)` : ''}. Price read off the store page when this deal was submitted.`,
-      image: live.image ?? undefined,
-      price: live.price,
-      mrp: live.mrp ?? undefined,
+      title: price ? `${name} at ₹${price}` : name,
+      description:
+        given.description ??
+        `${name} is live${price ? ` at ₹${price}` : ''}${pct ? ` (${pct}% off)` : ''}. Price read off the store page when this deal was submitted.`,
+      image: given.image ?? scraped?.image ?? undefined,
+      price: price ?? undefined,
+      mrp: mrp ?? undefined,
       discountPct: pct ?? undefined,
-      status: 'live',
+      couponCode: given.couponCode ?? undefined,
+      status: verified ? 'live' : 'pending-review',
     } as never);
     await this.prisma.deal.update({ where: { id: deal.id }, data: { submittedById: userId } });
+
+    if (!verified) {
+      return {
+        status: 'pending',
+        points: 0,
+        slug: deal.slug,
+        message: 'Queued for a price check — it goes live and pays out once we confirm the price.',
+      };
+    }
+
     await this.award(userId, 'deal_submit', POINTS.dealSubmit, `deal_submit:${deal.id}`, deal.id);
+    // A page nobody knows about earns nothing. Refresh the ISR pages it appears on and
+    // tell IndexNow — same treatment our own ingests get.
+    await this.revalidate.revalidate(this.revalidate.pathsForDeal(deal.slug, parsed.store));
 
     return {
       status: 'live',

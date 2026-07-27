@@ -17,6 +17,8 @@ interface Me {
   createdAt: string;
   redeemAt: number;
   checkedInToday: boolean;
+  pendingDeals?: number;
+  pendingPoints?: number;
 }
 
 interface LedgerRow {
@@ -64,8 +66,6 @@ export default function AccountClient() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [dealUrl, setDealUrl] = useState("");
-  const [submitMsg, setSubmitMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   const loadLedger = useCallback(() => {
     call<LedgerRow[]>("/auth/ledger")
@@ -116,23 +116,6 @@ export default function AccountClient() {
       loadLedger();
     } catch (err) {
       setError((err as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function submitDeal(e: React.FormEvent) {
-    e.preventDefault();
-    setSubmitMsg(null);
-    setBusy(true);
-    try {
-      const r = await call<{ message: string }>("/auth/submit-deal", { url: dealUrl });
-      setSubmitMsg({ ok: true, text: r.message });
-      setDealUrl("");
-      setMe(await call<Me>("/auth/me"));
-      loadLedger();
-    } catch (err) {
-      setSubmitMsg({ ok: false, text: (err as Error).message });
     } finally {
       setBusy(false);
     }
@@ -352,6 +335,11 @@ export default function AccountClient() {
           {me.points.toLocaleString("en-IN")}{" "}
           <span className="text-xl font-bold opacity-80">= ₹{me.points.toLocaleString("en-IN")}</span>
         </p>
+        {!!me.pendingPoints && (
+          <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold">
+            ⏳ {me.pendingPoints} pending — {me.pendingDeals} deal{me.pendingDeals === 1 ? "" : "s"} being verified
+          </p>
+        )}
         <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-white" style={{ width: `${pct}%` }} />
         </div>
@@ -408,28 +396,12 @@ export default function AccountClient() {
             +1
           </span>
         </div>
-        <form onSubmit={submitDeal} className="mt-4 flex flex-col gap-2 sm:flex-row">
-          <input
-            type="url"
-            required
-            value={dealUrl}
-            onChange={(e) => setDealUrl(e.target.value)}
-            placeholder="https://www.amazon.in/dp/…"
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10"
-          />
-          <button
-            type="submit"
-            disabled={busy}
-            className="shrink-0 rounded-xl bg-brand px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-dark disabled:bg-gray-300"
-          >
-            {busy ? "Checking…" : "Submit deal"}
-          </button>
-        </form>
-        {submitMsg && (
-          <p className={`mt-2 text-sm font-semibold ${submitMsg.ok ? "text-green-700" : "text-brand-dark"}`}>
-            {submitMsg.text}
-          </p>
-        )}
+        <Link
+          href="/submit"
+          className="mt-4 inline-flex rounded-xl bg-brand px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-dark"
+        >
+          Post a deal
+        </Link>
         <p className="mt-3 text-xs text-gray-500">
           Single product pages only — no search, category or app-only links. Amazon links take a short
           manual price check before they publish. One payout per deal, first submitter wins.

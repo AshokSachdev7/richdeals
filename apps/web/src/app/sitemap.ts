@@ -32,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absUrl("/coupons"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/freebies"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/blog"), lastModified: now, changeFrequency: "daily", priority: 0.6 },
+    { url: absUrl("/submit"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },
   ];
 
   const [allDeals, stores, categories, posts] = await Promise.all([
