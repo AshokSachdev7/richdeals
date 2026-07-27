@@ -55,6 +55,11 @@ export class AuthController {
     return { url: await uploadDataUrl(body?.image ?? '', this.uid(cookie)) };
   }
 
+  @Get('my-deals')
+  myDeals(@Headers('cookie') cookie?: string) {
+    return this.auth.myDeals(this.uid(cookie));
+  }
+
   @Get('ledger')
   ledger(@Headers('cookie') cookie?: string) {
     return this.auth.ledger(this.uid(cookie));

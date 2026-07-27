@@ -28,6 +28,24 @@ interface LedgerRow {
   createdAt: string;
 }
 
+interface MyDeal {
+  id: number;
+  slug: string;
+  title: string;
+  image: string | null;
+  price: number | null;
+  status: "DRAFT" | "PENDING_REVIEW" | "LIVE" | "EXPIRED";
+  createdAt: string;
+}
+
+// What the member actually wants to know: did it publish, and did I get paid.
+const DEAL_STATUS: Record<MyDeal["status"], { label: string; cls: string }> = {
+  PENDING_REVIEW: { label: "⏳ Being checked", cls: "bg-amber-50 text-amber-700 ring-amber-200" },
+  LIVE: { label: "✅ Live · +1 point", cls: "bg-emerald-50 text-emerald-700 ring-emerald-200" },
+  EXPIRED: { label: "⛔ Not published", cls: "bg-gray-100 text-gray-500 ring-gray-200" },
+  DRAFT: { label: "📝 Draft", cls: "bg-gray-100 text-gray-500 ring-gray-200" },
+};
+
 const KIND_LABEL: Record<string, string> = {
   signup: "Welcome bonus",
   referral: "Friend joined",
@@ -59,6 +77,7 @@ async function call<T>(path: string, body?: unknown): Promise<T> {
 export default function AccountClient() {
   const [me, setMe] = useState<Me | null>(null);
   const [ledger, setLedger] = useState<LedgerRow[]>([]);
+  const [myDeals, setMyDeals] = useState<MyDeal[]>([]);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<"register" | "login">("register");
   const [ref, setRef] = useState("");
@@ -70,6 +89,9 @@ export default function AccountClient() {
   const loadLedger = useCallback(() => {
     call<LedgerRow[]>("/auth/ledger")
       .then(setLedger)
+      .catch(() => undefined);
+    call<MyDeal[]>("/auth/my-deals")
+      .then(setMyDeals)
       .catch(() => undefined);
   }, []);
 
@@ -125,6 +147,7 @@ export default function AccountClient() {
     await call("/auth/logout", {}).catch(() => undefined);
     setMe(null);
     setLedger([]);
+    setMyDeals([]);
     setForm({ email: "", password: "", name: "" });
   }
 
@@ -418,6 +441,69 @@ export default function AccountClient() {
           </Link>{" "}
           earns karma instead: rank and badges, not rupees.
         </p>
+      </div>
+
+      <div className="mt-5">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="font-display text-base font-bold text-ink">Deals you sent in</h2>
+          {myDeals.length > 0 && (
+            <span className="text-xs text-gray-500">
+              {myDeals.filter((d) => d.status === "LIVE").length} of {myDeals.length} published
+            </span>
+          )}
+        </div>
+        {myDeals.length === 0 ? (
+          <p className="mt-2 text-sm text-gray-500">
+            None yet.{" "}
+            <Link href="/submit" className="font-semibold text-brand hover:underline">
+              Send your first one
+            </Link>{" "}
+            — 1 point (₹1) when it publishes.
+          </p>
+        ) : (
+          <ul className="mt-2 divide-y divide-gray-100">
+            {myDeals.map((d) => {
+              const s = DEAL_STATUS[d.status] ?? DEAL_STATUS.DRAFT;
+              return (
+                <li key={d.id} className="flex items-center gap-3 py-3">
+                  {d.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={d.image}
+                      alt=""
+                      className="h-12 w-12 shrink-0 rounded-lg object-contain ring-1 ring-gray-100"
+                    />
+                  ) : (
+                    <span className="h-12 w-12 shrink-0 rounded-lg bg-gray-50 ring-1 ring-gray-100" />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    {d.status === "LIVE" ? (
+                      <Link
+                        href={`/${d.slug}`}
+                        className="line-clamp-2 text-sm font-semibold text-ink hover:text-brand"
+                      >
+                        {d.title}
+                      </Link>
+                    ) : (
+                      <p className="line-clamp-2 text-sm font-semibold text-ink">{d.title}</p>
+                    )}
+                    <p className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+                      {d.price != null && <span className="font-bold text-ink">₹{d.price.toLocaleString("en-IN")}</span>}
+                      <span>
+                        {new Date(d.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                      </span>
+                    </p>
+                  </div>
+                  <span
+                    className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ring-inset ${s.cls}`}
+                  >
+                    {s.label}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
 
       <div className="mt-5">

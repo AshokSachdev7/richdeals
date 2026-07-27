@@ -234,6 +234,16 @@ export class AuthService {
     };
   }
 
+  /** Deals this member sent in, newest first — with the status they are waiting on. */
+  myDeals(userId: number) {
+    return this.prisma.deal.findMany({
+      where: { submittedById: userId },
+      orderBy: { id: 'desc' },
+      take: 50,
+      select: { id: true, slug: true, title: true, image: true, price: true, status: true, createdAt: true },
+    });
+  }
+
   ledger(userId: number) {
     return this.prisma.pointEvent.findMany({
       where: { userId },
