@@ -16,7 +16,7 @@ export default function EarnBanner() {
   return (
     <section
       aria-labelledby="earn-heading"
-      className="mt-8 overflow-hidden rounded-3xl bg-ink text-white ring-1 ring-inset ring-white/10"
+      className="overflow-hidden rounded-3xl bg-ink text-white ring-1 ring-inset ring-white/10"
     >
       <div className="relative grid gap-6 px-5 py-8 sm:px-9 sm:py-10 lg:grid-cols-[1.25fr_1fr] lg:items-center">
         {/* Oversized rupee glyph, clipped by the card — cheap depth, no image request */}
@@ -32,11 +32,12 @@ export default function EarnBanner() {
             Member rewards
           </span>
           <h2 id="earn-heading" className="mt-4 font-display text-2xl font-extrabold sm:text-3xl">
-            Find a deal. Earn ₹1.
+            Earn money online — free, no investment.
           </h2>
           <p className="mt-2 max-w-md text-sm leading-relaxed text-white/70">
-            1 point = ₹1, no conversion maths. At 100 points you cash out for an Amazon gift-card
-            code — we send it by hand within 3 working days.
+            Find a deal, earn ₹1. Daily check-in, refer and earn, deal submissions — 1 point = ₹1,
+            no conversion maths. At 100 points you cash out for a free Amazon gift-card code, sent
+            by hand within 3 working days. No fee to join, ever.
           </p>
           <Link
             href="/account"

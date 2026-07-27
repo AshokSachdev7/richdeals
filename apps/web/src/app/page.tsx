@@ -60,7 +60,12 @@ type Props = { searchParams: Promise<{ feed?: string; cursor?: string }> };
 // only the bare "/" should compete for the homepage query.
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const { feed, cursor } = await searchParams;
-  if (!cursor && !feed) return {};
+  // Bare "/" also targets the earn-money queries the rewards banner answers.
+  if (!cursor && !feed)
+    return {
+      description:
+        "Verified deals from Amazon, Flipkart & 100+ Indian stores — plus earn money online free with no investment: ₹1 per deal, daily check-in and refer-and-earn, paid in Amazon gift cards.",
+    };
   return { robots: { index: false, follow: true }, alternates: { canonical: absUrl("/") } };
 }
 
@@ -89,11 +94,11 @@ export default async function HomePage({ searchParams }: Props) {
   return (
     <div className="space-y-2">
       <JsonLd data={itemListSchema} />
+      <EarnBanner />
+
       <Hero />
 
       <CategoryStrip />
-
-      <EarnBanner />
 
       <section aria-labelledby="deals-heading" className="mt-8">
         <div className="flex flex-wrap items-end justify-between gap-3">
