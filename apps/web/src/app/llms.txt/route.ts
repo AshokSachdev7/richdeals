@@ -33,6 +33,7 @@ ${SITE_NAME} publishes original deal write-ups (never copied), each with the cur
 
 ## Key pages
 - [Home — today's top deals](${absUrl("/")})
+- [All Deals](${absUrl("/offers")})
 - [All Stores](${absUrl("/stores")})
 - [Coupons](${absUrl("/coupons")})
 - [Freebies](${absUrl("/freebies")})
