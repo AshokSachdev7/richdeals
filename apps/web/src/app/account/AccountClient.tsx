@@ -31,6 +31,7 @@ const KIND_LABEL: Record<string, string> = {
   referral: "Friend joined",
   daily: "Daily check-in",
   click: "Deal visit",
+  deal_submit: "Deal you submitted",
 };
 
 const EARN_TIERS = [
@@ -38,6 +39,7 @@ const EARN_TIERS = [
   { icon: "👥", label: "A friend joins with your code", points: 50 },
   { icon: "📅", label: "Check in, every day", points: 10 },
   { icon: "🛍️", label: "Open any deal", points: 2 },
+  { icon: "🔗", label: "Submit a deal we publish", points: 100 },
 ];
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
@@ -62,6 +64,8 @@ export default function AccountClient() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [dealUrl, setDealUrl] = useState("");
+  const [submitMsg, setSubmitMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   const loadLedger = useCallback(() => {
     call<LedgerRow[]>("/auth/ledger")
@@ -112,6 +116,23 @@ export default function AccountClient() {
       loadLedger();
     } catch (err) {
       setError((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function submitDeal(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitMsg(null);
+    setBusy(true);
+    try {
+      const r = await call<{ message: string }>("/auth/submit-deal", { url: dealUrl });
+      setSubmitMsg({ ok: true, text: r.message });
+      setDealUrl("");
+      setMe(await call<Me>("/auth/me"));
+      loadLedger();
+    } catch (err) {
+      setSubmitMsg({ ok: false, text: (err as Error).message });
     } finally {
       setBusy(false);
     }
@@ -368,6 +389,48 @@ export default function AccountClient() {
             {copied ? "Link copied ✓" : "Copy invite link"}
           </button>
         </div>
+      </div>
+
+      <div className="mt-5 rounded-2xl border-2 border-brand/20 bg-brand/[0.03] p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="font-display text-lg font-bold text-ink">Found a deal? Send it in.</h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Paste the product link. We check the store&apos;s live price ourselves — if it holds up
+              and it is not already on RichDeals, it goes live and you earn{" "}
+              <span className="font-bold text-ink">100 points (₹1)</span>.
+            </p>
+          </div>
+          <span className="hidden shrink-0 rounded-full bg-brand px-3 py-1 text-xs font-bold text-white sm:block">
+            +100
+          </span>
+        </div>
+        <form onSubmit={submitDeal} className="mt-4 flex flex-col gap-2 sm:flex-row">
+          <input
+            type="url"
+            required
+            value={dealUrl}
+            onChange={(e) => setDealUrl(e.target.value)}
+            placeholder="https://www.amazon.in/dp/…"
+            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10"
+          />
+          <button
+            type="submit"
+            disabled={busy}
+            className="shrink-0 rounded-xl bg-brand px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-dark disabled:bg-gray-300"
+          >
+            {busy ? "Checking…" : "Submit deal"}
+          </button>
+        </form>
+        {submitMsg && (
+          <p className={`mt-2 text-sm font-semibold ${submitMsg.ok ? "text-green-700" : "text-brand-dark"}`}>
+            {submitMsg.text}
+          </p>
+        )}
+        <p className="mt-3 text-xs text-gray-500">
+          Single product pages only — no search, category or app-only links. Amazon links take a short
+          manual price check before they publish. One payout per deal, first submitter wins.
+        </p>
       </div>
 
       <div className="mt-5 rounded-xl border border-gray-200 p-4">

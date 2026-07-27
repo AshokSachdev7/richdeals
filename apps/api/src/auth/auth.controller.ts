@@ -43,6 +43,11 @@ export class AuthController {
     return this.auth.checkIn(this.uid(cookie));
   }
 
+  @Post('submit-deal')
+  submitDeal(@Body() body: { url?: string }, @Headers('cookie') cookie?: string) {
+    return this.auth.submitDeal(this.uid(cookie), body.url ?? '');
+  }
+
   @Get('ledger')
   ledger(@Headers('cookie') cookie?: string) {
     return this.auth.ledger(this.uid(cookie));

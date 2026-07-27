@@ -25,10 +25,19 @@ const api = (m, body) =>
 const inr = n => '₹' + Number(n).toLocaleString('en-IN');
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+// Strip source-title cruft like "[Mrp Error]", "[Apply 2% Coupon]", "[Set of 4]"
+// leading tags and a trailing " at ₹X – Store" so channel posts read clean.
+const cleanTitle = (t) =>
+  String(t)
+    .replace(/^\s*(\[[^\]]*\]\s*)+/g, "")        // leading [..] tags
+    .replace(/\s*(?:at|@|–|-)\s*(?:₹|Rs\.?)\s*[\d,]+.*$/i, "") // trailing " at ₹X – Store"
+    .replace(/\s{2,}/g, " ")
+    .trim() || String(t).trim();
+
 const caption = (d) => {
   const off = d.mrp && d.price && d.mrp > d.price ? Math.round((1 - d.price / d.mrp) * 100) : null;
   const lines = [];
-  lines.push(`🔥 <b>${esc(d.title)}</b>`);
+  lines.push(`🔥 <b>${esc(cleanTitle(d.title))}</b>`);
   let price = d.price != null ? `💰 <b>${inr(d.price)}</b>` : '';
   if (d.mrp && d.price && d.mrp > d.price) price += `  <s>${inr(d.mrp)}</s>`;
   if (off != null) price += `  (${off}% OFF)`;
@@ -41,6 +50,32 @@ const caption = (d) => {
 
 const p = new PrismaClient();
 try {
+  // HARD RULE (owner directive): no manual approval gate. Every ingested deal
+  // auto-publishes — flip any PENDING_REVIEW → LIVE before broadcasting so new
+  // deals go live + reach the channel on the next tick, no human step.
+  // User-submitted deals are the one exception: they pay ₹1, so a human checks the price
+  // before they go live. They stay PENDING_REVIEW until that check flips them.
+  const approved = await p.deal.updateMany({
+    where: { status: 'PENDING_REVIEW', submittedById: null },
+    data: { status: 'LIVE' },
+  });
+  if (approved.count) console.log(`auto-approved ${approved.count} pending → LIVE`);
+
+  // Pay out submitted deals that made it live. dedupeKey makes this safe to re-run.
+  const owed = await p.deal.findMany({
+    where: { status: 'LIVE', submittedById: { not: null } },
+    select: { id: true, submittedById: true },
+  });
+  for (const d of owed) {
+    const key = `deal_submit:${d.id}`;
+    if (await p.pointEvent.findUnique({ where: { dedupeKey: key } })) continue;
+    await p.$transaction([
+      p.pointEvent.create({ data: { userId: d.submittedById, kind: 'deal_submit', points: 100, dedupeKey: key, dealId: d.id } }),
+      p.user.update({ where: { id: d.submittedById }, data: { points: { increment: 100 } } }),
+    ]);
+    console.log(`paid 100 pts (₹1) to user ${d.submittedById} for deal ${d.id}`);
+  }
+
   const maxRow = await p.deal.findFirst({ where: { status: 'LIVE' }, orderBy: { id: 'desc' }, select: { id: true } });
   const maxId = maxRow?.id ?? 0;
 

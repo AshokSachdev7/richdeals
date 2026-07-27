@@ -74,6 +74,7 @@ model Deal {
   affiliateUrl String    // final link with OUR tag
   clickCount  Int        @default(0)
   postedBy    String?
+  submittedById Int?     // set when a logged-in user submitted this deal (earns points once it goes LIVE)
   expiresAt   DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
