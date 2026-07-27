@@ -167,6 +167,25 @@ default, `ALL_COVERS=1` to redo all). `blog/[slug]/page.tsx` already renders
   mandatory before writing; unique seoTitle (≤60 chars) + seoDesc (150-160)
   per post; ≥1 real internal link to a live deal page or `/offers`.
 
+- FRESHNESS AFTER EVERY BATCH (owner directive 2026-07-27): after ANY batch
+  of deals or posts is pushed, the AI/search-facing surfaces must reflect it
+  before the tick is called done. Three checks, every time:
+  1. `node apps/api/scripts/indexnow-ping.mjs <slug...>` for the pushed deal
+     slugs (blogs already ping via `insert-blog-mdmeta.mjs` — deals do NOT,
+     because `RevalidateService.submitIndexNow()` no-ops unless `WEB_URL` is
+     https and `INDEXNOW_KEY` is set, and the local `.env` has neither).
+  2. `sitemap.xml` carries the batch — it is ISR `revalidate = 1800`, so
+     worst case is 30 min stale, never manually regenerated. If a new STATIC
+     route was added, it must be appended to `staticRoutes` in
+     `apps/web/src/app/sitemap.ts` by hand (dynamic deal/post/store/category
+     URLs come from the API automatically).
+  3. `llms.txt` carries the batch — `force-dynamic`, rebuilt per request off
+     `getDeals()`/`getPosts()`/`getStores()`/`getCategories()`. It only goes
+     stale if a new hub page is added and not linked in
+     `apps/web/src/app/llms.txt/route.ts`.
+  Report the IndexNow HTTP status in the tick line. A batch that skipped the
+  ping is not shipped, it is just sitting in the DB.
+
 - ALL STORES, not just Amazon/Flipkart (owner directive 2026-07-27:
   "jitne store ki deal mile sab uthana khali amazon and flipkart ki nai").
   Every ingest (indiafreestuff, DesiDime, Telegram) takes deals from ANY

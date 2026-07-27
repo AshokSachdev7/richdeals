@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script";
 import { Rubik, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
@@ -74,6 +75,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${rubik.variable} ${nunito.variable}`}>
       <body>
+        {/* AdSense site verification + ad serving. Publisher id matches
+            public/ads.txt — without this tag on the site the application
+            cannot be reviewed, ads.txt alone is not enough. */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7298984420457042"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <Analytics />
         <JsonLd data={orgSchema} />
         <JsonLd data={websiteSchema} />
@@ -128,6 +138,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <h4 className="mb-3 font-display font-bold text-ink">Company</h4>
               <ul className="space-y-2.5 text-gray-500">
                 <li><Link href="/about" className="transition-colors hover:text-brand">About Us</Link></li>
+                <li><Link href="/contact" className="transition-colors hover:text-brand">Contact Us</Link></li>
                 <li><Link href="/privacy" className="transition-colors hover:text-brand">Privacy Policy</Link></li>
                 <li><Link href="/terms" className="transition-colors hover:text-brand">Terms of Use</Link></li>
                 <li><Link href="/disclosure" className="transition-colors hover:text-brand">Affiliate Disclosure</Link></li>

@@ -28,11 +28,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: absUrl("/"), lastModified: now, changeFrequency: "hourly", priority: 1 },
+    { url: absUrl("/offers"), lastModified: now, changeFrequency: "hourly", priority: 0.9 },
+    { url: absUrl("/categories"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/stores"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/coupons"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/freebies"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/blog"), lastModified: now, changeFrequency: "daily", priority: 0.6 },
     { url: absUrl("/submit"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    // Trust pages — AdSense review and Google both look for these, and they
+    // were reachable from the footer but absent from the sitemap.
+    { url: absUrl("/about"), lastModified: now, changeFrequency: "monthly", priority: 0.4 },
+    { url: absUrl("/contact"), lastModified: now, changeFrequency: "monthly", priority: 0.4 },
+    { url: absUrl("/privacy"), lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: absUrl("/terms"), lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: absUrl("/disclosure"), lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   const [allDeals, stores, categories, posts] = await Promise.all([
