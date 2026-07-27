@@ -13,6 +13,7 @@ const NAV = [
   { href: "/coupons", label: "Coupons" },
   { href: "/offers", label: "Offers 💰" },
   { href: "/blog", label: "Blog" },
+  { href: "/account", label: "Earn 🎁" },
 ];
 
 export default function SiteHeader() {

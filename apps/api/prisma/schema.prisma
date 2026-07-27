@@ -151,3 +151,28 @@ model PostTag {
 
   @@id([postId, tagId])
 }
+
+model User {
+  id           Int          @id @default(autoincrement())
+  email        String       @unique
+  passwordHash String
+  name         String?
+  points       Int          @default(0) // running total; PointEvent is the ledger of record
+  refCode      String       @unique
+  referredById Int?
+  createdAt    DateTime     @default(now())
+  events       PointEvent[]
+}
+
+model PointEvent {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  kind      String // signup | referral | daily | click
+  points    Int
+  dealId    Int?
+  dedupeKey String   @unique // idempotency enforced by the DB, not by app logic
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}

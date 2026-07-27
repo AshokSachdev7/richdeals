@@ -10,6 +10,7 @@ import { RevalidateModule } from './revalidate/revalidate.module';
 import { AdminModule } from './admin/admin.module';
 import { IngestModule } from './ingest/ingest.module';
 import { PostsModule } from './posts/posts.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { PostsModule } from './posts/posts.module';
     AdminModule,
     IngestModule,
     PostsModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
