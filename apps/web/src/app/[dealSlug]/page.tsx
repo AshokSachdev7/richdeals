@@ -7,6 +7,7 @@ import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import CopyCode from "@/components/CopyCode";
+import ForumThread from "@/components/ForumThread";
 import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle, dealFaq, dealProductName, dealSummary } from "@/lib/site";
 
 // Always SSR fresh: ISR + broken on-demand revalidation was serving stale deal
@@ -471,6 +472,9 @@ export default async function DealPage({ params }: Props) {
           ))}
         </div>
       </section>
+
+      {/* Forum thread — votes, comments, still-working reports live on the deal itself */}
+      <ForumThread slug={deal.slug} />
 
       {/* Price history — only meaningful with more than one point */}
       {deal.priceHistory.length > 1 && (

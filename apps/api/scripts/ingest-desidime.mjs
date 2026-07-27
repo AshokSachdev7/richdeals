@@ -88,7 +88,11 @@ for (const d of out.filter((x) => x.store !== 'Amazon')) {
 const p = new PrismaClient();
 const have = new Set((await p.deal.findMany({ where: { productId: { in: out.map((d) => d.productId) } }, select: { productId: true } })).map((d) => d.productId));
 await p.$disconnect();
-const fresh = out.filter((d) => !have.has(d.productId));
+// price-rejected in a recent tick (stale/coupon-conditional) — don't re-resolve for 24h
+const REJ = new URL('../../../data/dd-rejected.json', import.meta.url);
+const rej = fs.existsSync(REJ) ? JSON.parse(fs.readFileSync(REJ, 'utf8')) : {};
+const cutoff = Date.now() - 24 * 3600e3;
+const fresh = out.filter((d) => !have.has(d.productId) && !(rej[d.productId] > cutoff));
 fresh.forEach((d) => console.log(`  ${d.verify && d.verify !== 'ok' ? 'SKIP(' + d.verify + ')' : 'ok'} ${d.store} ${d.productId}  ₹${d.price ?? '?'}  ${d.title.slice(0, 45)}`));
 
 fs.writeFileSync(DEAD, JSON.stringify([...dead]));

@@ -70,10 +70,10 @@ try {
     const key = `deal_submit:${d.id}`;
     if (await p.pointEvent.findUnique({ where: { dedupeKey: key } })) continue;
     await p.$transaction([
-      p.pointEvent.create({ data: { userId: d.submittedById, kind: 'deal_submit', points: 100, dedupeKey: key, dealId: d.id } }),
-      p.user.update({ where: { id: d.submittedById }, data: { points: { increment: 100 } } }),
+      p.pointEvent.create({ data: { userId: d.submittedById, kind: 'deal_submit', points: 1, dedupeKey: key, dealId: d.id } }),
+      p.user.update({ where: { id: d.submittedById }, data: { points: { increment: 1 } } }),
     ]);
-    console.log(`paid 100 pts (₹1) to user ${d.submittedById} for deal ${d.id}`);
+    console.log(`paid 1 pt (₹1) to user ${d.submittedById} for deal ${d.id}`);
   }
 
   const maxRow = await p.deal.findFirst({ where: { status: 'LIVE' }, orderBy: { id: 'desc' }, select: { id: true } });

@@ -34,12 +34,12 @@ const KIND_LABEL: Record<string, string> = {
   deal_submit: "Deal you submitted",
 };
 
+// 1 point = ₹1, everywhere. No conversion, no paisa.
 const EARN_TIERS = [
-  { icon: "🎁", label: "Sign up (one time)", points: 100 },
-  { icon: "👥", label: "A friend joins with your code", points: 50 },
-  { icon: "📅", label: "Check in, every day", points: 10 },
-  { icon: "🛍️", label: "Open any deal", points: 2 },
-  { icon: "🔗", label: "Submit a deal we publish", points: 100 },
+  { icon: "🎁", label: "Sign up (one time)", points: 1 },
+  { icon: "👥", label: "A friend joins with your code", points: 1 },
+  { icon: "📅", label: "Check in, every day", points: 1 },
+  { icon: "🔗", label: "Submit a deal we publish", points: 1 },
 ];
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
@@ -173,8 +173,8 @@ export default function AccountClient() {
               <span className="text-brand-accent">Get paid in points.</span>
             </h1>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/70">
-              A free RichDeals account turns every price drop you grab into points. No cost, no
-              catch — start at 100 before you even browse.
+              A free RichDeals account pays you in points for the deals you send in. 1 point = ₹1.
+              No cost, no catch, no conversion maths.
             </p>
 
             <ul className="mt-8 space-y-px">
@@ -196,7 +196,7 @@ export default function AccountClient() {
 
             <p className="mt-7 flex items-center gap-2 text-xs text-white/45">
               <span aria-hidden="true">🔒</span>
-              Points have no cash value yet. Redeeming unlocks at 1,000.
+              1 point = ₹1. Redeeming unlocks at 100 points.
             </p>
           </div>
         </aside>
@@ -292,7 +292,7 @@ export default function AccountClient() {
                   className={`${field} font-mono uppercase tracking-widest`}
                 />
                 <p className="mt-1.5 text-xs text-gray-500">
-                  Got a code from a friend? Paste it here — they earn 50 points when you join.
+                  Got a code from a friend? Paste it here — they earn 1 point (₹1) when you join.
                 </p>
               </div>
             )}
@@ -311,7 +311,7 @@ export default function AccountClient() {
               {busy
                 ? "Please wait…"
                 : mode === "register"
-                  ? "Create free account → +100 points"
+                  ? "Create free account → +1 point"
                   : "Sign in"}
             </button>
           </form>
@@ -347,8 +347,11 @@ export default function AccountClient() {
       </div>
 
       <div className="mt-5 rounded-2xl bg-brand p-5 text-white">
-        <p className="text-sm opacity-80">Your points</p>
-        <p className="font-display text-4xl font-extrabold">{me.points.toLocaleString("en-IN")}</p>
+        <p className="text-sm opacity-80">Your points — 1 point = ₹1</p>
+        <p className="font-display text-4xl font-extrabold">
+          {me.points.toLocaleString("en-IN")}{" "}
+          <span className="text-xl font-bold opacity-80">= ₹{me.points.toLocaleString("en-IN")}</span>
+        </p>
         <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-white" style={{ width: `${pct}%` }} />
         </div>
@@ -362,20 +365,20 @@ export default function AccountClient() {
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <div className="rounded-xl border border-gray-200 p-4">
           <h2 className="font-display text-base font-bold text-ink">Daily check-in</h2>
-          <p className="mt-1 text-sm text-gray-600">+10 points, once every day.</p>
+          <p className="mt-1 text-sm text-gray-600">+1 point (₹1), once every day.</p>
           <button
             onClick={checkIn}
             disabled={busy || me.checkedInToday}
             className="mt-3 w-full rounded-lg bg-ink py-2 text-sm font-bold text-white disabled:bg-gray-200 disabled:text-gray-500"
           >
-            {me.checkedInToday ? "Checked in today ✓" : busy ? "…" : "Check in for +10"}
+            {me.checkedInToday ? "Checked in today ✓" : busy ? "…" : "Check in for +1"}
           </button>
         </div>
 
         <div className="rounded-xl border border-gray-200 p-4">
           <h2 className="font-display text-base font-bold text-ink">Invite friends</h2>
           <p className="mt-1 text-sm text-gray-600">
-            +50 points each time someone joins with your code{" "}
+            +1 point (₹1) each time someone joins with your code{" "}
             <span className="font-mono font-bold text-brand">{me.refCode}</span>.
           </p>
           <button
@@ -398,11 +401,11 @@ export default function AccountClient() {
             <p className="mt-1 text-sm text-gray-600">
               Paste the product link. We check the store&apos;s live price ourselves — if it holds up
               and it is not already on RichDeals, it goes live and you earn{" "}
-              <span className="font-bold text-ink">100 points (₹1)</span>.
+              <span className="font-bold text-ink">1 point (₹1)</span>.
             </p>
           </div>
           <span className="hidden shrink-0 rounded-full bg-brand px-3 py-1 text-xs font-bold text-white sm:block">
-            +100
+            +1
           </span>
         </div>
         <form onSubmit={submitDeal} className="mt-4 flex flex-col gap-2 sm:flex-row">
@@ -436,15 +439,12 @@ export default function AccountClient() {
       <div className="mt-5 rounded-xl border border-gray-200 p-4">
         <h2 className="font-display text-base font-bold text-ink">Earn more</h2>
         <p className="mt-1 text-sm text-gray-600">
-          Every deal you open from{" "}
-          <Link href="/" className="text-brand hover:underline">
-            RichDeals
+          Points come from deals you send in — 1 point (₹1) per deal we check and publish. Talking
+          on the{" "}
+          <Link href="/forum" className="text-brand hover:underline">
+            forum
           </Link>{" "}
-          earns 2 points (once per deal per day). Browse{" "}
-          <Link href="/?feed=hot" className="text-brand hover:underline">
-            today&apos;s hot deals
-          </Link>{" "}
-          and stack them up.
+          earns karma instead: rank and badges, not rupees.
         </p>
       </div>
 
@@ -465,8 +465,8 @@ export default function AccountClient() {
       </div>
 
       <p className="mt-6 rounded-lg bg-gray-50 p-3 text-xs text-gray-500">
-        Redeeming is not open yet — points keep accruing on your account and will be redeemable once
-        rewards go live. Points have no cash value until then.
+        1 point = ₹1. Redeeming is not open yet — points keep accruing on your account and unlock at
+        100 points, once payouts go live.
       </p>
     </div>
   );

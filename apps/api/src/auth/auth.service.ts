@@ -4,15 +4,16 @@ import { hashPassword, istDay, makeRefCode, verifyPassword } from './auth.util';
 import { fetchLivePrice, parseSubmission } from './submit';
 import { DealsService } from '../deals/deals.service';
 
-// 1 point = 1 paisa. So signup = ₹1, a submitted deal that goes live = ₹1, redeem opens at ₹10.
-// Earning rates. Redeem is deliberately NOT implemented — points accrue, nothing pays out yet.
+// 1 point = ₹1. No conversion anywhere — the number a member sees IS the rupees.
+// Redeem is deliberately NOT implemented — points accrue, nothing pays out yet.
+// Opening a deal pays nothing: at ₹1 a point there is no honest sub-rupee reward,
+// and paying per click is exactly what a bot farm would drain.
 export const POINTS = {
-  signup: 100,
-  referral: 50,
-  daily: 10,
-  click: 2,
-  dealSubmit: 100,
-  redeemAt: 1000,
+  signup: 1,
+  referral: 1,
+  daily: 1,
+  dealSubmit: 1,
+  redeemAt: 100,
 };
 
 @Injectable()
@@ -161,7 +162,12 @@ export class AuthService {
     await this.prisma.deal.update({ where: { id: deal.id }, data: { submittedById: userId } });
     await this.award(userId, 'deal_submit', POINTS.dealSubmit, `deal_submit:${deal.id}`, deal.id);
 
-    return { status: 'live', points: POINTS.dealSubmit, slug: deal.slug, message: `Live on the site. +${POINTS.dealSubmit} points (₹1).` };
+    return {
+      status: 'live',
+      points: POINTS.dealSubmit,
+      slug: deal.slug,
+      message: `Live on the site. +${POINTS.dealSubmit} point (₹${POINTS.dealSubmit}).`,
+    };
   }
 
   ledger(userId: number) {

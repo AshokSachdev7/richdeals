@@ -6,6 +6,7 @@ import { SITE_NAME } from "@/lib/site";
 
 const NAV = [
   { href: "/", label: "Home" },
+  { href: "/forum", label: "Forum" },
   { href: "/?feed=hot", label: "Hot" },
   { href: "/stores", label: "Stores" },
   { href: "/categories", label: "Categories" },

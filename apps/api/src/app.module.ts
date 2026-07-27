@@ -11,6 +11,7 @@ import { AdminModule } from './admin/admin.module';
 import { IngestModule } from './ingest/ingest.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
+import { ForumModule } from './forum/forum.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AuthModule } from './auth/auth.module';
     IngestModule,
     PostsModule,
     AuthModule,
+    ForumModule,
   ],
 })
 export class AppModule {}

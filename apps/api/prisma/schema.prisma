@@ -73,6 +73,10 @@ model Deal {
   productId   String?    // ASIN / flipkart pid — dedup key
   affiliateUrl String    // final link with OUR tag
   clickCount  Int        @default(0)
+  // Forum counters. Denormalised because the listing sorts on them; the rows in
+  // DealVote / DealComment stay the source of truth.
+  score        Int       @default(0)
+  commentCount Int       @default(0)
   postedBy    String?
   submittedById Int?     // set when a logged-in user submitted this deal (earns points once it goes LIVE)
   expiresAt   DateTime?
@@ -84,7 +88,10 @@ model Deal {
   categories  DealCategory[]
   priceHistory PriceHistory[]
   clicks      Click[]
+  votes       DealVote[]
+  comments    DealComment[]
 
+  @@index([status, score])
   @@index([status, createdAt])
   @@index([storeId, status])
   @@unique([storeId, productId], name: "store_product")
@@ -159,10 +166,40 @@ model User {
   passwordHash String
   name         String?
   points       Int          @default(0) // running total; PointEvent is the ledger of record
+  karma        Int          @default(0) // forum reputation — never convertible to money
   refCode      String       @unique
   referredById Int?
   createdAt    DateTime     @default(now())
   events       PointEvent[]
+  votes        DealVote[]
+  comments     DealComment[]
+}
+
+// One row per (deal, user). value is +1 or -1; changing a vote updates the row.
+model DealVote {
+  dealId    Int
+  userId    Int
+  value     Int
+  createdAt DateTime @default(now())
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([dealId, userId])
+}
+
+// Thread reply. `flag` doubles as the "still working / expired" report so we do not
+// need a second table for what is really a comment with a badge.
+model DealComment {
+  id        Int      @id @default(autoincrement())
+  dealId    Int
+  userId    Int
+  body      String
+  flag      String? // working | expired | null
+  createdAt DateTime @default(now())
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([dealId, id])
 }
 
 model PointEvent {
