@@ -60,11 +60,16 @@ export function affiliate(finalUrl) {
 
   // any other merchant — still has to be a single product page
   if (NOT_A_PRODUCT.test(u.pathname + u.search) || u.pathname === '/') return null;
-  const clean = `${u.origin}${u.pathname}${u.search.replace(/[?&](utm_[^&]*|affid|affExtParam\d|ascsubtag|tag|ref|social_share|cjdata|gad_[^&]*|gbraid|click_id)=[^&]*/g, '').replace(/^&/, '?')}`;
+  const clean = `${u.origin}${u.pathname}${u.search.replace(/[?&](utm_[^&]*|affid|affExtParam\d|ascsubtag|tag|ref|social_share|cjdata|gad_[^&]*|gbraid|click_id|pwsvid|sessionid|sid)=[^&]*/g, '').replace(/^[?&]+$/, '').replace(/^&/, '?')}`;
   const name = h.split('.')[0].replace(/^(m|www|shop)$/, h.split('.')[1] || h);
   return {
     store: name.charAt(0).toUpperCase() + name.slice(1),
-    productId: crypto.createHash('md5').update(clean).digest('hex').slice(0, 12),
+    // Hash the PATH only, never the query. Every non-Amazon/Flipkart merchant we
+    // resolve puts the product in the path (myntra.com/35928848, /p/<sku>...), and
+    // the redirect glues a fresh session param on each sweep (Myntra's pwsvid).
+    // Hashing the query meant the same product got a new productId every 30
+    // minutes, so DB dedup never matched and each sweep "found" it again.
+    productId: crypto.createHash('md5').update(`${u.origin}${u.pathname}`).digest('hex').slice(0, 12),
     affiliateUrl: cue(clean),
     page: clean,
   };

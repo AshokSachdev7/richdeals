@@ -18,6 +18,13 @@ assert.strictEqual(affiliate('https://www.flipkart.com/blue-star/p/itm123'), nul
 // amazon still wins, and still through the nested-URL path
 assert.strictEqual(affiliate('https://dl.x.com/dlhttps://www.amazon.in/dp/B0DDTYBT2Z').productId, 'B0DDTYBT2Z');
 
+// a per-sweep session param must not mint a new productId for the same product
+const MY = 'https://www.myntra.com/35928848';
+assert.strictEqual(affiliate(`${MY}?&pwsvid=PW178511085`).productId, affiliate(`${MY}?&pwsvid=PW999999999`).productId);
+assert.strictEqual(affiliate(`${MY}?&pwsvid=PW1`).affiliateUrl, affiliate(MY).affiliateUrl);
+// different products still differ
+assert.notStrictEqual(affiliate(MY).productId, affiliate('https://www.myntra.com/19460932').productId);
+
 // coupon-conditional freebies are junk; real products with "free" in the name are not
 assert.ok(JUNK.test('Mr Muscle Disinfectant free on Rs100 bill'));
 assert.ok(!JUNK.test('Sugar Free Gold Low Calorie Sweetener 500 Pellets'));
