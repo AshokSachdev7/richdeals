@@ -33,6 +33,13 @@ const KIND_LABEL: Record<string, string> = {
   click: "Deal visit",
 };
 
+const EARN_TIERS = [
+  { icon: "🎁", label: "Sign up (one time)", points: 100 },
+  { icon: "👥", label: "A friend joins with your code", points: 50 },
+  { icon: "📅", label: "Check in, every day", points: 10 },
+  { icon: "🛍️", label: "Open any deal", points: 2 },
+];
+
 async function call<T>(path: string, body?: unknown): Promise<T> {
   const res = await fetch(`${API}${path}`, {
     method: body ? "POST" : "GET",
@@ -120,100 +127,188 @@ export default function AccountClient() {
   if (loading) return <p className="py-10 text-center text-sm text-gray-500">Loading…</p>;
 
   if (!me) {
+    const field =
+      "w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-ink transition-colors placeholder:text-gray-400 focus:border-brand focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand/10";
+
     return (
-      <div className="mx-auto max-w-md">
-        <h1 className="text-2xl font-extrabold text-ink">
-          {mode === "register" ? "Join RichDeals & start earning" : "Sign in"}
-        </h1>
-        <p className="mt-2 text-sm text-gray-600">
-          {mode === "register"
-            ? "Free account. 100 points the moment you join, then earn every day you shop deals with us."
-            : "Welcome back — your points are waiting."}
-        </p>
+      <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-white shadow-xl shadow-ink/5 ring-1 ring-gray-100 md:grid md:grid-cols-[1.05fr_1fr]">
+        {/* Value panel — the reason to sign up, not decoration. */}
+        <aside className="hero-dots relative bg-ink px-7 py-9 text-white md:px-9 md:py-11">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/30 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -left-10 h-52 w-52 rounded-full bg-savings/20 blur-3xl"
+          />
+          <div className="relative">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-savings ring-1 ring-inset ring-white/15">
+              Rewards
+            </span>
+            <h1 className="mt-4 font-display text-3xl font-extrabold leading-[1.15] md:text-4xl">
+              Shop the deals.
+              <br />
+              <span className="text-brand-accent">Get paid in points.</span>
+            </h1>
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/70">
+              A free RichDeals account turns every price drop you grab into points. No cost, no
+              catch — start at 100 before you even browse.
+            </p>
 
-        {mode === "register" && (
-          <ul className="mt-5 space-y-1.5 rounded-xl bg-brand/5 p-4 text-sm text-ink">
-            <li>🎁 100 points just for signing up</li>
-            <li>📅 10 points every day you check in</li>
-            <li>🛍️ 2 points each time you open a deal</li>
-            <li>👥 50 points when a friend joins with your code</li>
-          </ul>
-        )}
+            <ul className="mt-8 space-y-px">
+              {EARN_TIERS.map((t) => (
+                <li
+                  key={t.label}
+                  className="flex items-center gap-4 border-t border-white/10 py-3.5 first:border-t-0"
+                >
+                  <span aria-hidden="true" className="text-xl">
+                    {t.icon}
+                  </span>
+                  <span className="flex-1 text-sm text-white/85">{t.label}</span>
+                  <span className="font-display text-lg font-extrabold tabular-nums text-savings">
+                    +{t.points}
+                  </span>
+                </li>
+              ))}
+            </ul>
 
-        <form onSubmit={submit} className="mt-6 space-y-3">
-          {mode === "register" && (
+            <p className="mt-7 flex items-center gap-2 text-xs text-white/45">
+              <span aria-hidden="true">🔒</span>
+              Points have no cash value yet. Redeeming unlocks at 1,000.
+            </p>
+          </div>
+        </aside>
+
+        {/* Form panel */}
+        <div className="px-7 py-9 md:px-9 md:py-11">
+          <div className="mb-6 inline-flex rounded-full bg-gray-100 p-1 text-sm font-bold">
+            {(["register", "login"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => {
+                  setMode(m);
+                  setError("");
+                }}
+                className={`rounded-full px-4 py-1.5 transition-colors ${
+                  mode === m ? "bg-white text-ink shadow-sm" : "text-gray-500 hover:text-ink"
+                }`}
+              >
+                {m === "register" ? "Create account" : "Sign in"}
+              </button>
+            ))}
+          </div>
+
+          <h2 className="font-display text-xl font-extrabold text-ink">
+            {mode === "register" ? "Join free in 20 seconds" : "Welcome back"}
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            {mode === "register"
+              ? "Email and a password. That is the whole form."
+              : "Your points are exactly where you left them."}
+          </p>
+
+          <form onSubmit={submit} className="mt-6 space-y-4">
+            {mode === "register" && (
+              <div>
+                <label htmlFor="name" className="mb-1.5 block text-sm font-semibold text-ink">
+                  Name <span className="font-normal text-gray-400">(optional)</span>
+                </label>
+                <input
+                  id="name"
+                  placeholder="Priya"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className={field}
+                />
+              </div>
+            )}
             <div>
-              <label htmlFor="name" className="mb-1 block text-sm font-semibold text-ink">
-                Name <span className="font-normal text-gray-400">(optional)</span>
+              <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-ink">
+                Email
               </label>
               <input
-                id="name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand focus:outline-none"
+                id="email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="you@email.com"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className={field}
               />
             </div>
-          )}
-          <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-semibold text-ink">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              autoComplete="email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand focus:outline-none"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="mb-1 block text-sm font-semibold text-ink">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              minLength={8}
-              autoComplete={mode === "register" ? "new-password" : "current-password"}
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand focus:outline-none"
-            />
-            {mode === "register" && (
-              <p className="mt-1 text-xs text-gray-500">At least 8 characters.</p>
-            )}
-          </div>
-          {mode === "register" && ref && (
-            <p className="text-sm text-gray-600">
-              Referral code applied: <span className="font-mono font-bold text-brand">{ref}</span>
-            </p>
-          )}
-          {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
-          <button
-            type="submit"
-            disabled={busy}
-            className="w-full rounded-lg bg-brand py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {busy ? "Please wait…" : mode === "register" ? "Create free account" : "Sign in"}
-          </button>
-        </form>
+            <div>
+              <label htmlFor="password" className="mb-1.5 block text-sm font-semibold text-ink">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                minLength={8}
+                autoComplete={mode === "register" ? "new-password" : "current-password"}
+                placeholder={mode === "register" ? "At least 8 characters" : "••••••••"}
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                className={field}
+              />
+            </div>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
-          {mode === "register" ? "Already have an account?" : "New here?"}{" "}
-          <button
-            type="button"
-            onClick={() => {
-              setMode(mode === "register" ? "login" : "register");
-              setError("");
-            }}
-            className="font-semibold text-brand hover:underline"
-          >
-            {mode === "register" ? "Sign in" : "Create one free"}
-          </button>
-        </p>
+            {mode === "register" && (
+              <div>
+                <label htmlFor="ref" className="mb-1.5 block text-sm font-semibold text-ink">
+                  Friend&apos;s referral code{" "}
+                  <span className="font-normal text-gray-400">(optional)</span>
+                </label>
+                <input
+                  id="ref"
+                  placeholder="e.g. 9AD01F87"
+                  maxLength={16}
+                  value={ref}
+                  onChange={(e) => setRef(e.target.value.trim().toUpperCase())}
+                  className={`${field} font-mono uppercase tracking-widest`}
+                />
+                <p className="mt-1.5 text-xs text-gray-500">
+                  Got a code from a friend? Paste it here — they earn 50 points when you join.
+                </p>
+              </div>
+            )}
+
+            {error && (
+              <p className="rounded-xl bg-red-50 px-4 py-2.5 text-sm font-semibold text-brand-dark">
+                {error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={busy}
+              className="w-full rounded-xl bg-brand py-3.5 font-display text-sm font-extrabold tracking-wide text-white shadow-lg shadow-brand/25 transition-all hover:bg-brand-dark active:scale-[0.99] disabled:opacity-50"
+            >
+              {busy
+                ? "Please wait…"
+                : mode === "register"
+                  ? "Create free account → +100 points"
+                  : "Sign in"}
+            </button>
+          </form>
+
+          <p className="mt-5 text-center text-sm text-gray-500">
+            {mode === "register" ? "Already have an account?" : "New here?"}{" "}
+            <button
+              type="button"
+              onClick={() => {
+                setMode(mode === "register" ? "login" : "register");
+                setError("");
+              }}
+              className="font-bold text-brand hover:underline"
+            >
+              {mode === "register" ? "Sign in" : "Create one free"}
+            </button>
+          </p>
+        </div>
       </div>
     );
   }

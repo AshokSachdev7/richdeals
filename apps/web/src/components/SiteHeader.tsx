@@ -11,9 +11,8 @@ const NAV = [
   { href: "/categories", label: "Categories" },
   { href: "/freebies", label: "Freebies" },
   { href: "/coupons", label: "Coupons" },
-  { href: "/offers", label: "Offers 💰" },
+  { href: "/offers", label: "Offers" },
   { href: "/blog", label: "Blog" },
-  { href: "/account", label: "Earn 🎁" },
 ];
 
 export default function SiteHeader() {
@@ -46,9 +45,9 @@ export default function SiteHeader() {
           </span>
         </Link>
         <nav className="hidden flex-1 md:block" aria-label="Primary">
-          <ul className="flex items-center gap-6 text-sm font-semibold text-ink-soft">
+          <ul className="flex items-center gap-5 text-sm font-semibold text-ink-soft lg:gap-6">
             {NAV.map((n) => (
-              <li key={n.label}>
+              <li key={n.label} className="whitespace-nowrap">
                 <Link href={n.href} className="transition-colors duration-200 hover:text-brand">
                   {n.label}
                 </Link>
@@ -61,7 +60,7 @@ export default function SiteHeader() {
           action="/search"
           method="GET"
           role="search"
-          className="ml-auto flex flex-1 items-center rounded-full border border-gray-300 bg-gray-50 px-3 transition-colors duration-200 focus-within:border-brand focus-within:bg-white md:max-w-xs"
+          className="ml-auto flex flex-1 items-center rounded-full border border-gray-300 bg-gray-50 px-3 transition-colors duration-200 focus-within:border-brand focus-within:bg-white md:max-w-[15rem]"
         >
           <span className="text-gray-400" aria-hidden="true">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -80,10 +79,18 @@ export default function SiteHeader() {
             className="w-full bg-transparent px-2 py-1.5 text-sm text-ink placeholder:text-gray-400 focus:outline-none"
           />
         </form>
+
+        {/* Earning is the one action we actively sell, so it gets a pill, not a nav slot. */}
+        <Link
+          href="/account"
+          className="hidden shrink-0 items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-sm font-bold text-white transition-colors duration-200 hover:bg-brand md:inline-flex"
+        >
+          <span aria-hidden="true">🎁</span> Earn
+        </Link>
       </div>
 
       <nav className="border-t border-gray-100 md:hidden" aria-label="Primary mobile">
-        <ul className="no-scrollbar mx-auto flex max-w-6xl gap-5 overflow-x-auto px-4 py-2 text-sm font-semibold text-ink-soft">
+        <ul className="no-scrollbar mx-auto flex max-w-6xl items-center gap-5 overflow-x-auto px-4 py-2 text-sm font-semibold text-ink-soft">
           {NAV.map((n) => (
             <li key={n.label} className="whitespace-nowrap">
               <Link href={n.href} className="transition-colors duration-200 hover:text-brand">
@@ -91,6 +98,11 @@ export default function SiteHeader() {
               </Link>
             </li>
           ))}
+          <li className="whitespace-nowrap">
+            <Link href="/account" className="font-bold text-brand">
+              🎁 Earn
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
