@@ -65,6 +65,16 @@ export class AuthController {
     return this.auth.ledger(this.uid(cookie));
   }
 
+  @Post('redeem')
+  redeem(@Headers('cookie') cookie?: string) {
+    return this.auth.redeem(this.uid(cookie));
+  }
+
+  @Get('redemptions')
+  redemptions(@Headers('cookie') cookie?: string) {
+    return this.auth.redemptions(this.uid(cookie));
+  }
+
   private uid(cookie?: string): number {
     const id = userIdFromCookieHeader(cookie);
     if (!id) throw new UnauthorizedException();

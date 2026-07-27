@@ -173,6 +173,25 @@ model User {
   events       PointEvent[]
   votes        DealVote[]
   comments     DealComment[]
+  redemptions  Redemption[]
+}
+
+// A member cashing points out. Payout is a manual Amazon gift-card code we paste in —
+// ponytail: no payment gateway, no UPI, no recurring cost. A text column is the whole
+// integration. Points are debited when the request is made (a matching negative
+// PointEvent), refunded if we reject it.
+model Redemption {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  points    Int // rupees too — 1 point = ₹1
+  status    String    @default("pending") // pending | paid | rejected
+  voucher   String? // Amazon gift-card code, filled in when paid
+  note      String? // reason, when rejected
+  createdAt DateTime  @default(now())
+  settledAt DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, id])
 }
 
 // One row per (deal, user). value is +1 or -1; changing a vote updates the row.

@@ -17,7 +17,7 @@ export type DealSubmission = {
 };
 
 // 1 point = ₹1. No conversion anywhere — the number a member sees IS the rupees.
-// Redeem is deliberately NOT implemented — points accrue, nothing pays out yet.
+// Redeem pays out as an Amazon gift-card code we send by hand (see `redeem`).
 // Opening a deal pays nothing: at ₹1 a point there is no honest sub-rupee reward,
 // and paying per click is exactly what a bot farm would drain.
 export const POINTS = {
@@ -251,5 +251,92 @@ export class AuthService {
       take: 30,
       select: { kind: true, points: true, dealId: true, createdAt: true },
     });
+  }
+
+  /**
+   * Cash out the whole balance. Points are debited here, not when we pay — otherwise a
+   * member could request ten times over the same 100 points. The balance is re-read
+   * inside the transaction so two racing requests can't both pass the threshold check.
+   */
+  async redeem(userId: number) {
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({ where: { id: userId }, select: { points: true } });
+      if (!user) throw new UnauthorizedException();
+      if (user.points < POINTS.redeemAt) {
+        throw new BadRequestException(`Redeeming starts at ${POINTS.redeemAt} points.`);
+      }
+      if (await tx.redemption.count({ where: { userId, status: 'pending' } })) {
+        throw new BadRequestException('You already have a payout being processed.');
+      }
+      const amount = user.points;
+      const r = await tx.redemption.create({ data: { userId, points: amount } });
+      // Negative ledger row so the events still sum to the balance shown.
+      await tx.pointEvent.create({
+        data: { userId, kind: 'redeem', points: -amount, dedupeKey: `redeem:${r.id}` },
+      });
+      await tx.user.update({ where: { id: userId }, data: { points: { decrement: amount } } });
+      return { id: r.id, points: amount, status: r.status };
+    });
+  }
+
+  redemptions(userId: number) {
+    return this.prisma.redemption.findMany({
+      where: { userId },
+      orderBy: { id: 'desc' },
+      take: 20,
+      select: {
+        id: true,
+        points: true,
+        status: true,
+        voucher: true,
+        note: true,
+        createdAt: true,
+        settledAt: true,
+      },
+    });
+  }
+
+  // ---- admin ----
+
+  adminRedemptions(status?: string) {
+    return this.prisma.redemption.findMany({
+      where: status ? { status } : undefined,
+      orderBy: { id: 'desc' },
+      take: 100,
+      include: { user: { select: { id: true, email: true, name: true } } },
+    });
+  }
+
+  /** Paste the gift-card code (paid) or hand the points back (rejected). */
+  async settleRedemption(id: number, status: string, voucher?: string, note?: string) {
+    if (status !== 'paid' && status !== 'rejected') throw new BadRequestException('status must be paid|rejected');
+    const r = await this.prisma.redemption.findUnique({ where: { id } });
+    if (!r) throw new BadRequestException('No such redemption');
+    if (r.status !== 'pending') throw new BadRequestException(`Already ${r.status}`);
+
+    if (status === 'paid') {
+      if (!voucher?.trim()) throw new BadRequestException('voucher code required');
+      return this.prisma.redemption.update({
+        where: { id },
+        data: { status, voucher: voucher.trim(), settledAt: new Date() },
+      });
+    }
+    // Rejected — we never paid, so the points go back.
+    const [updated] = await this.prisma.$transaction([
+      this.prisma.redemption.update({
+        where: { id },
+        data: { status, note: note?.trim() || null, settledAt: new Date() },
+      }),
+      this.prisma.pointEvent.create({
+        data: {
+          userId: r.userId,
+          kind: 'redeem_refund',
+          points: r.points,
+          dedupeKey: `redeem_refund:${id}`,
+        },
+      }),
+      this.prisma.user.update({ where: { id: r.userId }, data: { points: { increment: r.points } } }),
+    ]);
+    return updated;
   }
 }

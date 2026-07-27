@@ -28,6 +28,16 @@ interface LedgerRow {
   createdAt: string;
 }
 
+interface Redemption {
+  id: number;
+  points: number;
+  status: "pending" | "paid" | "rejected";
+  voucher: string | null;
+  note: string | null;
+  createdAt: string;
+  settledAt: string | null;
+}
+
 interface MyDeal {
   id: number;
   slug: string;
@@ -52,6 +62,8 @@ const KIND_LABEL: Record<string, string> = {
   daily: "Daily check-in",
   click: "Deal visit",
   deal_submit: "Deal you submitted",
+  redeem: "Redeemed for a voucher",
+  redeem_refund: "Redeem cancelled — points back",
 };
 
 // 1 point = ₹1, everywhere. No conversion, no paisa.
@@ -78,6 +90,7 @@ export default function AccountClient() {
   const [me, setMe] = useState<Me | null>(null);
   const [ledger, setLedger] = useState<LedgerRow[]>([]);
   const [myDeals, setMyDeals] = useState<MyDeal[]>([]);
+  const [payouts, setPayouts] = useState<Redemption[]>([]);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<"register" | "login">("register");
   const [ref, setRef] = useState("");
@@ -92,6 +105,9 @@ export default function AccountClient() {
       .catch(() => undefined);
     call<MyDeal[]>("/auth/my-deals")
       .then(setMyDeals)
+      .catch(() => undefined);
+    call<Redemption[]>("/auth/redemptions")
+      .then(setPayouts)
       .catch(() => undefined);
   }, []);
 
@@ -143,11 +159,26 @@ export default function AccountClient() {
     }
   }
 
+  async function redeem() {
+    setBusy(true);
+    setError("");
+    try {
+      await call("/auth/redeem", {});
+      setMe(await call<Me>("/auth/me"));
+      loadLedger();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function logout() {
     await call("/auth/logout", {}).catch(() => undefined);
     setMe(null);
     setLedger([]);
     setMyDeals([]);
+    setPayouts([]);
     setForm({ email: "", password: "", name: "" });
   }
 
@@ -202,7 +233,7 @@ export default function AccountClient() {
 
             <p className="mt-7 flex items-center gap-2 text-xs text-white/45">
               <span aria-hidden="true">🔒</span>
-              1 point = ₹1. Redeeming unlocks at 100 points.
+              1 point = ₹1. Cash out as an Amazon gift card at 100 points.
             </p>
           </div>
         </aside>
@@ -342,6 +373,7 @@ export default function AccountClient() {
 
   const shareUrl = `https://richdeals.in/register?ref=${me.refCode}`;
   const pct = Math.min(100, Math.round((me.points / me.redeemAt) * 100));
+  const openPayout = payouts.find((p) => p.status === "pending");
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -367,10 +399,21 @@ export default function AccountClient() {
           <div className="h-full rounded-full bg-white" style={{ width: `${pct}%` }} />
         </div>
         <p className="mt-2 text-xs opacity-90">
-          {me.points >= me.redeemAt
-            ? "You have hit the redeem threshold — rewards open soon."
-            : `${(me.redeemAt - me.points).toLocaleString("en-IN")} points to go until redeem unlocks at ${me.redeemAt.toLocaleString("en-IN")}.`}
+          {openPayout
+            ? `Payout of ₹${openPayout.points.toLocaleString("en-IN")} requested — your voucher code lands here once we send it.`
+            : me.points >= me.redeemAt
+              ? `Cash out ₹${me.points.toLocaleString("en-IN")} as an Amazon gift card.`
+              : `${(me.redeemAt - me.points).toLocaleString("en-IN")} points to go until redeem unlocks at ${me.redeemAt.toLocaleString("en-IN")}.`}
         </p>
+        {!openPayout && me.points >= me.redeemAt && (
+          <button
+            onClick={redeem}
+            disabled={busy}
+            className="mt-3 w-full rounded-xl bg-white py-3 font-display text-sm font-extrabold text-brand transition-opacity disabled:opacity-60"
+          >
+            {busy ? "…" : `Redeem ₹${me.points.toLocaleString("en-IN")} → Amazon gift card`}
+          </button>
+        )}
       </div>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -515,16 +558,57 @@ export default function AccountClient() {
             {ledger.map((row, i) => (
               <li key={i} className="flex items-center justify-between py-2">
                 <span className="text-gray-700">{KIND_LABEL[row.kind] || row.kind}</span>
-                <span className="font-bold text-brand">+{row.points}</span>
+                <span className={`font-bold ${row.points < 0 ? "text-gray-500" : "text-brand"}`}>
+                  {row.points < 0 ? "−" : "+"}
+                  {Math.abs(row.points)}
+                </span>
               </li>
             ))}
           </ul>
         )}
       </div>
 
+      {payouts.length > 0 && (
+        <div className="mt-5">
+          <h2 className="font-display text-base font-bold text-ink">Payouts</h2>
+          <ul className="mt-2 divide-y divide-gray-100 text-sm">
+            {payouts.map((p) => (
+              <li key={p.id} className="py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-bold text-ink">₹{p.points.toLocaleString("en-IN")}</span>
+                  <span className="text-xs text-gray-500">
+                    {new Date(p.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                  </span>
+                </div>
+                {p.status === "pending" && (
+                  <p className="mt-1 text-xs text-amber-700">
+                    ⏳ Being processed — gift-card codes go out within 3 working days.
+                  </p>
+                )}
+                {p.status === "paid" && (
+                  <p className="mt-1 text-xs text-emerald-700">
+                    ✅ Amazon gift card:{" "}
+                    <span className="select-all rounded bg-emerald-50 px-1.5 py-0.5 font-mono font-bold">
+                      {p.voucher}
+                    </span>{" "}
+                    — redeem it at amazon.in/gc/redeem.
+                  </p>
+                )}
+                {p.status === "rejected" && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    ⛔ Not paid — points were returned to your balance.{p.note ? ` ${p.note}` : ""}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <p className="mt-6 rounded-lg bg-gray-50 p-3 text-xs text-gray-500">
-        1 point = ₹1. Redeeming is not open yet — points keep accruing on your account and unlock at
-        100 points, once payouts go live.
+        1 point = ₹1. Redeeming unlocks at {me.redeemAt} points and pays out as an Amazon gift-card
+        code, sent by hand within 3 working days. You cash out your full balance in one go — one
+        request at a time.
       </p>
     </div>
   );
