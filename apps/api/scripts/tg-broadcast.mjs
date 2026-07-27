@@ -2,6 +2,7 @@
 // Forward-only: tracks the last-broadcast deal id in a cursor file so it never
 // re-posts and never dumps the whole backlog. Run on a cron (~5 min).
 // ponytail: cursor file, not a DB column — no migration, one small state file.
+import 'dotenv/config';       // cron and ad-hoc shells both lack DATABASE_URL otherwise
 import { PrismaClient } from '@prisma/client';
 import fs from 'node:fs';
 import path from 'node:path';
