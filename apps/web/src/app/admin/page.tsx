@@ -54,7 +54,12 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold">Admin — Deals</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-extrabold">Admin — Deals</h1>
+          <a href="/admin/dashboard" className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-200">
+            Dashboard →
+          </a>
+        </div>
         <form action={logout}>
           <button className="text-sm text-gray-500 underline">Logout</button>
         </form>
