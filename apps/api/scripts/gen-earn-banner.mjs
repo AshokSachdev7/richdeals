@@ -2,8 +2,8 @@
 // Spaces, and optionally post it to the Telegram channel.
 //   cd apps/api && node scripts/gen-earn-banner.mjs          # build + upload only
 //   cd apps/api && node scripts/gen-earn-banner.mjs --post   # ...and broadcast it
-// Copy is deliberately literal about redeem being closed — the site says the same
-// thing on /account, and a banner promising a payout that does not exist is a lie.
+// Copy states the real payout terms — Amazon gift card at 100 points, sent by hand.
+// It must keep matching /account; a banner promising more than the code pays is a lie.
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
 
@@ -65,7 +65,7 @@ function svg() {
   ${rows}
   <rect x="76" y="536" width="700" height="1" fill="#ffffff" opacity="0.14"/>
 
-  <text x="90" y="576" font-family="'Segoe UI',Arial,sans-serif" font-size="21" fill="#ffffff" opacity="0.6">Redeem 100 points par khulta hai &#183; abhi points jama hote hain</text>
+  <text x="90" y="576" font-family="'Segoe UI',Arial,sans-serif" font-size="21" fill="#ffffff" opacity="0.6">100 points par redeem &#183; Amazon gift card seedha account mein</text>
 
   <text x="1110" y="576" font-family="'Segoe UI',Arial,sans-serif" font-size="32" font-weight="800" fill="#ffffff" text-anchor="end">Rich<tspan fill="#ffd166">Deals</tspan></text>
   <text x="1110" y="602" font-family="'Segoe UI',Arial,sans-serif" font-size="19" fill="#ffffff" opacity="0.6" text-anchor="end">richdeals.in</text>
@@ -83,7 +83,7 @@ const CAPTION = [
   '',
   'Deal bhejne ka matlab: link do, hum khud price check karte hain. Price sahi nikla aur deal live hui, tabhi point milta hai.',
   '',
-  '<i>Saaf baat: redeem abhi open nahi hai. Points account mein jama hote rehte hain aur 100 points par redeem unlock hoga.</i>',
+  '<b>Redeem ab LIVE hai.</b> 100 points par cash out karo &#8212; Amazon gift card code 3 working days ke andar aapke account page par.',
   '',
   '&#128073; https://richdeals.in/register',
 ].join('\n');

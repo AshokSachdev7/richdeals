@@ -4,6 +4,7 @@ import type { DealFeed } from "@deals/shared";
 import { getDeals } from "@/lib/api";
 import Hero from "@/components/Hero";
 import CategoryStrip from "@/components/CategoryStrip";
+import EarnBanner from "@/components/EarnBanner";
 import LoadMoreDeals from "@/components/LoadMoreDeals";
 import JsonLd from "@/components/JsonLd";
 import { absUrl } from "@/lib/site";
@@ -91,6 +92,8 @@ export default async function HomePage({ searchParams }: Props) {
       <Hero />
 
       <CategoryStrip />
+
+      <EarnBanner />
 
       <section aria-labelledby="deals-heading" className="mt-8">
         <div className="flex flex-wrap items-end justify-between gap-3">
