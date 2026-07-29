@@ -51,7 +51,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPosts(),
   ]);
 
-  const dealRoutes: MetadataRoute.Sitemap = allDeals.map((d) => ({
+  // Only submit deals the page itself lets Google index. The deal page sets
+  // robots noindex for EXPIRED rows and thin rows (no price AND no image); a
+  // sitemap that still lists them earns "Submitted URL marked noindex" in GSC
+  // and drags the domain's quality signal. Keep the two rules identical.
+  const indexableDeals = allDeals.filter(
+    (d) => d.status !== "EXPIRED" && !(d.price == null && !d.image),
+  );
+
+  const dealRoutes: MetadataRoute.Sitemap = indexableDeals.map((d) => ({
     url: absUrl(`/${d.slug}`),
     // last price sighting, not first publish — a deal repriced today should
     // read as changed today
