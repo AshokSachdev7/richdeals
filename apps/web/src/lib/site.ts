@@ -119,15 +119,52 @@ export function dealProductName(
 
 // Rough product-category detection from the title, so the FAQ can ask the
 // questions buyers actually search for that category (warranty/EMI for
-// electronics, authenticity for fashion, etc.).
-function dealKind(title: string): "electronics" | "fashion" | "grocery" | "general" {
+// electronics, authenticity for fashion, fit for pet gear, etc.). Order
+// matters — the first regex that matches wins, so put specific before broad.
+type DealKind =
+  | "electronics"
+  | "fashion"
+  | "beauty"
+  | "grocery"
+  | "lighting"
+  | "kitchen"
+  | "home"
+  | "toys"
+  | "baby"
+  | "tools"
+  | "sports"
+  | "pet"
+  | "stationery"
+  | "general";
+
+function dealKind(title: string): DealKind {
   const t = title.toLowerCase();
-  if (/\b(phone|mobile|5g|smartphone|laptop|tablet|tv|television|earbud|headphone|speaker|smartwatch|watch|camera|monitor|router|printer|console|power ?bank|trimmer|fan|mixer|washing|refriger|microwave|air ?fryer|induction|purifier|iron|geyser|ac\b)/.test(t))
+  if (/\b(phone|mobile|5g|smartphone|laptop|tablet|tv|television|earbud|headphone|speaker|smartwatch|watch|camera|monitor|router|printer|console|power ?bank|trimmer|mixer|washing|refriger|microwave|air ?fryer|induction|purifier|geyser|ac\b|gamepad|game-?pad|keyboard|mouse|neckband|processor|\bcpu\b|\bssd\b|motherboard|graphics card|\bram\b|hard disk)/.test(t))
     return "electronics";
-  if (/\b(shirt|t-?shirt|jeans|trouser|kurta|saree|dress|shoe|sneaker|sandal|slipper|footwear|jacket|hoodie|backpack|bag|vest|innerwear|lingerie|apparel|clothing)\b/.test(t))
+  if (/\b(shirt|t-?shirt|jeans|trouser|kurta|saree|dress|shoe|sneaker|sandal|slipper|footwear|jacket|hoodie|backpack|innerwear|brief|lingerie|apparel|clothing|track ?pant|suitcase|trolley|luggage)\b/.test(t))
     return "fashion";
-  if (/\b(seeds|oil|atta|rice|dal|masala|namkeen|chocolate|coffee|tea|snack|papad|ghee|honey|protein|supplement|shampoo|lotion|cream|soap|facewash|body ?wash)\b/.test(t))
+  if (/\b(lipstick|kajal|mascara|foundation|sunscreen|perfume|deodorant|fragrance|serum|moisturi|shampoo|conditioner|lotion|cream|soap|facewash|face ?wash|body ?wash|hand ?wash|wax|makeup|cosmetic|nail|eyeliner|blush|primer)\b/.test(t))
+    return "beauty";
+  if (/\b(seeds|oil|atta|rice|dal|masala|namkeen|chocolate|coffee|tea|snack|papad|ghee|honey|protein|supplement|biscuit|noodle|flour|spice)\b/.test(t))
     return "grocery";
+  if (/\b(bulb|downlight|led light|led bulb|tube ?light|lamp|light|luminaire|panel light|street light|batten)\b/.test(t))
+    return "lighting";
+  if (/\b(container|dustbin|cookware|kadai|pan|skillet|dinner ?set|opalware|crockery|bottle|lunch ?box|storage|jar|tiffin|casserole|pressure cooker|tawa|utensil|straw)\b/.test(t))
+    return "kitchen";
+  if (/\b(curtain|bedsheet|bed ?sheet|mattress|pillow|cushion|blanket|towel|door mat|doormat|carpet|rug|chair|table|shelf|rack|organizer|draft stopper|home)\b/.test(t))
+    return "home";
+  if (/\b(toy|toyz|unicorn|pencil case|puzzle|board game|chess|building block|lego|doll|figurine|kids)\b/.test(t))
+    return "toys";
+  if (/\b(baby|infant|diaper|mosquito net|stroller|pram|bassinet|feeding bottle|nursery)\b/.test(t))
+    return "baby";
+  if (/\b(hammer|drill|screwdriver|wrench|tool kit|toolkit|plier|spanner|hardware|measuring tape)\b/.test(t))
+    return "tools";
+  if (/\b(treadmill|racket|racquet|dumbbell|yoga|cycle|bicycle|skipping|swim|pool|float|kick scooter|fitness|gym|sport|sweatband)\b/.test(t))
+    return "sports";
+  if (/\b(dog|cat|puppy|kitten|pet|harness|kennel|aquarium)\b/.test(t))
+    return "pet";
+  if (/\b(pen|ball ?pen|gel pen|diary|notebook|stapler|marker|highlighter|stationery|refill ink|ink cartridge)\b/.test(t))
+    return "stationery";
   return "general";
 }
 
@@ -215,7 +252,9 @@ export function dealFaq(
       : `Tap Get Deal to see the current live price of ${name} on ${store}. ${SITE_NAME} always links to the latest marketplace price.`,
   });
 
-  // Category-specific question(s) — the ones buyers actually search.
+  // Category-specific question(s) — the ones buyers actually search for that
+  // product type. Every answer is generic marketplace guidance grounded in the
+  // real store/name; none invents a spec the listing might not have.
   if (kind === "electronics") {
     faqs.push({
       q: `Does ${name} come with a warranty?`,
@@ -230,10 +269,60 @@ export function dealFaq(
       q: `Is ${name} genuine and as shown?`,
       a: `This deal links to ${name} on ${store}, so you get the seller's original listing with size chart, images and buyer reviews. Check the size guide and reviews before ordering, and use ${store}'s easy returns if the fit is off.`,
     });
+  } else if (kind === "beauty") {
+    faqs.push({
+      q: `Is ${name} 100% genuine and safe to use?`,
+      a: `Yes — this opens ${name} on ${store}'s original listing, so you get the seller's authentic product with ingredients, shade/variant options and buyer reviews. Pick the exact shade or variant you want on the page, and check the seller rating before ordering.`,
+    });
   } else if (kind === "grocery") {
     faqs.push({
       q: `Is ${name} a genuine product with a good expiry date?`,
       a: `Yes — this links to ${name} on ${store}'s marketplace listing. Check the seller rating and pack details on the product page, and prefer listings with recent reviews for freshness.`,
+    });
+  } else if (kind === "lighting") {
+    faqs.push({
+      q: `Will ${name} fit my existing fittings?`,
+      a: `${name} is sold on ${store} with its exact base/holder type, wattage and pack size on the listing — check those against your fixture before ordering so it fits straight in.`,
+    });
+  } else if (kind === "kitchen") {
+    faqs.push({
+      q: `What do I get in the ${name} pack?`,
+      a: `The ${store} listing shows the exact set, capacity and piece count for ${name} — check the product images and the "what's in the box" section on ${store} so you receive the pack shown here.`,
+    });
+  } else if (kind === "home") {
+    faqs.push({
+      q: `Is ${name} the size and colour shown?`,
+      a: `${name} lists its exact size, colour and set contents on ${store}. Confirm the dimensions and variant on the product page before ordering, and use ${store}'s returns if it isn't as shown.`,
+    });
+  } else if (kind === "toys") {
+    faqs.push({
+      q: `Is ${name} good quality and safe for kids?`,
+      a: `${name} links to ${store}'s listing where you can see the age recommendation, material and buyer reviews. Check the recommended age and recent reviews before buying to be sure it suits your child.`,
+    });
+  } else if (kind === "baby") {
+    faqs.push({
+      q: `Is ${name} safe for my baby?`,
+      a: `${name} is sold on ${store} with its age suitability and material details on the listing. Check the recommended age range and buyer reviews on ${store} before ordering, and prefer listings with recent feedback.`,
+    });
+  } else if (kind === "tools") {
+    faqs.push({
+      q: `Is ${name} good enough for regular home use?`,
+      a: `${name} lists its build, size and included pieces on ${store}, along with buyer reviews from people using it at home. Check the specs and reviews on the product page to confirm it suits your job.`,
+    });
+  } else if (kind === "sports") {
+    faqs.push({
+      q: `Is ${name} suitable for home use and beginners?`,
+      a: `${name} shows its specifications, size and weight limits on the ${store} listing. Check those details and the buyer reviews on ${store} to be sure it fits your space and fitness level.`,
+    });
+  } else if (kind === "pet") {
+    faqs.push({
+      q: `How do I pick the right size of ${name} for my pet?`,
+      a: `${name} carries a size chart on its ${store} listing. Measure your pet and match it to the chart on the product page before ordering, and check the reviews for fit feedback.`,
+    });
+  } else if (kind === "stationery") {
+    faqs.push({
+      q: `Is ${name} good for daily use or gifting?`,
+      a: `${name} is sold on ${store} with its full description, pack size and buyer reviews on the listing — check those on the product page to see if it suits daily use or makes a good gift.`,
     });
   }
 
