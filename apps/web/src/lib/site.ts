@@ -26,6 +26,42 @@ export function itemListSchema(paths: string[]) {
   };
 }
 
+// AEO/GEO: an ItemList that embeds a full Product + Offer per deal (name,
+// image, INR price, availability, seller) instead of a bare url — so answer
+// engines and Google's listing parsers can read prices straight off a listing
+// page without crawling each deal. Mirrors the single-deal Product schema.
+// Price-less deals still list (name + url + image), just without an Offer,
+// since a bare item inside an ItemList is valid where a lone Product isn't.
+export function dealItemListSchema(
+  deals: (Pick<DealDTO, "title" | "slug" | "price" | "image" | "status"> & {
+    store: { name: string };
+  })[],
+  name: string,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    numberOfItems: deals.length,
+    itemListElement: deals.map((d, i) => {
+      const url = absUrl(`/${d.slug}`);
+      const product: Record<string, unknown> = { "@type": "Product", name: dealProductName(d), url };
+      if (d.image) product.image = [d.image];
+      if (d.price != null) {
+        product.offers = {
+          "@type": "Offer",
+          priceCurrency: "INR",
+          price: String(d.price),
+          availability: d.status === "EXPIRED" ? "https://schema.org/Discontinued" : "https://schema.org/InStock",
+          url,
+          seller: { "@type": "Organization", name: d.store.name },
+        };
+      }
+      return { "@type": "ListItem", position: i + 1, url, item: product };
+    }),
+  };
+}
+
 export function breadcrumbSchema(crumbs: { name: string; href: string }[]) {
   return {
     "@context": "https://schema.org",

@@ -52,9 +52,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     name: SITE_NAME,
     url: SITE_URL,
     logo: absUrl("/logo.png"),
+    description: `${SITE_NAME} is an Indian deals, coupons and freebies aggregator publishing original, price-verified discount write-ups across Amazon, Flipkart, Myntra, Ajio, Nykaa and 100+ stores.`,
+    // Only real, resolving profiles — a fabricated sameAs weakens the entity graph.
     sameAs: [
-      "https://t.me/" + SITE_NAME.toLowerCase(),
-      "https://twitter.com/" + SITE_NAME.toLowerCase(),
+      "https://t.me/+aYRmCknf4_w0MGVl",
+      "https://medium.com/@inrichdaddy",
     ],
   };
   const websiteSchema = {

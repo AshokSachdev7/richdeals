@@ -7,7 +7,7 @@ import CategoryStrip from "@/components/CategoryStrip";
 import EarnBanner from "@/components/EarnBanner";
 import LoadMoreDeals from "@/components/LoadMoreDeals";
 import JsonLd from "@/components/JsonLd";
-import { absUrl } from "@/lib/site";
+import { absUrl, dealItemListSchema } from "@/lib/site";
 
 // Always SSR fresh: the landing feed must show the newest deals on every load.
 // (ISR + on-demand revalidation was serving stale deals for up to 5 min.)
@@ -79,17 +79,7 @@ export default async function HomePage({ searchParams }: Props) {
   });
   const heading = HEADINGS[active];
 
-  const itemListSchema = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: heading.title,
-    itemListElement: items.map((d, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      url: absUrl(`/${d.slug}`),
-      name: d.title,
-    })),
-  };
+  const itemListSchema = dealItemListSchema(items, heading.title);
 
   return (
     <div className="space-y-2">

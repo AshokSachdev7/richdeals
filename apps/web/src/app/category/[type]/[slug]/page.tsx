@@ -6,7 +6,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
 import Pager from "@/components/Pager";
-import { SITE_NAME, absUrl, CATEGORY_TYPE_LABEL } from "@/lib/site";
+import { SITE_NAME, absUrl, CATEGORY_TYPE_LABEL, dealItemListSchema } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -64,17 +64,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     { name, href: `/category/${type}/${slug}` },
   ];
 
-  const itemListSchema = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: `${name} deals`,
-    itemListElement: items.map((d, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      url: absUrl(`/${d.slug}`),
-      name: d.title,
-    })),
-  };
+  const itemListSchema = dealItemListSchema(items, `${name} deals`);
 
   return (
     <div>

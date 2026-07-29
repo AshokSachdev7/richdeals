@@ -7,7 +7,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
 import Pager from "@/components/Pager";
-import { SITE_NAME, absUrl } from "@/lib/site";
+import { SITE_NAME, absUrl, dealItemListSchema } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -58,17 +58,7 @@ export default async function StorePage({ params, searchParams }: Props) {
     { name: store.name, href: `/stores/${store.slug}` },
   ];
 
-  const itemListSchema = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: `${store.name} deals`,
-    itemListElement: items.map((d, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      url: absUrl(`/${d.slug}`),
-      name: d.title,
-    })),
-  };
+  const itemListSchema = dealItemListSchema(items, `${store.name} deals`);
 
   return (
     <div>
