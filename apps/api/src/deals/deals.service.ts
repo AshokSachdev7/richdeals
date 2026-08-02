@@ -151,7 +151,29 @@ export class DealsService {
   }
 
   async setStatus(id: number, status: string): Promise<DealDTO> {
-    const row = await this.prisma.deal.update({ where: { id }, data: { status: normStatus(status) as never }, include: dealInclude });
+    const target = normStatus(status);
+    const current = await this.prisma.deal.findUnique({
+      where: { id },
+      select: { status: true, image: true, price: true, submittedById: true },
+    });
+    if (!current) throw new NotFoundException('Deal not found');
+    // A live page with no picture and no price is exactly the junk (e.g. a bare "amazon deal")
+    // a reviewer is meant to catch — don't let it publish.
+    if (target === 'LIVE' && (!current.image || current.price == null)) {
+      throw new BadRequestException('Deal needs an image and a price before it can go live.');
+    }
+    const row = await this.prisma.deal.update({ where: { id }, data: { status: target as never }, include: dealInclude });
+    // Pay the member who sent it in — once, when it first reaches LIVE. Deduped by the same
+    // key tg-broadcast uses, so approval + the broadcast sweep can never both pay.
+    if (target === 'LIVE' && current.status !== 'LIVE' && current.submittedById) {
+      const uid = current.submittedById;
+      try {
+        await this.prisma.$transaction([
+          this.prisma.pointEvent.create({ data: { userId: uid, kind: 'deal_submit', points: 1, dedupeKey: `deal_submit:${id}`, dealId: id } }),
+          this.prisma.user.update({ where: { id: uid }, data: { points: { increment: 1 } } }),
+        ]);
+      } catch { /* already paid */ }
+    }
     return toDealDTO(row);
   }
 

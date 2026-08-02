@@ -416,6 +416,90 @@ export default function AccountClient() {
         )}
       </div>
 
+      {/* Plain-English guide — the mechanics exist below; this explains them. Native
+          <details> so it collapses with zero JS. Open by default so first-timers read it. */}
+      <details
+        open
+        className="group mt-5 rounded-2xl border border-gray-200 bg-white p-5 [&_summary]:cursor-pointer [&_summary::-webkit-details-marker]:hidden"
+      >
+        <summary className="flex items-center justify-between font-display text-base font-bold text-ink">
+          How RichDeals works — a quick guide
+          <span className="text-gray-400 transition-transform group-open:rotate-180">▾</span>
+        </summary>
+        <div className="mt-4 space-y-5 text-sm text-gray-600">
+          <div>
+            <h3 className="font-bold text-ink">📝 How to post a deal</h3>
+            <ol className="mt-2 list-decimal space-y-1 pl-5">
+              <li>
+                Copy the <b>product link</b> from Amazon, Flipkart, Myntra or any store — a single
+                product page, not a search or category page.
+              </li>
+              <li>
+                Tap{" "}
+                <Link href="/submit" className="font-semibold text-brand hover:underline">
+                  Post a deal
+                </Link>{" "}
+                and paste the link. Add the price if you know it.
+              </li>
+              <li>
+                We check the store&apos;s live price ourselves. If it holds up and the deal is not
+                already on RichDeals, it goes live.
+              </li>
+              <li>
+                You earn <b>1 point (₹1)</b> the moment it publishes. First person to send a deal
+                wins the point.
+              </li>
+            </ol>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-ink">📂 Track your posts</h3>
+            <p className="mt-2">
+              Every deal you send shows under <b>&ldquo;Deals you sent in&rdquo;</b> below, with a
+              live status:
+            </p>
+            <ul className="mt-2 space-y-1">
+              <li>⏳ <b>Being checked</b> — we&apos;re verifying the price.</li>
+              <li>✅ <b>Live · +1 point</b> — published, point added to your balance.</li>
+              <li>
+                ⛔ <b>Not published</b> — price didn&apos;t hold up, or it was already listed. No
+                point for that one.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-ink">💸 How to withdraw your points</h3>
+            <ol className="mt-2 list-decimal space-y-1 pl-5">
+              <li>
+                Reach <b>{me.redeemAt} points</b> (₹{me.redeemAt}). The bar on your points card shows
+                how close you are.
+              </li>
+              <li>
+                Tap <b>&ldquo;Redeem → Amazon gift card&rdquo;</b> on the points card — it cashes out
+                your <b>full balance</b> in one go.
+              </li>
+              <li>
+                We send an <b>Amazon gift-card code by hand within 3 working days</b>. It appears
+                under <b>Payouts</b> here — redeem it at amazon.in/gc/redeem.
+              </li>
+            </ol>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-ink">📅 Earn a little every day</h3>
+            <ul className="mt-2 space-y-1">
+              <li><b>Daily check-in</b> — +1 point (₹1) once a day, one tap.</li>
+              <li>
+                <b>Invite friends</b> — +1 point (₹1) each time someone joins with your code{" "}
+                <span className="font-mono font-bold text-brand">{me.refCode}</span>.
+              </li>
+              <li><b>Forum</b> — chatting earns karma (rank &amp; badges), not points.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <div className="rounded-xl border border-gray-200 p-4">
           <h2 className="font-display text-base font-bold text-ink">Daily check-in</h2>

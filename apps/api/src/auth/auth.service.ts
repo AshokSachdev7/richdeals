@@ -189,12 +189,14 @@ export class AuthService {
       .slice(0, 120);
     const price = given.price ?? scraped?.price ?? null;
     const mrp = given.mrp ?? scraped?.mrp ?? null;
+    const photo = given.image ?? scraped?.image ?? null;
     const pct = mrp && price && mrp > price ? Math.round(((mrp - price) / mrp) * 100) : null;
     const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)}-${parsed.productId.toLowerCase()}`.slice(0, 100);
 
     // Trust the store's own number, not the member's: publish straight away only when we
-    // read the price ourselves and the member did not contradict it by more than ₹1.
-    const verified = !!scraped?.price && (!given.price || Math.abs(scraped.price - given.price) <= 1);
+    // read the price AND a picture ourselves and the member did not contradict the price by
+    // more than ₹1. No image or no price -> pending-review (a bare deal never goes live).
+    const verified = !!scraped?.price && !!photo && (!given.price || Math.abs(scraped.price - given.price) <= 1);
 
     const { deal } = await this.deals.upsertFromIngest({
       ...base,
@@ -203,7 +205,7 @@ export class AuthService {
       description:
         given.description ??
         `${name} is live${price ? ` at ₹${price}` : ''}${pct ? ` (${pct}% off)` : ''}. Price read off the store page when this deal was submitted.`,
-      image: given.image ?? scraped?.image ?? undefined,
+      image: photo ?? undefined,
       price: price ?? undefined,
       mrp: mrp ?? undefined,
       discountPct: pct ?? undefined,
