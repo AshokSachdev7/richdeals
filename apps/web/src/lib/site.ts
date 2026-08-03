@@ -358,6 +358,106 @@ export function dealFaq(
   return faqs;
 }
 
+// ---- Collection (category / store hub) AEO+GEO helpers -------------------
+// The hub pages (/category/*, /stores/*) are already crawled but were thin
+// deal grids. These build real stats + a FAQ from the LIVE deals on the page
+// so each hub carries answer-first GEO copy + FAQPage schema. No fabrication —
+// every number comes from the deals passed in.
+type CollectionDeal = Pick<DealDTO, "title" | "slug" | "price" | "mrp" | "discountPct"> & {
+  store?: { name: string } | null;
+};
+
+export interface CollectionStats {
+  count: number;
+  min: number | null;
+  max: number | null;
+  avgDisc: number | null;
+  maxDisc: number | null;
+  topStore: string | null;
+  topPicks: (CollectionDeal & { disc: number; price: number })[];
+}
+
+export function collectionStats(deals: CollectionDeal[]): CollectionStats {
+  const prices = deals.map((d) => d.price).filter((p): p is number => p != null);
+  const discs = deals
+    .map((d) => discountOf(d))
+    .filter((x): x is number => x != null);
+
+  const storeCount = new Map<string, number>();
+  for (const d of deals) {
+    const s = d.store?.name;
+    if (s) storeCount.set(s, (storeCount.get(s) ?? 0) + 1);
+  }
+  const topStore = [...storeCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+
+  const topPicks = deals
+    .map((d) => ({ ...d, disc: discountOf(d), price: d.price }))
+    .filter((d): d is CollectionDeal & { disc: number; price: number } => d.disc != null && d.price != null)
+    .sort((a, b) => b.disc - a.disc)
+    .slice(0, 5);
+
+  return {
+    count: deals.length,
+    min: prices.length ? Math.min(...prices) : null,
+    max: prices.length ? Math.max(...prices) : null,
+    avgDisc: discs.length ? Math.round(discs.reduce((a, b) => a + b, 0) / discs.length) : null,
+    maxDisc: discs.length ? Math.max(...discs) : null,
+    topStore,
+    topPicks,
+  };
+}
+
+// FAQ for a collection hub, grounded entirely in the real stats above.
+// variant tunes wording for a store hub vs a category hub.
+export function collectionFaq(
+  name: string,
+  stats: CollectionStats,
+  variant: "category" | "store",
+): { q: string; a: string }[] {
+  const faqs: { q: string; a: string }[] = [];
+  const scope = variant === "store" ? `on ${name}` : `in ${name}`;
+  const range =
+    stats.min != null && stats.max != null
+      ? stats.min === stats.max
+        ? ` priced around ${formatINR(stats.min)}`
+        : ` priced from ${formatINR(stats.min)} to ${formatINR(stats.max)}`
+      : "";
+
+  faqs.push({
+    q: `How many ${name} deals are live right now?`,
+    a: `${SITE_NAME} is tracking ${stats.count} verified ${name} deal${stats.count === 1 ? "" : "s"} ${scope}${range}. The list refreshes through the day as prices change, so the count and prices you see are the current live ones, not cached figures.`,
+  });
+
+  if (stats.maxDisc != null) {
+    const top = stats.topPicks[0];
+    faqs.push({
+      q: `What is the biggest discount on ${name} deals today?`,
+      a: `The highest saving live ${scope} right now is ${stats.maxDisc}% off${
+        top ? ` — on ${dealProductName(top)} at ${formatINR(top.price)}` : ""
+      }. Discounts move daily, so check the price on the store's checkout page before you buy.`,
+    });
+  }
+
+  if (variant === "store" && stats.topStore) {
+    faqs.push({
+      q: `Are these ${name} deals verified?`,
+      a: `Yes. Every deal ${scope} links to the product's live listing, and ${SITE_NAME} tracks the marketplace price directly rather than quoting an estimate. Prices and stock can still change between our check and your checkout, so confirm the final amount on ${name} before paying.`,
+    });
+  } else if (stats.topStore) {
+    faqs.push({
+      q: `Which stores have the best ${name} deals?`,
+      a: `Right now ${stats.topStore} has the most live ${name} deals on ${SITE_NAME}, but the list pulls from every merchant we track — Amazon, Flipkart, Myntra, Ajio, Croma and more — so compare across stores before ordering.`,
+    });
+  }
+
+  faqs.push({
+    q: `How do I save more on ${name} deals?`,
+    a: `Stack the deal price with a bank or card offer at checkout and any usable coupon — that combination usually beats the sticker discount. ${SITE_NAME} re-posts each product when its price drops again, so it is worth checking back rather than buying at the first price you see.`,
+  });
+
+  return faqs;
+}
+
 // Human labels for category URL segments.
 export const CATEGORY_TYPE_LABEL: Record<string, string> = {
   "shopping-category": "Category",

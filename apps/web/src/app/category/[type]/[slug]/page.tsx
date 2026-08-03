@@ -6,6 +6,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
 import Pager from "@/components/Pager";
+import CollectionSeo from "@/components/CollectionSeo";
 import { SITE_NAME, absUrl, CATEGORY_TYPE_LABEL, dealItemListSchema } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
@@ -80,6 +81,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       </div>
       <DealGrid deals={items} emptyMessage={`No ${name} deals live right now. Check back soon!`} />
       <Pager basePath={`/category/${type}/${slug}`} cursor={nextCursor} params={{ sort }} />
+      {!cursor && <CollectionSeo name={name} deals={items} variant="category" />}
     </div>
   );
 }

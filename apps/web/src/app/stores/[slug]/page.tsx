@@ -7,6 +7,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
 import Pager from "@/components/Pager";
+import CollectionSeo from "@/components/CollectionSeo";
 import { SITE_NAME, absUrl, dealItemListSchema } from "@/lib/site";
 
 export const revalidate = 300;
@@ -80,6 +81,7 @@ export default async function StorePage({ params, searchParams }: Props) {
       </div>
       <DealGrid deals={items} emptyMessage={`No ${store.name} deals live right now. Check back soon!`} />
       <Pager basePath={`/stores/${store.slug}`} cursor={nextCursor} params={{ sort }} />
+      {!cursor && <CollectionSeo name={store.name} deals={items} variant="store" />}
     </div>
   );
 }
