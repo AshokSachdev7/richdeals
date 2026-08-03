@@ -54,9 +54,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonical = absUrl(`/${deal.slug}`);
   const seoTitle = dealSeoTitle(deal);
 
-  // Expired deals stay live (owner rule: never 404) but drop out of the index —
-  // same for thin rows with neither a price nor an image. Links still followed.
-  const indexable = deal.status !== "EXPIRED" && !(deal.price == null && !deal.image);
+  // Index only "real deal" pages: has price AND image AND a visible saving
+  // (discountPct). Google was refusing ~2500 thin deal pages ("Discovered –
+  // currently not indexed"); a page with no price/image/discount reads as a
+  // duplicate of the merchant PDP and drags the whole domain's quality signal.
+  // Expired stays live (never 404) but out of the index. Links still followed.
+  // Keep this rule identical to the sitemap filter in app/sitemap.ts.
+  const indexable =
+    deal.status !== "EXPIRED" &&
+    deal.price != null &&
+    !!deal.image &&
+    deal.discountPct != null;
 
   return {
     title: seoTitle,

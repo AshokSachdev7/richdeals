@@ -51,12 +51,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPosts(),
   ]);
 
-  // Only submit deals the page itself lets Google index. The deal page sets
-  // robots noindex for EXPIRED rows and thin rows (no price AND no image); a
-  // sitemap that still lists them earns "Submitted URL marked noindex" in GSC
-  // and drags the domain's quality signal. Keep the two rules identical.
+  // Only submit deals the page itself lets Google index. Must match the robots
+  // rule in app/[dealSlug]/page.tsx EXACTLY: real deal = has price AND image AND
+  // a visible saving (discountPct). Firehosing 4358 thin deal URLs starved
+  // crawl budget and left ~2500 stuck in "Discovered – currently not indexed";
+  // gating to genuine deals concentrates crawl on pages that can actually rank.
   const indexableDeals = allDeals.filter(
-    (d) => d.status !== "EXPIRED" && !(d.price == null && !d.image),
+    (d) => d.status !== "EXPIRED" && d.price != null && !!d.image && d.discountPct != null,
   );
 
   const dealRoutes: MetadataRoute.Sitemap = indexableDeals.map((d) => ({
