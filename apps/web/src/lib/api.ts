@@ -16,7 +16,12 @@ const emptyPage = <T>(): Paginated<T> => ({ items: [], nextCursor: null, total: 
 // return the safe fallback so pages render instead of crashing the build.
 async function apiGet<T>(path: string, fallback: T, revalidate: number = 300): Promise<T> {
   try {
-    const res = await fetch(`${API}${path}`, { next: { revalidate } });
+    // 8s AbortSignal so a stalled upstream aborts → catch → fallback, instead of
+    // hanging until Cloudflare's ~100s 504 (root cause of intermittent feed.xml 504s).
+    const res = await fetch(`${API}${path}`, {
+      next: { revalidate },
+      signal: AbortSignal.timeout(8000),
+    });
     if (!res.ok) return fallback;
     return (await res.json()) as T;
   } catch {
