@@ -51,11 +51,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPosts(),
   ]);
 
-  // If the API blipped during this ISR regen, every getX() returned its empty
-  // fallback and we'd cache a sitemap of just the 13 static routes for 30 min —
-  // GSC then records "13 discovered pages". Throw instead: Next.js keeps serving
-  // the last good sitemap and retries on the next request, so a stub never ships.
-  if (allDeals.length === 0) {
+  // If the API blipped during a runtime ISR regen, every getX() returned its
+  // empty fallback and we'd cache a sitemap of just the 13 static routes for
+  // 30 min — GSC then records "13 discovered pages". Throw instead: Next.js
+  // keeps serving the last good sitemap and retries next request, so a stub
+  // never ships. Skip this at build time — the api component isn't serving
+  // during the web build, so an empty fetch there is expected and the first
+  // runtime revalidate repopulates it.
+  if (allDeals.length === 0 && process.env.NEXT_PHASE !== "phase-production-build") {
     throw new Error("sitemap: deal fetch returned 0 — refusing to cache degraded sitemap");
   }
 
