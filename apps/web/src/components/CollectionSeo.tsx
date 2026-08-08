@@ -19,16 +19,22 @@ export default function CollectionSeo({
   name,
   deals,
   variant,
+  extraFaqs,
 }: {
   name: string;
   deals: Deal[];
   variant: "category" | "store";
+  // Store/category-specific "people also ask" FAQs, merged ahead of the
+  // data-driven ones into a single FAQPage. These render even when the hub is
+  // too thin for the data summary/table (evergreen AEO copy always shows).
+  extraFaqs?: { q: string; a: string }[];
 }) {
   const stats: CollectionStats = collectionStats(deals);
-  // ponytail: <3 real deals isn't enough to say anything non-generic — skip.
-  if (stats.count < 3) return null;
-
-  const faqs = collectionFaq(name, stats, variant);
+  // ponytail: <3 real deals isn't enough to say anything non-generic — skip the
+  // data summary + table, but still show any evergreen FAQs passed in.
+  const hasData = stats.count >= 3;
+  const faqs = [...(extraFaqs ?? []), ...(hasData ? collectionFaq(name, stats, variant) : [])];
+  if (!hasData && faqs.length === 0) return null;
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -50,6 +56,7 @@ export default function CollectionSeo({
       <JsonLd data={faqSchema} />
 
       {/* GEO answer-first summary — citable standalone passage with real numbers */}
+      {hasData && (
       <section>
         <h2 className="text-lg font-bold">{name} deals — quick summary</h2>
         <p className="mt-2 text-[15px] leading-relaxed text-gray-700">
@@ -64,6 +71,7 @@ export default function CollectionSeo({
           bank or card offer at checkout to save the most.
         </p>
       </section>
+      )}
 
       {/* Top-picks comparison table — the structure answer engines quote */}
       {stats.topPicks.length >= 3 && (

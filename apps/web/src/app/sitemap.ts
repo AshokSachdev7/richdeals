@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getDeals, getStores, getCategories, getPosts } from "@/lib/api";
 import { absUrl } from "@/lib/site";
+import { COMPARISONS } from "@/lib/comparisons";
 
 // ISR-cached (not force-dynamic): with ~2000 deals the per-request render is
 // ~33 sequential API calls and was timing out. Cache for 30min instead.
@@ -34,6 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absUrl("/coupons"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/freebies"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/blog"), lastModified: now, changeFrequency: "daily", priority: 0.6 },
+    { url: absUrl("/compare"), lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: absUrl("/submit"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     // Trust pages — AdSense review and Google both look for these, and they
     // were reachable from the footer but absent from the sitemap.
@@ -103,5 +105,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticRoutes, ...dealRoutes, ...storeRoutes, ...categoryRoutes, ...postRoutes];
+  const compareRoutes: MetadataRoute.Sitemap = COMPARISONS.map((c) => ({
+    url: absUrl(`/compare/${c.slug}`),
+    lastModified: new Date(c.updated),
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...dealRoutes,
+    ...storeRoutes,
+    ...categoryRoutes,
+    ...postRoutes,
+    ...compareRoutes,
+  ];
 }
