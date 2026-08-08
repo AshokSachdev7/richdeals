@@ -7,21 +7,20 @@ import { paginateDeals } from '../deals/deal.query';
 export class StoresService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // A store with one or two live deals is a thin page — bad for AdSense review,
-  // bad for crawl budget, and it was leaking into llms.txt as a headline "store"
-  // (Tinyurl, Pedigree, Testbook, Cred all had exactly 1 deal). The deals stay
-  // live at their own URLs; only the store hub stops being advertised.
-  // ponytail: threshold, not a delete — an ingest that grows the store un-hides it.
-  static readonly MIN_LIVE_DEALS = 3;
-
+  // Owner directive 2026-08-08: surface EVERY store hub (even 0 live deals) —
+  // the 245-store directory imported from the store list exists for the traffic
+  // those pages pull, so list() no longer filters by live-deal count. Store hubs
+  // render an empty-state ("No X deals live right now") rather than 404.
   async list(): Promise<StoreDTO[]> {
     const stores = await this.prisma.store.findMany({
       orderBy: { name: 'asc' },
-      include: { _count: { select: { deals: { where: { status: 'LIVE' } } } } },
     });
-    return stores
-      .filter((s) => s._count.deals >= StoresService.MIN_LIVE_DEALS)
-      .map((s) => ({ id: s.id, name: s.name, slug: s.slug, logo: s.logo }));
+    return stores.map((s) => ({
+      id: s.id,
+      name: s.name,
+      slug: s.slug,
+      logo: s.logo,
+    }));
   }
 
   async getBySlug(
