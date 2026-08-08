@@ -34,6 +34,13 @@ export default function ProductImage({
         fill
         sizes={sizes}
         priority={priority}
+        // Deals come from ANY store CDN (PlayStation, brand D2C, Cuelinks
+        // merchants, ...). The Next optimizer 400s every host not in
+        // next.config remotePatterns, so arbitrary marketplace images break.
+        // Marketplace CDNs already serve right-sized images — skip the
+        // optimizer so any https host renders (no per-store allowlist churn,
+        // no SSRF-via-optimizer surface).
+        unoptimized
         // next/image's `priority` only preloads; it does NOT set fetchPriority
         fetchPriority={priority ? "high" : undefined}
         onLoad={() => setLoaded(true)}
