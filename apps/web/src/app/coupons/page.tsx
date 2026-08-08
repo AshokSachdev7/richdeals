@@ -15,8 +15,8 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   // Paged variants are crawl paths to older coupons, not index targets.
   const { cursor } = await searchParams;
   return {
-    title: "Coupon Codes & Promo Offers",
-    description: `Verified coupon codes and promo offers from top Indian stores — copy, paste and save on ${SITE_NAME}.`,
+    title: "Coupon Codes Today — Amazon, Flipkart & More",
+    description: `Verified coupon codes and promo offers today from Amazon, Flipkart, Myntra and more Indian stores — copy, paste and save on ${SITE_NAME}. Tested and updated daily.`,
     robots: cursor ? { index: false, follow: true } : undefined,
     alternates: { canonical: absUrl("/coupons") },
   };
@@ -36,9 +36,11 @@ export default async function CouponsPage({ searchParams }: Props) {
       <JsonLd data={breadcrumbSchema(crumbs)} />
       <JsonLd data={itemListSchema(items.map((d) => `/${d.slug}`))} />
       <Breadcrumbs items={crumbs} />
-      <h1 className="mb-1 text-2xl font-extrabold">Coupon Codes</h1>
-      <p className="mb-4 text-sm text-gray-500">
-        Working promo codes and discount coupons, tested and updated daily.
+      <h1 className="mb-1 text-2xl font-extrabold">Coupon Codes Today</h1>
+      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-gray-600">
+        Working promo codes and discount coupons for Amazon, Flipkart, Myntra and more Indian stores — every code
+        here is tested and updated daily, so you can copy, paste and save at checkout without hunting for one that
+        still works.
       </p>
       <div className="mb-5 flex justify-end">
         <SortControl />
