@@ -53,12 +53,14 @@ for (const slug of slugs) {
   const { tags = [], ...m } = meta;
   const data = {
     slug: m.slug || slug, title: m.title, body,
-    excerpt: m.excerpt ?? null, seoTitle: m.seoTitle ?? null, seoDesc: m.seoDesc ?? null, cover: m.cover ?? null,
+    excerpt: m.excerpt ?? null, seoTitle: m.seoTitle ?? null, seoDesc: m.seoDesc ?? null,
   };
   const row = await withRetry(() => p.post.upsert({
     where: { slug: data.slug },
-    update: { ...data, publishedAt: now },
-    create: { ...data, author: 'RichDeals Editorial', publishedAt: now },
+    // only write cover when meta carries one — gen-blog-covers.mjs writes it back to the DB, not the meta file,
+    // so a re-publish of an existing slug must NOT null the live cover
+    update: { ...data, ...(m.cover ? { cover: m.cover } : {}), publishedAt: now },
+    create: { ...data, cover: m.cover ?? null, author: 'RichDeals Editorial', publishedAt: now },
   }), data.slug);
   for (const t of tags) {
     const ts = String(t).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
