@@ -1,0 +1,1472 @@
+[
+  {
+    "name": "Amazon India",
+    "host": "amazon.in",
+    "url": "https://www.amazon.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/341759/amazon-.in-logo-400-x-200.png"
+  },
+  {
+    "name": "Airtel Payment Bank",
+    "host": "airtelpayments.bank.in",
+    "url": "https://www.airtelpayments.bank.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/63/c245b72e-e5eb-495a-acbf-6e314421c4fa.jpg"
+  },
+  {
+    "name": "Ajio",
+    "host": "ajio.com",
+    "url": "https://www.ajio.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/418611/Ajio_400x200_logo-png.png"
+  },
+  {
+    "name": "Chumbak",
+    "host": "chumbak.com",
+    "url": "https://www.chumbak.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/547500/logo.png"
+  },
+  {
+    "name": "Cleartrip",
+    "host": "cleartrip.com",
+    "url": "https://www.cleartrip.com/flights",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/393913/cleartrip-logo.png"
+  },
+  {
+    "name": "Etihad Airways",
+    "host": "etihad.com",
+    "url": "https://www.etihad.com/en-ae/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394159/etihad-airways-logo.png"
+  },
+  {
+    "name": "Firstcry",
+    "host": "firstcry.com",
+    "url": "https://www.firstcry.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394588/first-cry-logo.png"
+  },
+  {
+    "name": "Floweraura",
+    "host": "floweraura.com",
+    "url": "https://www.floweraura.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394169/flower-aura-logo.png"
+  },
+  {
+    "name": "Forest Essentials",
+    "host": "forestessentialsindia.com",
+    "url": "https://www.forestessentialsindia.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/328954/forest-essen-400x200-png.png"
+  },
+  {
+    "name": "Elementor",
+    "host": "elementor.com",
+    "url": "https://elementor.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/508613/a.png"
+  },
+  {
+    "name": "Indian Gifts Portal",
+    "host": "igp.com",
+    "url": "https://www.igp.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/413344/igp-logo-revamp.png"
+  },
+  {
+    "name": "Wonderchef",
+    "host": "wonderchef.com",
+    "url": "https://www.wonderchef.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/468742/Wonderchef_logo.png"
+  },
+  {
+    "name": "Bharat Loan",
+    "host": "bharatloan.com",
+    "url": "https://www.bharatloan.com/apply-now",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/464016/brand_logo.png"
+  },
+  {
+    "name": "TheManCompany",
+    "host": "themancompany.com",
+    "url": "https://www.themancompany.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/329368/man-company---400x200-png.png"
+  },
+  {
+    "name": "The Body Shop",
+    "host": "thebodyshop.in",
+    "url": "https://www.thebodyshop.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/401929/Body-shop-logo.png"
+  },
+  {
+    "name": "Myntra",
+    "host": "myntra.com",
+    "url": "https://www.myntra.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/328661/myntra--logo-400x200--png.png"
+  },
+  {
+    "name": "Nykaa Beauty",
+    "host": "nykaa.com",
+    "url": "https://www.nykaa.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/395770/Nykaa-logo.png"
+  },
+  {
+    "name": "Rupee 112",
+    "host": "rupee112.com",
+    "url": "https://www.rupee112.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/509491/h.jpg"
+  },
+  {
+    "name": "Money Control PL",
+    "host": "moneycontrolpay.com",
+    "url": "https://www.moneycontrolpay.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/513472/OIP.jpeg"
+  },
+  {
+    "name": "Pepperfry",
+    "host": "pepperfry.com",
+    "url": "https://www.pepperfry.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/395273/pepperfry-logo-400x200.png"
+  },
+  {
+    "name": "TataCliq",
+    "host": "tatacliq.com",
+    "url": "https://www.tatacliq.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398890/tata-cliq-logo-2-.png"
+  },
+  {
+    "name": "Bigrock",
+    "host": "bigrock.in",
+    "url": "https://www.bigrock.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/393842/Big-rock_400x200_logo.png"
+  },
+  {
+    "name": "Uber",
+    "host": "uber.com",
+    "url": "https://www.uber.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/67596/ku%2BACnHIYCC6mEmAAAAAElFTkSuQmCC"
+  },
+  {
+    "name": "Healthkart",
+    "host": "healthkart.com",
+    "url": "https://www.healthkart.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/341781/Healthkart-logo-400-x-200.png"
+  },
+  {
+    "name": "WforWoman",
+    "host": "wforwoman.com",
+    "url": "https://wforwoman.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/391935/WforWoman-logo.png"
+  },
+  {
+    "name": "Croma",
+    "host": "croma.com",
+    "url": "https://www.croma.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/406052/croma_logo.png"
+  },
+  {
+    "name": "Yatra (Hotel and Flights)",
+    "host": "yatra.com",
+    "url": "https://www.yatra.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/391294/yatra--logo.png"
+  },
+  {
+    "name": "Lenovo",
+    "host": "lenovo.com",
+    "url": "https://www.lenovo.com/in/en/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/395298/lenovo-logo.png"
+  },
+  {
+    "name": "Moglix",
+    "host": "moglix.com",
+    "url": "https://www.moglix.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/395300/moglix-logo.png"
+  },
+  {
+    "name": "Levis",
+    "host": "levi.in",
+    "url": "https://levi.in/collections/new-arrivals",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/391410/levis-logo.png"
+  },
+  {
+    "name": "Jockey",
+    "host": "jockey.in",
+    "url": "https://www.jockey.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/557256/logo.png"
+  },
+  {
+    "name": "Marks and Spencer",
+    "host": "marksandspencer.in",
+    "url": "https://www.marksandspencer.in/l/offers/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/397411/m%26s-logo--400x200-psd.png"
+  },
+  {
+    "name": "Makemytrip (Domestic Hotels)",
+    "host": "makemytrip.com",
+    "url": "https://www.makemytrip.com/hotels/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/395191/make-my-trip-logo.png"
+  },
+  {
+    "name": "JBL",
+    "host": "in.jbl.com",
+    "url": "https://in.jbl.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/341815/jbl--logo-400-x-200.png"
+  },
+  {
+    "name": "Udemy",
+    "host": "udemy.com",
+    "url": "https://www.udemy.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/395793/udemy-logo.png"
+  },
+  {
+    "name": "Acer",
+    "host": "store.acer.com",
+    "url": "https://store.acer.com/en-in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/393758/acer-logo.png"
+  },
+  {
+    "name": "Asus",
+    "host": "asus.com",
+    "url": "https://www.asus.com/in/store/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/6047/asus.jpg"
+  },
+  {
+    "name": "Oppo",
+    "host": "oppo.com",
+    "url": "https://www.oppo.com/in/store",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/6052/oppo.jpg"
+  },
+  {
+    "name": "Air India",
+    "host": "airindia.com",
+    "url": "https://www.airindia.com/en-in/book-flights/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/6387/air-india.jpeg"
+  },
+  {
+    "name": "Urban Ladder",
+    "host": "urbanladder.com",
+    "url": "https://www.urbanladder.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/7373/urbanladder-1480321746182.png"
+  },
+  {
+    "name": "Campus Sutra",
+    "host": "cahoot.in",
+    "url": "https://cahoot.in/collections/men-bestsellers",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549664/logo.png"
+  },
+  {
+    "name": "HaldiramsOnline",
+    "host": "haldirams.com",
+    "url": "https://haldirams.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/7465/haldiramsonline.jpeg"
+  },
+  {
+    "name": "Dish TV",
+    "host": "dishtv.in",
+    "url": "https://www.dishtv.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/7472/dishtv.jpeg"
+  },
+  {
+    "name": "Jaypore",
+    "host": "jaypore.com",
+    "url": "https://www.jaypore.com/c/eoss-2025",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/397020/Jaypore-logo.png"
+  },
+  {
+    "name": "Yes Bank POP CC",
+    "host": "applyonline.getpopcard.co",
+    "url": "https://applyonline.getpopcard.co/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/521401/logo.png"
+  },
+  {
+    "name": "Bluehost",
+    "host": "bluehost.in",
+    "url": "https://www.bluehost.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/393852/blue-host-logo.png"
+  },
+  {
+    "name": "Vijay Sales",
+    "host": "vijaysales.com",
+    "url": "https://www.vijaysales.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/341818/vijay-sale-logo-400-x-200.png"
+  },
+  {
+    "name": "Furlenco",
+    "host": "furlenco.com",
+    "url": "https://www.furlenco.com/rent",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/375362/download-%2832%29.png"
+  },
+  {
+    "name": "Soulflower",
+    "host": "soulflower.in",
+    "url": "https://www.soulflower.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398856/soul-flower-logo.png"
+  },
+  {
+    "name": "Axis Bank CC",
+    "host": "web.axis.bank.in",
+    "url": "https://web.axis.bank.in/DigitalChannel/WebForm/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/456941/axis.png"
+  },
+  {
+    "name": "P N Gadgil Jewellers",
+    "host": "pngjewellers.com",
+    "url": "https://www.pngjewellers.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/7887/pngadgiljewellers.jpeg"
+  },
+  {
+    "name": "DBS Digibank",
+    "host": "dbs.com",
+    "url": "https://www.dbs.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/493444/images.jpeg"
+  },
+  {
+    "name": "NMIMS MBA",
+    "host": "campaign.online.nmims.edu",
+    "url": "https://campaign.online.nmims.edu/mba-online-programme-campaign-otp",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/552329/nn.webp"
+  },
+  {
+    "name": "Soch",
+    "host": "soch.com",
+    "url": "https://www.soch.com/in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/435443/soch-logo.png"
+  },
+  {
+    "name": "Lavie World",
+    "host": "lavieworld.com",
+    "url": "http://www.lavieworld.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/552917/logo.png"
+  },
+  {
+    "name": "Kama Ayurveda",
+    "host": "kamaayurveda.in",
+    "url": "https://www.kamaayurveda.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/328909/kama--400x200-png.png"
+  },
+  {
+    "name": "Noise",
+    "host": "gonoise.com",
+    "url": "https://www.gonoise.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394621/gonoise-logo.png"
+  },
+  {
+    "name": "Malaysia Airlines",
+    "host": "malaysiaairlines.com",
+    "url": "https://www.malaysiaairlines.com/my/en/home.html",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/8280/malaysiaairlines-1481702651272.png"
+  },
+  {
+    "name": "Instamoney",
+    "host": "instamoney.app",
+    "url": "https://www.instamoney.app/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/516196/IMG_1810.jpeg"
+  },
+  {
+    "name": "Redchief",
+    "host": "redchief.in",
+    "url": "https://redchief.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549615/logo.png"
+  },
+  {
+    "name": "Uni Card",
+    "host": "uni.cards",
+    "url": "https://www.uni.cards/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/550944/uu.avif"
+  },
+  {
+    "name": "Newchic",
+    "host": "newchic.com",
+    "url": "https://www.newchic.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/445798/newchic_logo.png"
+  },
+  {
+    "name": "Licious App",
+    "host": "licious.in",
+    "url": "https://www.licious.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/339051/licious-logo.jpeg"
+  },
+  {
+    "name": "Banggood",
+    "host": "banggood.in",
+    "url": "https://www.banggood.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/74971/ban.jpg"
+  },
+  {
+    "name": "Thrillophilia",
+    "host": "thrillophilia.com",
+    "url": "https://www.thrillophilia.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549663/logo.png"
+  },
+  {
+    "name": "iHerb",
+    "host": "in.iherb.com",
+    "url": "https://in.iherb.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/395010/iherb-logo.png"
+  },
+  {
+    "name": "H&M",
+    "host": "www2.hm.com",
+    "url": "https://www2.hm.com/en_in/index.html",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/8564/hm-1504596659584.jpg"
+  },
+  {
+    "name": "UpGrad",
+    "host": "upgrad.com",
+    "url": "https://www.upgrad.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/8577/upgrad-1505197701806.png"
+  },
+  {
+    "name": "Havells",
+    "host": "havells.com",
+    "url": "https://havells.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/111740/Havells-1.jpg"
+  },
+  {
+    "name": "Klook",
+    "host": "klook.com",
+    "url": "https://www.klook.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/397059/download-%2880%29.png"
+  },
+  {
+    "name": "Fiverr",
+    "host": "fiverr.com",
+    "url": "https://www.fiverr.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394590/fiverr.png"
+  },
+  {
+    "name": "Jack&Jones",
+    "host": "jackjones.in",
+    "url": "https://www.jackjones.in/collections/new-in-jj/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/397018/jack-%26-jones-logo.png"
+  },
+  {
+    "name": "ONLY",
+    "host": "only.in",
+    "url": "https://www.only.in/collections/new-arrivals/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398585/only-logo.png"
+  },
+  {
+    "name": "The Moms Co",
+    "host": "themomsco.com",
+    "url": "https://themomsco.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/341652/momsco--logo-400-x-200.png"
+  },
+  {
+    "name": "Ace Blend",
+    "host": "aceblend.com",
+    "url": "https://www.aceblend.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/535606/ace-blend-logo-01.png"
+  },
+  {
+    "name": "Goibibo (Hotels)",
+    "host": "goibibo.com",
+    "url": "https://www.goibibo.com/hotels/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394617/goibibo-logo-400x200.png-2.png"
+  },
+  {
+    "name": "SBI Credit Card (Simply Click)",
+    "host": "sbicard.com",
+    "url": "https://www.sbicard.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398652/sbi-card-logo.png"
+  },
+  {
+    "name": "Durex",
+    "host": "durexindia.com",
+    "url": "https://www.durexindia.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394074/durex-logo.png"
+  },
+  {
+    "name": "ICICI Lombard (Car)",
+    "host": "icicilombard.com",
+    "url": "https://www.icicilombard.com/motor-insurance/car-insurance",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/467639/R.jpg"
+  },
+  {
+    "name": "Kotak 811",
+    "host": "kotak811.com",
+    "url": "https://www.kotak811.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/397086/kotak-logo400x200.png"
+  },
+  {
+    "name": "Realme",
+    "host": "realme.com",
+    "url": "https://www.realme.com/in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398628/Realme-logo.png"
+  },
+  {
+    "name": "Arata",
+    "host": "affiliate.arata.in",
+    "url": "https://affiliate.arata.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549760/arta-new-logo.png"
+  },
+  {
+    "name": "Whirlpool",
+    "host": "india.whirlpool.in",
+    "url": "https://india.whirlpool.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/113709/whirlpool-logo-1.png"
+  },
+  {
+    "name": "DHgate",
+    "host": "dhgate.com",
+    "url": "https://www.dhgate.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/117002/DHgate-1.png"
+  },
+  {
+    "name": "Times Prime",
+    "host": "timesprime.com",
+    "url": "https://www.timesprime.com/new-campaign/n33new",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/400516/Times-prime-logo.png"
+  },
+  {
+    "name": "Iba Cosmetics",
+    "host": "ibacosmetics.com",
+    "url": "https://ibacosmetics.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394983/iba-LOGO.png"
+  },
+  {
+    "name": "Kapiva",
+    "host": "kapiva.in",
+    "url": "https://kapiva.in/shop-all/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/397026/kapiva--400x200-png.png"
+  },
+  {
+    "name": "Zebronics",
+    "host": "shop.zebronics.com",
+    "url": "https://shop.zebronics.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/128111/zebronics-1.png"
+  },
+  {
+    "name": "The Natural Wash",
+    "host": "thenaturalwash.com",
+    "url": "https://www.thenaturalwash.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/128712/natural-2.png"
+  },
+  {
+    "name": "Vero Moda",
+    "host": "veromoda.in",
+    "url": "https://www.veromoda.in/collections/new-arrivals/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/401941/vero-moda-logo.png"
+  },
+  {
+    "name": "Geekbuying",
+    "host": "geekbuying.com",
+    "url": "https://www.geekbuying.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394600/geekbuying.png"
+  },
+  {
+    "name": "Hostinger",
+    "host": "hostinger.com",
+    "url": "https://www.hostinger.com/in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394981/Hostinger-LOGO.png"
+  },
+  {
+    "name": "Nord Vpn",
+    "host": "nordvpn.com",
+    "url": "https://nordvpn.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398131/nord-vpn-logo.png"
+  },
+  {
+    "name": "Hostpapa",
+    "host": "hostpapa.com",
+    "url": "https://www.hostpapa.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/145271/hostpapa-1.jpg"
+  },
+  {
+    "name": "Plum Goodness",
+    "host": "plumgoodness.com",
+    "url": "https://plumgoodness.com/collections/all-in-stock",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/328940/PLUM--400x200-PNG.png"
+  },
+  {
+    "name": "Cloudways",
+    "host": "cloudways.com",
+    "url": "https://www.cloudways.com/en/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/341664/CLOUDS-WAY-logo-400-x-200.png"
+  },
+  {
+    "name": "Indusind Credit Card",
+    "host": "induseasycredit.indusind.bank.in",
+    "url": "https://induseasycredit.indusind.bank.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/395016/induslnd-bank-logo.png"
+  },
+  {
+    "name": "TrueBasics",
+    "host": "truebasics.com",
+    "url": "https://www.truebasics.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/400529/True-Basics-logo.png"
+  },
+  {
+    "name": "Opinion World",
+    "host": "opinionworld.in",
+    "url": "https://www.opinionworld.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/199418/ow-color.jpg"
+  },
+  {
+    "name": "MILTON",
+    "host": "milton.in",
+    "url": "https://www.milton.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/202047/MILTON.jpg"
+  },
+  {
+    "name": "boAt",
+    "host": "boat-lifestyle.com",
+    "url": "https://www.boat-lifestyle.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/393854/boat-logo_Black_png.png"
+  },
+  {
+    "name": "Soxytoes",
+    "host": "soxytoes.com",
+    "url": "https://soxytoes.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/551762/logo.png"
+  },
+  {
+    "name": "Reliance Digital",
+    "host": "reliancedigital.in",
+    "url": "https://www.reliancedigital.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/239001/rel.png"
+  },
+  {
+    "name": "Valued Opinions",
+    "host": "valuedopinions.co.in",
+    "url": "https://www.valuedopinions.co.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/341791/valued-opinions-removebg-preview.png"
+  },
+  {
+    "name": "Man Matters",
+    "host": "manmatters.com",
+    "url": "https://manmatters.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/397407/man-mattress-logo.png"
+  },
+  {
+    "name": "Muscle Blaze",
+    "host": "muscleblaze.com",
+    "url": "https://www.muscleblaze.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/329398/muscle-blaze---400x200-png.png"
+  },
+  {
+    "name": "Sirona",
+    "host": "thesirona.com",
+    "url": "https://www.thesirona.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/261248/sir.png"
+  },
+  {
+    "name": "Dyson India",
+    "host": "dyson.in",
+    "url": "https://www.dyson.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/396262/dyson-logo.png"
+  },
+  {
+    "name": "Federal Bank Credit Card",
+    "host": "creditcards.federalbank.co.in",
+    "url": "https://creditcards.federalbank.co.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/553545/logo.png"
+  },
+  {
+    "name": "Envato Elements",
+    "host": "elements.envato.com",
+    "url": "https://elements.envato.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394125/envato-logo.png"
+  },
+  {
+    "name": "Medibuddy (Lab Test)",
+    "host": "medibuddy.in",
+    "url": "https://www.medibuddy.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/270420/med.jpg"
+  },
+  {
+    "name": "Swisse",
+    "host": "swisse.co.in",
+    "url": "https://swisse.co.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/274590/oo.png"
+  },
+  {
+    "name": "Kindlife",
+    "host": "kindlife.in",
+    "url": "https://www.kindlife.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/279818/kindlifeLogo.svg"
+  },
+  {
+    "name": "Farmrooter",
+    "host": "farmrooter.com",
+    "url": "https://farmrooter.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394167/farmrooter--logo.png"
+  },
+  {
+    "name": "The Derma Co",
+    "host": "thedermaco.com",
+    "url": "https://thedermaco.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/400474/derma-logo.png"
+  },
+  {
+    "name": "Indusind Saving Account",
+    "host": "myaccount.indusind.bank.in",
+    "url": "https://myaccount.indusind.bank.in/savingsaccount/index.aspx",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/300384/mm.png"
+  },
+  {
+    "name": "IDFC Bank - CC",
+    "host": "idfcfirstbank.com",
+    "url": "https://www.idfcfirstbank.com/credit-card/ntb-diy/apply",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/395001/IDFC-First-logo.png"
+  },
+  {
+    "name": "Axis MF",
+    "host": "axismf.com",
+    "url": "https://www.axismf.com/micro-investing",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/309588/kk.png"
+  },
+  {
+    "name": "Nua",
+    "host": "nuawoman.com",
+    "url": "https://nuawoman.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398137/nua-women-logo.png"
+  },
+  {
+    "name": "Super Bottoms",
+    "host": "superbottoms.com",
+    "url": "https://superbottoms.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398875/supper-bottom-logo-png.png"
+  },
+  {
+    "name": "Beyoung",
+    "host": "beyoung.in",
+    "url": "https://www.beyoung.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/557271/logo.png"
+  },
+  {
+    "name": "Rage Coffee",
+    "host": "ragecoffee.com",
+    "url": "https://ragecoffee.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/327892/hh.png"
+  },
+  {
+    "name": "Titan Skinn",
+    "host": "skinn.in",
+    "url": "https://www.skinn.in/shop/collections",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/328500/logo.png"
+  },
+  {
+    "name": "CreditMantri",
+    "host": "creditmantri.com",
+    "url": "https://www.creditmantri.com/campaign/equifax/credit-score/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394031/credit-mantri-logo.png"
+  },
+  {
+    "name": "Libas",
+    "host": "libas.in",
+    "url": "https://www.libas.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/397095/libas-logo.png"
+  },
+  {
+    "name": "Acko (Bike)",
+    "host": "acko.com",
+    "url": "https://www.acko.com/lp/new-bike/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/514627/output-onlinepngtools.png"
+  },
+  {
+    "name": "Jupiter CSB Edge+ RuPay CC",
+    "host": "web.jupiter.money",
+    "url": "https://web.jupiter.money/rupay-csb/web-ob/landing",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/446164/jupiter_logo.png"
+  },
+  {
+    "name": "Wellbeing Nutrition",
+    "host": "wellbeingnutrition.com",
+    "url": "https://wellbeingnutrition.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/401946/wellbeingnutrition-logo.png"
+  },
+  {
+    "name": "AU Bank Credit Card",
+    "host": "cconboarding.aubank.in",
+    "url": "https://cconboarding.aubank.in/auccself/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/348406/download.png"
+  },
+  {
+    "name": "Dot & Key",
+    "host": "dotandkey.com",
+    "url": "https://www.dotandkey.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394072/dot-%26-key-logo.png"
+  },
+  {
+    "name": "Neeman's",
+    "host": "neemans.com",
+    "url": "https://neemans.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/397945/neemans-logo.png"
+  },
+  {
+    "name": "Nykaa Fashion",
+    "host": "nykaafashion.com",
+    "url": "https://www.nykaafashion.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/352150/Nykaa-Fashion-logo.png"
+  },
+  {
+    "name": "Uniqlo",
+    "host": "uniqlo.com",
+    "url": "https://www.uniqlo.com/in/en/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/400537/uniqlo-logo.png"
+  },
+  {
+    "name": "Swiss Beauty",
+    "host": "swissbeauty.in",
+    "url": "https://swissbeauty.in/collections/all",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398879/swiss-beauty-400x200-logo.png"
+  },
+  {
+    "name": "CreditLinks",
+    "host": "loans.creditlinks.in",
+    "url": "https://loans.creditlinks.in/jIQoBOrt",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/407574/credit-links-logo.png"
+  },
+  {
+    "name": "BlissClub",
+    "host": "blissclub.com",
+    "url": "https://blissclub.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/419290/Bliss-Club-loggo.png"
+  },
+  {
+    "name": "Earth Rhythm",
+    "host": "earthrhythm.com",
+    "url": "https://earthrhythm.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394112/earth-rhythm-logo.png"
+  },
+  {
+    "name": "Hammer",
+    "host": "hammeronline.in",
+    "url": "https://hammeronline.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394646/hammer-logo.png"
+  },
+  {
+    "name": "Brillare",
+    "host": "brillare.co.in",
+    "url": "https://www.brillare.co.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/393883/Brillare-logo.png"
+  },
+  {
+    "name": "R for Rabbit",
+    "host": "rforrabbit.com",
+    "url": "https://rforrabbit.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/393748/r-for-rabbit-logo-400x200.png"
+  },
+  {
+    "name": "Gritzo",
+    "host": "gritzo.com",
+    "url": "https://gritzo.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394627/Gritzo-logo.png"
+  },
+  {
+    "name": "Philips",
+    "host": "domesticappliances.philips.co.in",
+    "url": "https://www.domesticappliances.philips.co.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398622/philips-logo.png"
+  },
+  {
+    "name": "Spinny Sell Car",
+    "host": "spinny.com",
+    "url": "https://www.spinny.com/sell-used-caar",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398858/Spinny-logo.png"
+  },
+  {
+    "name": "Neuherbs",
+    "host": "neuherbs.com",
+    "url": "https://neuherbs.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398119/Neuherbs--logo.png"
+  },
+  {
+    "name": "Perfora",
+    "host": "perforacare.com",
+    "url": "https://perforacare.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398620/perfora-logo.png"
+  },
+  {
+    "name": "HK Vitals",
+    "host": "hkvitals.com",
+    "url": "https://www.hkvitals.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/393361/download-%2873%29.png"
+  },
+  {
+    "name": "Bagline",
+    "host": "bagline.com",
+    "url": "https://www.bagline.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/394127/download-%2877%29.png"
+  },
+  {
+    "name": "The Artment",
+    "host": "theartment.com",
+    "url": "https://theartment.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398894/artment-logo.png"
+  },
+  {
+    "name": "Pepe Jeans",
+    "host": "pepejeans.in",
+    "url": "https://www.pepejeans.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/398618/pepejeans-logo.png"
+  },
+  {
+    "name": "HOK Makeup",
+    "host": "hokmakeup.com",
+    "url": "https://www.hokmakeup.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/416123/hok-make-up-logo.png"
+  },
+  {
+    "name": "Peepul Tree",
+    "host": "peepultree.world",
+    "url": "https://www.peepultree.world/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/404612/download---2023-05-04T142402.615.png"
+  },
+  {
+    "name": "Truemeds",
+    "host": "truemeds.in",
+    "url": "https://www.truemeds.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/404642/truemeds-logo-%281%29.png"
+  },
+  {
+    "name": "Beco",
+    "host": "letsbeco.com",
+    "url": "https://www.letsbeco.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/405210/beco-LOGO.png"
+  },
+  {
+    "name": "The Hindu",
+    "host": "thehindu.com",
+    "url": "https://www.thehindu.com/subscription/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/406072/download---2023-05-09T132255.431.png"
+  },
+  {
+    "name": "Muscletech",
+    "host": "muscletech.in",
+    "url": "https://www.muscletech.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/406129/download---2023-05-09T163354.640.png"
+  },
+  {
+    "name": "HyugaLife",
+    "host": "hyugalife.com",
+    "url": "https://hyugalife.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/409344/download-%2811%29-%282%29.png"
+  },
+  {
+    "name": "Charles & Keith",
+    "host": "charleskeith.in",
+    "url": "https://www.charleskeith.in/in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/419550/download---2023-06-28T132126.513.png"
+  },
+  {
+    "name": "Stable Money",
+    "host": "stablemoney.in",
+    "url": "https://stablemoney.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/515455/IMG_1723.jpeg"
+  },
+  {
+    "name": "PantProject",
+    "host": "pantproject.com",
+    "url": "https://pantproject.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/431327/The-Pant-Project_logo.png"
+  },
+  {
+    "name": "Bajaj Health Insurance",
+    "host": "bajajgeneralinsurance.com",
+    "url": "https://www.bajajgeneralinsurance.com/health-insurance-online/product",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549577/d.png"
+  },
+  {
+    "name": "Krishna's Herbal & Ayurveda",
+    "host": "krishnaayurved.com",
+    "url": "https://krishnaayurved.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/440095/krishna-herbal-ayurveda-logo.png"
+  },
+  {
+    "name": "Shopsy",
+    "host": "shopsy.in",
+    "url": "https://www.shopsy.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/440612/ShopsyLite-205d58.png"
+  },
+  {
+    "name": "Bummer",
+    "host": "bummer.in",
+    "url": "https://bummer.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/443259/Bummer--logo.png"
+  },
+  {
+    "name": "Scapia Credit Card",
+    "host": "apply.scapia.cards",
+    "url": "https://apply.scapia.cards/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/443269/scapia.cards_logo.png"
+  },
+  {
+    "name": "Sleepwell",
+    "host": "mysleepwell.com",
+    "url": "https://mysleepwell.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/450466/sleepwell_logo.png"
+  },
+  {
+    "name": "Campus Shoes",
+    "host": "campusshoes.com",
+    "url": "https://www.campusshoes.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/450479/Campus-Shoes_logo.png"
+  },
+  {
+    "name": "9ShineLabel",
+    "host": "9shineslabel.com",
+    "url": "https://www.9shineslabel.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/454945/9shines-label_logo.png"
+  },
+  {
+    "name": "Timex",
+    "host": "shop.timexindia.com",
+    "url": "https://shop.timexindia.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/545136/logo.png"
+  },
+  {
+    "name": "Guvi",
+    "host": "guvi.in",
+    "url": "https://www.guvi.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/458963/GUVI_logo.png"
+  },
+  {
+    "name": "Salty",
+    "host": "salty.co.in",
+    "url": "https://salty.co.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/473686/salty_logo.png"
+  },
+  {
+    "name": "Protouch",
+    "host": "protouchskin.com",
+    "url": "https://protouchskin.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/479325/protouch_logo.png"
+  },
+  {
+    "name": "Asaya",
+    "host": "worldofasaya.com",
+    "url": "https://worldofasaya.com/collections/offers",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/481088/Asaya_LOGO.png"
+  },
+  {
+    "name": "CarInfo",
+    "host": "carinfo.app",
+    "url": "https://www.carinfo.app/service-history",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/481400/carinfo-logo.png"
+  },
+  {
+    "name": "AppSumo",
+    "host": "appsumo.com",
+    "url": "https://appsumo.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/481861/APP-SUMO_Logo-%281%29.png"
+  },
+  {
+    "name": "Godrej Interio",
+    "host": "interio.com",
+    "url": "https://interio.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/489129/interio_logo.png"
+  },
+  {
+    "name": "Bacca Bucci",
+    "host": "baccabucci.com",
+    "url": "https://baccabucci.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/491238/Bacca-Bucci-logo.png"
+  },
+  {
+    "name": "Watchout Wearables",
+    "host": "watchoutwearables.com",
+    "url": "https://www.watchoutwearables.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/492072/watchout_logo.png"
+  },
+  {
+    "name": "Quillbot",
+    "host": "quillbot.com",
+    "url": "https://quillbot.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/492915/Untitled-design-%2871%29.png"
+  },
+  {
+    "name": "IDFC SA",
+    "host": "digital.idfcfirst.bank.in",
+    "url": "https://digital.idfcfirst.bank.in/apply/savings",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/500333/images.jpeg"
+  },
+  {
+    "name": "Viagogo",
+    "host": "viagogo.com",
+    "url": "https://www.viagogo.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/500679/viagogo-logo.png"
+  },
+  {
+    "name": "Tide App",
+    "host": "tide.co",
+    "url": "https://www.tide.co/en-IN/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/501266/images.png"
+  },
+  {
+    "name": "Hdfc Tata Neu CC",
+    "host": "applyonline.hdfcbank.com",
+    "url": "https://applyonline.hdfcbank.com/cards/credit-cards.html",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/501278/hdfc_bank.png"
+  },
+  {
+    "name": "HSBC Credit Card",
+    "host": "accountopening.hsbc.co.in",
+    "url": "https://www.accountopening.hsbc.co.in/credit-cards/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/501285/HSBC-Logo.png"
+  },
+  {
+    "name": "Pelago",
+    "host": "pelago.com",
+    "url": "https://www.pelago.com/en-IN/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/501978/pelago_logo.png"
+  },
+  {
+    "name": "Emami Zanducare",
+    "host": "zanducare.com",
+    "url": "https://zanducare.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/503109/Zanducare-logo.png"
+  },
+  {
+    "name": "Liva",
+    "host": "livabybirlacellulose.com",
+    "url": "https://www.livabybirlacellulose.com/consumer/buy-liva",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/503110/livabybirlacellulose-_logo.png"
+  },
+  {
+    "name": "Kurlon",
+    "host": "kurlon.com",
+    "url": "https://kurlon.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/507000/kurlon_logo.png"
+  },
+  {
+    "name": "Lastpass",
+    "host": "lastpass.com",
+    "url": "https://www.lastpass.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/509791/lastpass_logo.png"
+  },
+  {
+    "name": "My Muse",
+    "host": "mymuse.in",
+    "url": "https://mymuse.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/510003/my-muse_logo.png"
+  },
+  {
+    "name": "Voyage Eyewear",
+    "host": "voyageeyewear.com",
+    "url": "https://www.voyageeyewear.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/511328/logo.png"
+  },
+  {
+    "name": "GetyourGuide",
+    "host": "getyourguide.com",
+    "url": "https://www.getyourguide.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/511415/get-your-guide.png"
+  },
+  {
+    "name": "Flot",
+    "host": "myflot.com",
+    "url": "https://myflot.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/513829/OIP.jpeg"
+  },
+  {
+    "name": "Geeklane",
+    "host": "geeklane.in",
+    "url": "https://geeklane.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/514795/geeklane_logo.png"
+  },
+  {
+    "name": "StockEdge",
+    "host": "stockedge.com",
+    "url": "https://stockedge.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/516122/download.jpeg"
+  },
+  {
+    "name": "Elver",
+    "host": "elver.in",
+    "url": "https://elver.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/516295/Elver_logo.png"
+  },
+  {
+    "name": "SignNow",
+    "host": "signnow.com",
+    "url": "https://www.signnow.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/516509/signnow-logo.png"
+  },
+  {
+    "name": "Nilkamal Sleep",
+    "host": "nilkamalsleep.com",
+    "url": "https://www.nilkamalsleep.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/516939/Nilkamal-Sleep-_logo.png"
+  },
+  {
+    "name": "ExpressVPN",
+    "host": "expressvpn.com",
+    "url": "https://www.expressvpn.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/517667/express-vpn-_logo.png"
+  },
+  {
+    "name": "ServerByt",
+    "host": "serverbyt.in",
+    "url": "https://serverbyt.in/offers",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/518166/Logo-300x86-copy.png"
+  },
+  {
+    "name": "BigMuscle Nutrition",
+    "host": "bigmusclesnutrition.com",
+    "url": "https://www.bigmusclesnutrition.com//",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/518885/BigMuscles-Nutrition_logo.png"
+  },
+  {
+    "name": "Jivisa",
+    "host": "jivisa.in",
+    "url": "https://jivisa.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/518929/jivisa_logo.png"
+  },
+  {
+    "name": "GoEYE",
+    "host": "goeye.in",
+    "url": "https://goeye.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/519974/go-eye_logo.png"
+  },
+  {
+    "name": "Uppercase",
+    "host": "uppercase.co.in",
+    "url": "https://uppercase.co.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/521499/logo.png"
+  },
+  {
+    "name": "Loopearplugs",
+    "host": "loopearplugs.in",
+    "url": "https://loopearplugs.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/522053/logo.png"
+  },
+  {
+    "name": "Redrail",
+    "host": "redrails.app.link",
+    "url": "https://redrails.app.link",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/522580/red-rail_logo.png"
+  },
+  {
+    "name": "Instax",
+    "host": "instax.in",
+    "url": "https://www.instax.in/collections/shop-all",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/523462/logo.png"
+  },
+  {
+    "name": "DCYPHR",
+    "host": "dcyphr.in",
+    "url": "https://dcyphr.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/523979/DCYPHR_LOGO.png"
+  },
+  {
+    "name": "wellversed",
+    "host": "wellversed.in",
+    "url": "https://wellversed.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/531816/Wellversed-logo.png"
+  },
+  {
+    "name": "Zop",
+    "host": "zop.in",
+    "url": "https://www.zop.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/557222/logo.png"
+  },
+  {
+    "name": "Lotto Sport",
+    "host": "lottosport.in",
+    "url": "https://lottosport.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/532939/logo.png"
+  },
+  {
+    "name": "mivi",
+    "host": "mivi.in",
+    "url": "https://www.mivi.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/533086/logo..png"
+  },
+  {
+    "name": "shyaway",
+    "host": "shyaway.com",
+    "url": "https://www.shyaway.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/533152/logo.png"
+  },
+  {
+    "name": "KredBharat",
+    "host": "lending.kredbharat.com",
+    "url": "https://lending.kredbharat.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/533878/logo.png"
+  },
+  {
+    "name": "Buy Indus Valley",
+    "host": "buyindusvalley.in",
+    "url": "https://www.buyindusvalley.in",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/534365/indus-valley-logo.png"
+  },
+  {
+    "name": "Baby Forest",
+    "host": "babyforest.in",
+    "url": "https://www.babyforest.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/534375/baby-forest-logo.png"
+  },
+  {
+    "name": "Pure Nutrition",
+    "host": "purenutrition.in",
+    "url": "https://purenutrition.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/534799/pure-nutrition-logo-01.png"
+  },
+  {
+    "name": "Aramya",
+    "host": "aramya.in",
+    "url": "https://aramya.in/collections/latest-kurti-collection-onsale",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/534924/aramya-logo-01.png"
+  },
+  {
+    "name": "Ajmal Perfume",
+    "host": "in.ajmal.com",
+    "url": "https://in.ajmal.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/535086/ajmal-logo.png"
+  },
+  {
+    "name": "CosIQ",
+    "host": "mycosiq.com",
+    "url": "https://mycosiq.com//",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/535943/cosiq-logo.png"
+  },
+  {
+    "name": "Alpino",
+    "host": "alpino.store",
+    "url": "https://alpino.store/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/536149/logo.png"
+  },
+  {
+    "name": "Gharsoaps",
+    "host": "gharsoaps.shop",
+    "url": "https://www.gharsoaps.shop/collections/best-seller",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/536369/logo.png"
+  },
+  {
+    "name": "Fuel One",
+    "host": "fuelone.in",
+    "url": "https://www.fuelone.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/537124/logo.png"
+  },
+  {
+    "name": "Rangdeep",
+    "host": "rangdeep.in",
+    "url": "https://rangdeep.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/538995/logo-%282%29.png"
+  },
+  {
+    "name": "Truloom",
+    "host": "truloom.in",
+    "url": "https://truloom.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/539005/logo-%283%29.png"
+  },
+  {
+    "name": "Spankers",
+    "host": "spankersindia.com",
+    "url": "https://spankersindia.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/541187/logo-%284%29.png"
+  },
+  {
+    "name": "Bookchor",
+    "host": "bookchor.com",
+    "url": "https://www.bookchor.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/545169/logo.png"
+  },
+  {
+    "name": "Zoff Foods",
+    "host": "zofffoods.com",
+    "url": "https://zofffoods.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/545215/logo.png"
+  },
+  {
+    "name": "Lunaer World",
+    "host": "lunaerworld.com",
+    "url": "https://www.lunaerworld.com/apps/qe/gbb/3902",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/547003/logo.png"
+  },
+  {
+    "name": "Coitonic",
+    "host": "coitonic.com",
+    "url": "https://coitonic.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549236/download-%2826%29.png"
+  },
+  {
+    "name": "Kerala Ayurveda",
+    "host": "keralaayurveda.com",
+    "url": "https://keralaayurveda.com",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549412/logo.png"
+  },
+  {
+    "name": "Suvasa",
+    "host": "suvasa.in",
+    "url": "https://suvasa.in/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549602/image-%2828%29.png"
+  },
+  {
+    "name": "Baby Shop",
+    "host": "babyshop.in",
+    "url": "https://www.babyshop.in/in/en/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549603/logo.png"
+  },
+  {
+    "name": "Cheapoair",
+    "host": "cheapoair.com",
+    "url": "https://www.cheapoair.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549655/download-%2828%29.png"
+  },
+  {
+    "name": "Linenclub",
+    "host": "linenclub.com",
+    "url": "https://www.linenclub.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/549661/logo.png"
+  },
+  {
+    "name": "Haute Sauce",
+    "host": "buyhautesauce.com",
+    "url": "https://www.buyhautesauce.com/collections/watches",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/550218/logo.png"
+  },
+  {
+    "name": "Emergency Paisa",
+    "host": "emergencypaisa.com",
+    "url": "https://emergencypaisa.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/551827/e.png"
+  },
+  {
+    "name": "SSLs",
+    "host": "ssls.com",
+    "url": "https://www.ssls.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/552299/d.webp"
+  },
+  {
+    "name": "TecSox",
+    "host": "tecsox.com",
+    "url": "https://tecsox.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/552303/logo.png"
+  },
+  {
+    "name": "AGeasy",
+    "host": "ageasy.co.in",
+    "url": "https://ageasy.co.in/collection",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/553332/logo.png"
+  },
+  {
+    "name": "De Novoo",
+    "host": "de-novoo.com",
+    "url": "https://de-novoo.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/554559/logo.png"
+  },
+  {
+    "name": "Ten X You",
+    "host": "tenxyou.com",
+    "url": "https://tenxyou.com/festive/most-loved",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/556029/logo.png"
+  },
+  {
+    "name": "Dressfolk",
+    "host": "dressfolk.com",
+    "url": "https://dressfolk.com/collections/sarees",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/556791/logo.png"
+  },
+  {
+    "name": "GoStops",
+    "host": "gostops.com",
+    "url": "https://gostops.com/stay/home",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/556033/download-%2832%29.png"
+  },
+  {
+    "name": "Bytepe",
+    "host": "bytepe.com",
+    "url": "https://www.bytepe.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/556793/images-%284%29.png"
+  },
+  {
+    "name": "Go24 Bottles",
+    "host": "go24bottles.com",
+    "url": "https://www.go24bottles.com/",
+    "logo": "https://inrdeals.sgp1.cdn.digitaloceanspaces.com/production/557220/logo.png"
+  }
+]
