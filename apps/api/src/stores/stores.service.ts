@@ -13,14 +13,16 @@ export class StoresService {
   // render an empty-state ("No X deals live right now") rather than 404.
   async list(): Promise<StoreDTO[]> {
     const stores = await this.prisma.store.findMany({
-      orderBy: { name: 'asc' },
+      include: { _count: { select: { deals: { where: { status: 'LIVE' } } } } },
     });
-    return stores.map((s) => ({
-      id: s.id,
-      name: s.name,
-      slug: s.slug,
-      logo: s.logo,
-    }));
+    // Stores WITH live deals first (high -> low count), then the 0-deal directory
+    // hubs alphabetically — so the index leads with pages that actually have offers.
+    return stores
+      .sort(
+        (a, b) =>
+          b._count.deals - a._count.deals || a.name.localeCompare(b.name),
+      )
+      .map((s) => ({ id: s.id, name: s.name, slug: s.slug, logo: s.logo }));
   }
 
   async getBySlug(
