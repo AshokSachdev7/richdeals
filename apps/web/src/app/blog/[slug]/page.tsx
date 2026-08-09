@@ -8,7 +8,7 @@ import BlogCard from "@/components/BlogCard";
 import JsonLd from "@/components/JsonLd";
 import LazyImage from "@/components/LazyImage";
 import { SITE_NAME, absUrl } from "@/lib/site";
-import { readTime, postCategory, postCover } from "@/lib/blog";
+import { readTime, postCategory, postCover, relatedPosts } from "@/lib/blog";
 
 // force-dynamic: ISR/on-demand revalidation is structurally broken on this app
 // (web /api/revalidate shadowed by the /api→NestJS ingress), so revalidate=300
@@ -106,7 +106,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const date = new Date(post.publishedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
   const cover = postCover(post);
-  const related = all.items.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const related = relatedPosts(post, all.items, 3);
 
   return (
     <article className="mx-auto max-w-3xl">
