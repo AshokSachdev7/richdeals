@@ -84,8 +84,9 @@ export default async function HomePage({ searchParams }: Props) {
   return (
     <div className="space-y-2">
       <JsonLd data={itemListSchema} />
-      <EarnBanner />
 
+      {/* Product-first: the deals hero leads, the earn/rewards pitch moves below
+          the first deal feed so a visitor sees real discounts before the upsell. */}
       <Hero />
 
       <CategoryStrip />
@@ -131,6 +132,11 @@ export default async function HomePage({ searchParams }: Props) {
           />
         </div>
       </section>
+
+      {/* Member rewards — mid-page conversion slot, after deals prove the value */}
+      <div className="mt-12">
+        <EarnBanner />
+      </div>
 
       {/* Why RichDeals */}
       <section aria-labelledby="why-heading" className="mt-16 rounded-3xl bg-ink px-5 py-12 text-white sm:px-10">
