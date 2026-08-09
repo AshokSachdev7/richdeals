@@ -27,6 +27,18 @@ const nextConfig = {
   },
   // Web talks to the API over HTTP only; transpile the shared workspace.
   transpilePackages: ["@deals/shared"],
+  // SEO: consolidate the thin BBD duplicate into the richer keeper. Both target
+  // the "big billion days 2026" cluster; GSC query×page showed them splitting
+  // equity (pos 21 vs 11, both 0 clicks). 308 passes link equity to the keeper.
+  async redirects() {
+    return [
+      {
+        source: "/blog/flipkart-big-billion-days-2026-guide",
+        destination: "/blog/flipkart-big-billion-days-2026-lowest-price-guide",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
