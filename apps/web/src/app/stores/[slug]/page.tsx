@@ -25,7 +25,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   // Deeper pages exist to be crawled (they carry the only links to older
   // deals), not to be indexed — noindex,follow keeps them out of the index.
   const { cursor } = await searchParams;
-  const seo = storeSeo(store.slug);
+  const seo = storeSeo(store.slug, store.name);
   const title = seo?.seoTitle ?? `${store.name} Deals, Offers & Coupons`;
   const description =
     seo?.seoDesc ??
@@ -55,7 +55,7 @@ export default async function StorePage({ params, searchParams }: Props) {
   const store = await getStore(slug);
   if (!store) notFound();
   const { sort, cursor } = await searchParams;
-  const seo = storeSeo(store.slug);
+  const seo = storeSeo(store.slug, store.name);
 
   const { items, nextCursor } = await getDeals({
     store: store.slug,

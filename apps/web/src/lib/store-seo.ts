@@ -5,6 +5,8 @@
 // coupons today 12.1k). Keyed by the real DB store slugs. Facts are evergreen and
 // honest — no fabricated prices; live numbers still come from the deals on the page.
 
+import { SITE_NAME } from "@/lib/site";
+
 export type StoreSeo = {
   domain: string; // for the favicon mark
   seoTitle: string; // <= 60 chars
@@ -98,4 +100,42 @@ export const STORE_SEO: Record<string, StoreSeo> = {
   },
 };
 
-export const storeSeo = (slug: string): StoreSeo | undefined => STORE_SEO[slug];
+// Generic evergreen SEO/AEO/GEO copy for any store not in the hand-tuned map
+// above. Store-name-templated, honest and fabrication-free (no prices/claims) so
+// even a hub with zero live deals is a real, citable page instead of thin content.
+const genericStoreSeo = (slug: string, name: string): StoreSeo => ({
+  domain: `${slug}.com`,
+  seoTitle: `${name} Offers & Coupons Today — Deals Live`.slice(0, 60),
+  seoDesc:
+    `${name} offers and coupon codes today, hand-picked and verified on ${SITE_NAME}. See live ${name} deals with current prices, refreshed daily, plus tips to save more.`.slice(
+      0,
+      160,
+    ),
+  intro: [
+    `${name} offers today are gathered on this page so you can find the genuine discounts in one place. Every deal is a live ${name} listing with the current price read straight from the product page and refreshed through the day, so you skip the padded MRPs and see the markdowns actually worth buying right now.`,
+    `To save the most on a ${name} deal, apply any on-page coupon and pay with a card carrying a running bank offer or a rewarding wallet. The sharpest prices sell out fast, so treat the price you see today as today's price — check back tomorrow for a fresh set of ${name} deals.`,
+  ],
+  faqs: [
+    {
+      q: `What are the best ${name} offers today?`,
+      a: `The best ${name} offers today are the ones with a real discount off the genuine selling price, not an inflated MRP. This page lists live ${name} deals ranked by verified discount and updates daily, so the highest-value markdowns show first.`,
+    },
+    {
+      q: `How do I get a ${name} coupon or discount?`,
+      a: `${name} discounts usually apply as on-page offers and bank or card offers at checkout rather than typed codes. The deals here already reflect the live price, and any extra coupon appears on the ${name} product or checkout page.`,
+    },
+    {
+      q: `Does ${name} have deals every day?`,
+      a: `Yes. ${name} runs regular daily deals plus larger sale events through the year. We track the everyday live ${name} deals here and refresh them daily, so you don't have to wait for a sale to save.`,
+    },
+    {
+      q: `How can I save more on ${name}?`,
+      a: `Stack the deal price with a bank or card offer at checkout, apply any eligible coupon, and buy during a sale event when discounts are deepest. Checking daily catches fresh ${name} markdowns before they sell out.`,
+    },
+  ],
+});
+
+// name is used only to build the generic fallback for stores outside the
+// hand-tuned map; the map entries win when present.
+export const storeSeo = (slug: string, name?: string): StoreSeo | undefined =>
+  STORE_SEO[slug] ?? (name ? genericStoreSeo(slug, name) : undefined);
