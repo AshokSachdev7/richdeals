@@ -64,7 +64,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   if (!cursor && !feed)
     return {
       description:
-        "Verified deals from Amazon, Flipkart & 100+ Indian stores — plus earn money online free with no investment: ₹1 per deal, daily check-in and refer-and-earn, paid in Amazon gift cards.",
+        "Verified deals from Amazon, Flipkart & 100+ Indian stores, plus earn free money online: ₹1 per deal, daily check-in & refer-and-earn, paid in gift cards.",
     };
   return { robots: { index: false, follow: true }, alternates: { canonical: absUrl("/") } };
 }

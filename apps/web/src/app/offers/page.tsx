@@ -4,12 +4,18 @@ import JsonLd from "@/components/JsonLd";
 import { SITE_NAME, absUrl, breadcrumbSchema } from "@/lib/site";
 import { OFFERS } from "@/lib/offers";
 
-export const dynamic = "force-dynamic";
+// Static content from the OFFERS constant — no per-request data, so let it
+// prerender + CDN-cache instead of force-dynamic no-store.
+const OFFERS_TITLE = "Money Offers — Credit Cards & Signup Bonuses";
+const OFFERS_DESC = `Best signup offers in India — credit cards, demat & savings accounts, loans and more, handpicked by ${SITE_NAME}.`;
 
 export const metadata: Metadata = {
-  title: "Money Offers — Credit Cards, Demat & Signup Bonuses",
-  description: `Earn with the best signup offers in India — credit cards, demat accounts, savings accounts, loans and more, handpicked by ${SITE_NAME}.`,
+  title: OFFERS_TITLE,
+  description: OFFERS_DESC,
   alternates: { canonical: absUrl("/offers") },
+  // Own OG/Twitter so shares don't fall back to the generic homepage card.
+  openGraph: { title: OFFERS_TITLE, description: OFFERS_DESC, url: absUrl("/offers"), type: "website" },
+  twitter: { card: "summary_large_image", title: OFFERS_TITLE, description: OFFERS_DESC },
 };
 
 export default function OffersPage() {
