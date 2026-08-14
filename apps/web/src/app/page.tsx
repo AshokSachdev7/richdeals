@@ -91,6 +91,17 @@ export default async function HomePage({ searchParams }: Props) {
 
       <CategoryStrip />
 
+      <p className="mt-3 text-sm text-gray-500">
+        Chasing free stuff? Read our guide to{" "}
+        <Link
+          href="/blog/how-to-get-free-samples-freebies-india"
+          className="font-semibold text-brand hover:underline"
+        >
+          free samples in India
+        </Link>
+        .
+      </p>
+
       <section aria-labelledby="deals-heading" className="mt-8">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
