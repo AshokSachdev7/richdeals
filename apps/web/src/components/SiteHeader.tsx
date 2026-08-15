@@ -61,7 +61,7 @@ export default function SiteHeader() {
       {festive && (
         <div className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#FF9933] via-white to-[#138808] py-1 text-center text-xs font-bold text-ink">
           <span aria-hidden="true">🇮🇳</span>
-          <span>Happy 79th Independence Day — freedom to save on every deal</span>
+          <span>Happy 80th Independence Day — freedom to save on every deal</span>
           <span aria-hidden="true" className="text-[#000080]">⎈</span>
         </div>
       )}
