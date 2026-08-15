@@ -107,14 +107,20 @@ try {
       const res = await api('sendPhoto', {
         chat_id: CHAT, photo: d.image, caption: caption(d), parse_mode: 'HTML',
       });
-      if (res.ok) { posted++; console.log(`posted #${d.id} ${d.title.slice(0, 40)}`); }
+      if (res.ok) { posted++; last = d.id; console.log(`posted #${d.id} ${d.title.slice(0, 40)}`); }
       else {
         // photo failed (bad image URL) → fall back to text
         const t = await api('sendMessage', { chat_id: CHAT, text: caption(d), parse_mode: 'HTML', disable_web_page_preview: false });
-        if (t.ok) { posted++; console.log(`posted(text) #${d.id}`); }
-        else console.log(`FAIL #${d.id}: ${JSON.stringify(res).slice(0, 120)}`);
+        if (t.ok) { posted++; last = d.id; console.log(`posted(text) #${d.id}`); }
+        else {
+          console.log(`FAIL #${d.id}: ${JSON.stringify(res).slice(0, 120)}`);
+          // Auth failure = dead/revoked token: bail WITHOUT advancing cursor so the
+          // whole backlog survives for a good token. Advancing here is what silently
+          // burned 513 deals when the bot's owner account was deleted.
+          if (res.error_code === 401 || res.error_code === 403) break;
+          last = d.id; // non-auth permanent failure (bad deal) → skip it, don't stall
+        }
       }
-      last = d.id;
       await new Promise(r => setTimeout(r, 1500)); // telegram channel rate limit
     } catch (e) { console.log(`ERR #${d.id}: ${e.message}`); }
   }
