@@ -102,7 +102,9 @@ export default async function BlogPostPage({ params }: Props) {
 
   // Render prose from everything BEFORE the FAQ section; FAQ shown as accordions.
   const bodyMd = faq.length ? content.slice(0, content.search(/^##\s+FAQ/im)) : content;
-  const html = marked.parse(bodyMd, { async: false }) as string;
+  // ponytail: template already renders post.title as the page <h1>. Strip a leading
+  // markdown H1 (77/208 posts lead with `# Title`) so the body doesn't emit a second one.
+  const html = marked.parse(bodyMd.replace(/^\s*#\s+.*(?:\r?\n)+/, ""), { async: false }) as string;
 
   const date = new Date(post.publishedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
   const cover = postCover(post);
