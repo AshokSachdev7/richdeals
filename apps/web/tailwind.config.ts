@@ -3,6 +3,9 @@ import typography from "@tailwindcss/typography";
 
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
+  // hover: variants only fire on hover-capable pointers, so a tap on touch
+  // doesn't freeze one tile in its brand-red :hover state until you tap away.
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     extend: {
       colors: {
