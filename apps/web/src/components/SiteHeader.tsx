@@ -21,9 +21,19 @@ const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 type Me = { name: string | null; email: string; points: number };
 
+// Independence Day tricolor: show 13–16 Aug, then auto-hides. No cleanup needed.
+function isIndependenceWindow() {
+  const d = new Date();
+  return d.getMonth() === 7 && d.getDate() >= 13 && d.getDate() <= 16;
+}
+
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [me, setMe] = useState<Me | null>(null);
+  const [festive, setFestive] = useState(false);
+
+  // Client-only so SSR/hydration match; the strip pops in after mount.
+  useEffect(() => setFestive(isIndependenceWindow()), []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -48,6 +58,13 @@ export default function SiteHeader() {
         scrolled ? "border-gray-200 shadow-md shadow-black/5" : "border-transparent"
       }`}
     >
+      {festive && (
+        <div className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#FF9933] via-white to-[#138808] py-1 text-center text-xs font-bold text-ink">
+          <span aria-hidden="true">🇮🇳</span>
+          <span>Happy 79th Independence Day — freedom to save on every deal</span>
+          <span aria-hidden="true" className="text-[#000080]">⎈</span>
+        </div>
+      )}
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
         <Link
           href="/"
