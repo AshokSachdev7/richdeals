@@ -1,4 +1,4 @@
-import { getStores, getCategories } from "@/lib/api";
+import { getStores, getCategories, getPosts } from "@/lib/api";
 import { absUrl, SITE_NAME } from "@/lib/site";
 
 // Always render live so a deploy-time API blip never caches an empty file.
@@ -8,7 +8,18 @@ export const dynamic = "force-dynamic";
 // (ChatGPT, Perplexity, Claude, Google AI Overviews). Improves GEO/AEO
 // citation quality by giving crawlers a clean entry point.
 export async function GET() {
-  const [stores, categories] = await Promise.all([getStores(), getCategories()]);
+  const [stores, categories, posts] = await Promise.all([
+    getStores(),
+    getCategories(),
+    getPosts(),
+  ]);
+
+  // Guides are what AI engines actually cite — link the newest ones so
+  // ChatGPT/Perplexity/AI Overviews pull our original write-ups, not just hubs.
+  const guideLines = posts.items
+    .slice(0, 30)
+    .map((p) => `- [${p.title}](${absUrl(`/blog/${p.slug}`)})${p.excerpt ? `: ${p.excerpt}` : ""}`)
+    .join("\n");
 
   const storeLines = stores
     .slice(0, 40)
@@ -33,7 +44,7 @@ ${SITE_NAME} publishes original deal write-ups (never copied), each with the cur
 
 ## Key pages
 - [Home — today's top deals](${absUrl("/")})
-- [All Deals](${absUrl("/offers")})
+- [Money Offers — credit cards & signup bonuses](${absUrl("/offers")})
 - [All Stores](${absUrl("/stores")})
 - [Coupons](${absUrl("/coupons")})
 - [Freebies](${absUrl("/freebies")})
@@ -44,6 +55,9 @@ ${storeLines}
 
 ## Categories
 ${catLines}
+
+## Guides & buying advice
+${guideLines}
 
 ## Data
 - Full deal data (prices, discounts, links): ${absUrl("/llms-full.txt")}
