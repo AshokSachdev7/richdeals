@@ -37,6 +37,15 @@ const nextConfig = {
         destination: "/blog/flipkart-big-billion-days-2026-lowest-price-guide",
         permanent: true,
       },
+      // SEO: same cannibalization on the "free sample websites india" head term.
+      // GSC winner = free-sample-websites-india-2026 (87/98 cluster clicks,
+      // pos 6.9); the "-in-india" twin self-canonicals and splits equity. 308
+      // folds it into the keeper.
+      {
+        source: "/blog/free-sample-websites-in-india-2026",
+        destination: "/blog/free-sample-websites-india-2026",
+        permanent: true,
+      },
     ];
   },
 };
