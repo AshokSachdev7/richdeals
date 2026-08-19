@@ -83,7 +83,7 @@ export function dealSeoTitle(
   deal: Pick<DealDTO, "title" | "price" | "discountPct" | "mrp"> & { store: { name: string } },
 ): string {
   let name = deal.title
-    .replace(/\s+(?:at|@)\s*₹?[\d,]+\s*[–-]\s*[\w ]+$/i, "") // drop " at ₹X – Amazon"
+    .replace(/\s+(?:at|@)\s*₹?[\d,]+(?:\s*[–-]\s*[\w ]+)?$/i, "") // drop " at ₹X – Amazon" (store tail optional)
     .split("|")[0]
     .split(/\s[–-]\s/)[0]
     .replace(/[,\s]+$/, "")

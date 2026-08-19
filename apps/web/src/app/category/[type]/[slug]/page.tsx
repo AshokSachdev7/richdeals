@@ -7,7 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
 import Pager from "@/components/Pager";
 import CollectionSeo from "@/components/CollectionSeo";
-import { SITE_NAME, absUrl, CATEGORY_TYPE_LABEL, dealItemListSchema } from "@/lib/site";
+import { SITE_NAME, absUrl, CATEGORY_TYPE_LABEL, dealItemListSchema, breadcrumbSchema } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -70,6 +70,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   return (
     <div>
       <JsonLd data={itemListSchema} />
+      <JsonLd data={breadcrumbSchema(crumbs)} />
       <Breadcrumbs items={crumbs} />
       <h1 className="text-2xl font-extrabold">{name} Deals</h1>
       <p className="mt-1 text-sm text-gray-500">
