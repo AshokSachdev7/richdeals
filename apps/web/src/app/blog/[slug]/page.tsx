@@ -39,22 +39,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
   if (!post) return { title: "Article not found" };
-  const description = post.excerpt || `${post.title} — ${SITE_NAME} blog.`;
+  const metaTitle = post.seoTitle || post.title;
+  const description = post.seoDesc || post.excerpt || `${post.title} — ${SITE_NAME} blog.`;
   const canonical = absUrl(`/blog/${post.slug}`);
   return {
-    title: post.title,
+    title: metaTitle,
     description,
     alternates: { canonical },
     openGraph: {
       type: "article",
       url: canonical,
-      title: `${post.title} | ${SITE_NAME}`,
+      title: `${metaTitle} | ${SITE_NAME}`,
       description,
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       images: post.coverImage ? [{ url: post.coverImage }] : undefined,
     },
-    twitter: { card: "summary_large_image", title: post.title, description },
+    twitter: { card: "summary_large_image", title: metaTitle, description },
   };
 }
 

@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 function toPostDTO(p: {
   slug: string; title: string; excerpt: string | null; body: string;
   cover: string | null; author: string; publishedAt: Date | null;
-  createdAt: Date; updatedAt: Date;
+  createdAt: Date; updatedAt: Date; seoTitle: string | null; seoDesc: string | null;
 }) {
   return {
     slug: p.slug,
@@ -13,6 +13,8 @@ function toPostDTO(p: {
     excerpt: p.excerpt,
     content: p.body,
     coverImage: p.cover,
+    seoTitle: p.seoTitle,
+    seoDesc: p.seoDesc,
     author: p.author,
     publishedAt: (p.publishedAt ?? p.createdAt).toISOString(),
     updatedAt: p.updatedAt.toISOString(),

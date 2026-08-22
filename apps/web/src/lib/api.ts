@@ -107,6 +107,8 @@ export interface PostDTO {
   excerpt: string | null;
   content: string | null;
   coverImage: string | null;
+  seoTitle?: string | null;
+  seoDesc?: string | null;
   author: string | null;
   publishedAt: string;
   updatedAt?: string;
