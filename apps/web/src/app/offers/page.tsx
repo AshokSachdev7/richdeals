@@ -7,7 +7,7 @@ import { OFFERS } from "@/lib/offers";
 // Static content from the OFFERS constant — no per-request data, so let it
 // prerender + CDN-cache instead of force-dynamic no-store.
 const OFFERS_TITLE = "Money Offers — Credit Cards & Signup Bonuses";
-const OFFERS_DESC = `Best signup offers in India — credit cards, demat & savings accounts, loans and more, handpicked by ${SITE_NAME}.`;
+const OFFERS_DESC = `Best signup bonuses in India — credit cards, demat & savings accounts, personal loans and more, each handpicked by ${SITE_NAME} so you pocket the joining reward.`;
 
 export const metadata: Metadata = {
   title: OFFERS_TITLE,

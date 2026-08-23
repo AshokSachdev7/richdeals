@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Blog — Money-Saving Guides & Deal News",
-  description: `Shopping guides, coupon tips and deal roundups from the ${SITE_NAME} team.`,
+  description: `Money-saving guides, coupon tricks and deal roundups from ${SITE_NAME} — buy smarter on Amazon, Flipkart and 100+ Indian stores, and pay less on every order.`,
   alternates: { canonical: absUrl("/blog") },
 };
 
