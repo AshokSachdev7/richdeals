@@ -67,7 +67,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     deal.discountPct != null;
 
   return {
-    title: seoTitle,
+    // absolute → skip layout's " | RichDeals" suffix; product+price+discount is
+    // the ranking signal and the brand tail only ate SERP width (title hit 75c).
+    title: { absolute: seoTitle },
     description,
     robots: { index: indexable, follow: true },
     alternates: { canonical },

@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: c.seoTitle,
     description: c.seoDesc,
     alternates: { canonical: absUrl(`/compare/${c.slug}`) },
-    openGraph: { title: `${c.seoTitle} | ${SITE_NAME}`, description: c.seoDesc, type: "article" },
+    openGraph: { title: `${c.seoTitle} | ${SITE_NAME}`, description: c.seoDesc, type: "article", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
   };
 }
 

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: OFFERS_DESC,
   alternates: { canonical: absUrl("/offers") },
   // Own OG/Twitter so shares don't fall back to the generic homepage card.
-  openGraph: { title: OFFERS_TITLE, description: OFFERS_DESC, url: absUrl("/offers"), type: "website" },
+  openGraph: { title: OFFERS_TITLE, description: OFFERS_DESC, url: absUrl("/offers"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
   twitter: { card: "summary_large_image", title: OFFERS_TITLE, description: OFFERS_DESC },
 };
 
