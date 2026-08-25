@@ -89,6 +89,10 @@ export function dealSeoTitle(
     .replace(/[,\s]+$/, "")
     .trim();
   if (name.length > 48) name = name.slice(0, 48).replace(/\s+\S*$/, "").trim();
+  // truncation can cut inside a "(…)" — drop a dangling unbalanced open paren + its trailing ","
+  if (name.lastIndexOf("(") > name.lastIndexOf(")")) {
+    name = name.slice(0, name.lastIndexOf("(")).replace(/[,\s]+$/, "").trim();
+  }
   const disc = discountOf(deal);
   const price = deal.price != null ? ` @ ${formatINR(deal.price)}` : "";
   const off = disc != null ? ` (${disc}% Off)` : "";
