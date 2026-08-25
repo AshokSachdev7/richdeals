@@ -43,6 +43,16 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: SITE_NAME },
   robots: { index: true, follow: true },
+  // ponytail: tokens are public, read from env → owner pastes GSC/Bing token,
+  // redeploy, no code edit. Field omitted when unset (no empty meta).
+  verification: {
+    ...(process.env.GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+      : {}),
+    ...(process.env.BING_SITE_VERIFICATION
+      ? { other: { "msvalidate.01": process.env.BING_SITE_VERIFICATION } }
+      : {}),
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -55,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     description: `${SITE_NAME} is an Indian deals, coupons and freebies aggregator publishing original, price-verified discount write-ups across Amazon, Flipkart, Myntra, Ajio, Nykaa and 100+ stores.`,
     // Only real, resolving profiles — a fabricated sameAs weakens the entity graph.
     sameAs: [
-      "https://t.me/+aYRmCknf4_w0MGVl",
+      "https://t.me/richdealsindia",
       "https://medium.com/@inrichdaddy",
     ],
   };
@@ -110,7 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {SITE_TAGLINE}. Handpicked, verified deals with live prices from Amazon, Flipkart &amp; 100+ Indian stores — updated all day.
               </p>
               <a
-                href="https://t.me/+aYRmCknf4_w0MGVl"
+                href="https://t.me/richdealsindia"
                 target="_blank"
                 rel="noopener"
                 className="mt-5 inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"

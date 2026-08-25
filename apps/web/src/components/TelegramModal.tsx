@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const JOIN = "https://t.me/+aYRmCknf4_w0MGVl";
+const JOIN = "https://t.me/richdealsindia";
 const JOINED = "rd_tg_joined";       // set once they click Join → never show again
 const COUNT = "rd_tg_dismiss_v1";    // times dismissed via Close → cap at MAX_SHOWS
 const MAX_SHOWS = 7;

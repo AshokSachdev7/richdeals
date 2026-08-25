@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: absUrl("/contact") },
 };
 
-const TELEGRAM = "https://t.me/+aYRmCknf4_w0MGVl";
+const TELEGRAM = "https://t.me/richdealsindia";
 
 export default function ContactPage() {
   return (
