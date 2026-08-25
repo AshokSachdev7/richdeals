@@ -30,6 +30,7 @@ export class StatsController {
       points,
       signupSeries, clickSeries,
       topDeals, recentUsers,
+      nullPrice, nullImg, coverless, seoless, dbMaxLive,
     ] = await Promise.all([
       this.prisma.user.count(),
       this.prisma.user.count({ where: { createdAt: { gte: todayIst } } }),
@@ -64,6 +65,12 @@ export class StatsController {
         orderBy: { id: 'desc' }, take: 8,
         select: { id: true, email: true, name: true, points: true, createdAt: true, referredById: true },
       }),
+      // Rot counters for the CEO audit — slot-safe (pooled) so ticks never open a fresh conn.
+      this.prisma.deal.count({ where: { status: 'LIVE', price: null } }),
+      this.prisma.deal.count({ where: { status: 'LIVE', OR: [{ image: null }, { image: '' }, { NOT: { image: { startsWith: 'http' } } }] } }),
+      this.prisma.post.count({ where: { OR: [{ cover: null }, { cover: '' }] } }),
+      this.prisma.post.count({ where: { OR: [{ seoTitle: null }, { seoTitle: '' }, { seoDesc: null }, { seoDesc: '' }] } }),
+      this.prisma.deal.findFirst({ where: { status: 'LIVE' }, orderBy: { id: 'desc' }, select: { id: true } }),
     ]);
 
     return {
@@ -71,6 +78,7 @@ export class StatsController {
       clicks: { total: clicks, today: clicksToday, last7d: clicks7d },
       deals: { live: dealsLive, pending: dealsPending, expired: dealsExpired, total: dealsTotal },
       posts: { total: posts, today: postsToday },
+      rot: { nullPriceLive: nullPrice, nullImgLive: nullImg, coverlessPosts: coverless, seolessPosts: seoless, dbMaxLive: dbMaxLive?.id ?? 0 },
       community: { comments, votes, pointsAwarded: points._sum.points ?? 0 },
       signupSeries,
       clickSeries,
