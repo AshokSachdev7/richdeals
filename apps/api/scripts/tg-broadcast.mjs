@@ -8,10 +8,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const BOT = process.env.TG_BOT || '8677395510:AAFV59MGu5fEiU65zAouKSqs_92mP2yxnSI';
-const CHAT = process.env.TG_CHANNEL || '-1004416895404';
+const BOT = process.env.TG_BOT || '';   // set in apps/api/.env — never hardcode the token
+const CHAT = process.env.TG_CHANNEL || '';
 const SITE = 'https://richdeals.in';
-const JOIN = 'https://t.me/+aYRmCknf4_w0MGVl';
+const JOIN = process.env.TG_JOIN || 'https://t.me/richdealsindia';
+if (!BOT || !CHAT) { console.error('TG_BOT / TG_CHANNEL missing in .env — broadcast aborted'); process.exit(1); }
 const MAX_PER_RUN = 5;          // avoid channel flood + telegram rate limits
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const CURSOR = path.join(__dir, '.tg-broadcast-cursor.json');
@@ -35,16 +36,31 @@ const cleanTitle = (t) =>
     .replace(/\s{2,}/g, " ")
     .trim() || String(t).trim();
 
+// Build a clean, verified deal post per the RichDeals posting rules. Every
+// number comes from the deal row — nothing invented. Discount + Save show only
+// when a real MRP > price; coupon line only when a real couponCode exists.
 const caption = (d) => {
-  const off = d.mrp && d.price && d.mrp > d.price ? Math.round((1 - d.price / d.mrp) * 100) : null;
+  const hasDisc = d.mrp && d.price && d.mrp > d.price;
+  const off = hasDisc ? Math.round((1 - d.price / d.mrp) * 100) : null;
+  const save = hasDisc ? d.mrp - d.price : null;
   const lines = [];
   lines.push(`🔥 <b>${esc(cleanTitle(d.title))}</b>`);
-  let price = d.price != null ? `💰 <b>${inr(d.price)}</b>` : '';
-  if (d.mrp && d.price && d.mrp > d.price) price += `  <s>${inr(d.mrp)}</s>`;
-  if (off != null) price += `  (${off}% OFF)`;
-  if (price) lines.push(price);
   lines.push('');
-  lines.push(`🛒 <a href="${SITE}/${d.slug}">Grab this deal →</a>`);
+  if (d.price != null) {
+    lines.push(`💰 <b>Deal Price: ${inr(d.price)}</b>`);
+    if (hasDisc) {
+      lines.push(`<s>${inr(d.mrp)}</s>`);
+      lines.push(`🏷️ <b>${off}% OFF</b>  💸 Save ${inr(save)}`);
+    }
+  }
+  // Coupon only when the row actually carries one — else say nothing (no
+  // "auto-applied" claim we can't verify).
+  const code = (d.couponCode || '').trim();
+  if (code) lines.push(`🎟️ <b>Coupon:</b> <code>${esc(code)}</code>`);
+  lines.push('');
+  lines.push(`👉 <b><a href="${SITE}/${d.slug}">Buy Now →</a></b>`);
+  lines.push('');
+  lines.push(`⚠️ Deal may expire anytime. Price/stock can change.`);
   lines.push(`📲 <a href="${JOIN}">Join RichDeals for more</a>`);
   return lines.join('\n');
 };
@@ -93,7 +109,7 @@ try {
     where: { status: 'LIVE', id: { gt: cursor }, image: { startsWith: 'http' } },
     orderBy: { id: 'asc' },
     take: MAX_PER_RUN,
-    select: { id: true, slug: true, title: true, price: true, mrp: true, image: true },
+    select: { id: true, slug: true, title: true, price: true, mrp: true, image: true, couponCode: true },
   });
 
   if (!deals.length) {
