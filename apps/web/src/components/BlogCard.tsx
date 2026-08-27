@@ -18,6 +18,7 @@ export default function BlogCard({ post, featured = false }: { post: PostDTO; fe
         {cover.type === "image" ? (
           <LazyImage
             src={cover.src}
+            alt={post.title}
             className={`w-full ${featured ? "h-full min-h-[220px]" : "aspect-[16/9]"}`}
             imgClassName="group-hover:scale-105"
           />
