@@ -54,17 +54,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonical = absUrl(`/${deal.slug}`);
   const seoTitle = dealSeoTitle(deal);
 
-  // Index only "real deal" pages: has price AND image AND a visible saving
-  // (discountPct). Google was refusing ~2500 thin deal pages ("Discovered –
-  // currently not indexed"); a page with no price/image/discount reads as a
-  // duplicate of the merchant PDP and drags the whole domain's quality signal.
-  // Expired stays live (never 404) but out of the index. Links still followed.
-  // Keep this rule identical to the sitemap filter in app/sitemap.ts.
+  // Index only "real deal" pages: has price AND image AND real substance —
+  // either a visible saving (discountPct) OR a substantive original description
+  // (≥120 chars, i.e. our rewrite, not a stub). Google was refusing ~2500 thin
+  // deal pages ("Discovered – currently not indexed"); a page with no
+  // price/image/content reads as a merchant-PDP duplicate and drags domain
+  // quality. But Amazon PDPs hide MRP → discountPct is null on legit product
+  // deals (median desc 180c, price + image + FAQ); gating on discountPct alone
+  // wrongly excluded 1603 real pages. Expired stays live (never 404) but out of
+  // the index. Keep this rule identical to the sitemap filter in app/sitemap.ts.
   const indexable =
     deal.status !== "EXPIRED" &&
     deal.price != null &&
     !!deal.image &&
-    deal.discountPct != null;
+    (deal.discountPct != null || (deal.description?.length ?? 0) >= 120);
 
   return {
     // absolute → skip layout's " | RichDeals" suffix; product+price+discount is

@@ -66,11 +66,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Only submit deals the page itself lets Google index. Must match the robots
   // rule in app/[dealSlug]/page.tsx EXACTLY: real deal = has price AND image AND
-  // a visible saving (discountPct). Firehosing 4358 thin deal URLs starved
-  // crawl budget and left ~2500 stuck in "Discovered – currently not indexed";
-  // gating to genuine deals concentrates crawl on pages that can actually rank.
+  // real substance — a visible saving (discountPct) OR a substantive original
+  // description (≥120 chars). Firehosing 4358 thin deal URLs starved crawl
+  // budget and left ~2500 stuck in "Discovered – currently not indexed"; but
+  // discountPct alone wrongly excluded 1603 legit Amazon PDP deals (MRP hidden
+  // → null discount, yet price + image + median-180c description + FAQ).
   const indexableDeals = allDeals.filter(
-    (d) => d.status !== "EXPIRED" && d.price != null && !!d.image && d.discountPct != null,
+    (d) =>
+      d.status !== "EXPIRED" &&
+      d.price != null &&
+      !!d.image &&
+      (d.discountPct != null || (d.description?.length ?? 0) >= 120),
   );
 
   const dealRoutes: MetadataRoute.Sitemap = indexableDeals.map((d) => ({
