@@ -34,7 +34,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const name = cat?.name || titleize(slug);
   const label = CATEGORY_TYPE_LABEL[type];
   const title = `${name} ${label} Deals & Offers`;
-  const description = `Best ${name} deals, discounts and coupons — updated daily on ${SITE_NAME}. Save more on every ${name} order.`;
+  const description = `Best ${name} deals & coupons in India — verified prices from Amazon, Flipkart & 100+ stores, updated daily on ${SITE_NAME}. Save more on every ${name} order.`;
   return {
     title,
     description,
