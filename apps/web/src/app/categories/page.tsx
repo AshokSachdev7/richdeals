@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Shop by Category — Deals & Offers",
-  description: `Browse deals by category — Electronics, Mobiles, Fashion, Home & Kitchen and more, all in one place on ${SITE_NAME}.`,
+  description: `Browse verified deals by category — Electronics, Mobiles, Fashion, Beauty, Home & Kitchen, Grocery and more, updated daily with real prices and MRP on ${SITE_NAME}.`,
   alternates: { canonical: absUrl("/categories") },
 };
 

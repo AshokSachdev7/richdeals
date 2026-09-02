@@ -10,7 +10,7 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "All Stores — Coupons & Deals",
-  description: `Browse deals and coupon codes by store — Amazon, Flipkart, Myntra and more, all in one place on ${SITE_NAME}.`,
+  description: `Browse verified deals and coupon codes by store — Amazon, Flipkart, Myntra, Ajio, Croma, Nykaa and 100+ Indian shops, updated daily with real prices on ${SITE_NAME}.`,
   alternates: { canonical: absUrl("/stores") },
 };
 

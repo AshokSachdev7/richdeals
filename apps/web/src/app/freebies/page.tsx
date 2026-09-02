@@ -15,8 +15,8 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   // Paged variants are crawl paths to older freebies, not index targets.
   const { cursor } = await searchParams;
   return {
-    title: "Free Samples & Freebies in India — Free Stuff Today",
-    description: `Free samples, freebies and free stuff in India, updated today — live giveaways and near-free deals from top brands on ${SITE_NAME}. Grab them fast before stock runs out.`,
+    title: "Free Samples & Freebies in India Today",
+    description: `Free samples, freebies and free stuff in India, updated today — live giveaways and near-free deals from top brands on ${SITE_NAME}. Grab them fast.`,
     robots: cursor ? { index: false, follow: true } : undefined,
     alternates: { canonical: absUrl("/freebies") },
   };
