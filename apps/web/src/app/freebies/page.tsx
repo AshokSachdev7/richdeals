@@ -19,6 +19,8 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     description: `Free samples, freebies and free stuff in India, updated today — live giveaways and near-free deals from top brands on ${SITE_NAME}. Grab them fast.`,
     robots: cursor ? { index: false, follow: true } : undefined,
     alternates: { canonical: absUrl("/freebies") },
+    openGraph: { title: "Free Samples & Freebies in India Today", description: `Free samples, freebies and free stuff in India, updated today on ${SITE_NAME}.`, url: absUrl("/freebies"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", title: "Free Samples & Freebies in India Today" },
   };
 }
 

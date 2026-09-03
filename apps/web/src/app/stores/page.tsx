@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   title: "All Stores — Coupons & Deals",
   description: `Browse verified deals and coupon codes by store — Amazon, Flipkart, Myntra, Ajio, Croma, Nykaa and 100+ Indian shops, updated daily with real prices on ${SITE_NAME}.`,
   alternates: { canonical: absUrl("/stores") },
+  openGraph: { title: "All Stores — Coupons & Deals", description: `Browse verified deals and coupon codes by store — Amazon, Flipkart, Myntra, Ajio, Croma, Nykaa and 100+ Indian shops on ${SITE_NAME}.`, url: absUrl("/stores"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+  twitter: { card: "summary_large_image", title: "All Stores — Coupons & Deals" },
 };
 
 export default async function StoresPage() {

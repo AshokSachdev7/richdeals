@@ -6,10 +6,15 @@ import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
+const BLOG_TITLE = "Blog — Money-Saving Guides & Deal News";
+const BLOG_DESC = `Money-saving guides, coupon tricks and deal roundups from ${SITE_NAME} — buy smarter on Amazon, Flipkart and 100+ Indian stores, and pay less on every order.`;
+
 export const metadata: Metadata = {
-  title: "Blog — Money-Saving Guides & Deal News",
-  description: `Money-saving guides, coupon tricks and deal roundups from ${SITE_NAME} — buy smarter on Amazon, Flipkart and 100+ Indian stores, and pay less on every order.`,
+  title: BLOG_TITLE,
+  description: BLOG_DESC,
   alternates: { canonical: absUrl("/blog") },
+  openGraph: { title: BLOG_TITLE, description: BLOG_DESC, url: absUrl("/blog"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+  twitter: { card: "summary_large_image", title: BLOG_TITLE, description: BLOG_DESC },
 };
 
 export default async function BlogPage() {

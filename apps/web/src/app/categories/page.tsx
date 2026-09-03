@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: "Shop by Category — Deals & Offers",
   description: `Browse verified deals by category — Electronics, Mobiles, Fashion, Beauty, Home & Kitchen, Grocery and more, updated daily with real prices and MRP on ${SITE_NAME}.`,
   alternates: { canonical: absUrl("/categories") },
+  openGraph: { title: "Shop by Category — Deals & Offers", description: `Browse verified deals by category — Electronics, Mobiles, Fashion, Beauty, Home & Kitchen and more on ${SITE_NAME}.`, url: absUrl("/categories"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+  twitter: { card: "summary_large_image", title: "Shop by Category — Deals & Offers" },
 };
 
 // Per-category icon + soft colour tile. Static class strings (Tailwind can't
