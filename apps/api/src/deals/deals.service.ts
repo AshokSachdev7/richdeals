@@ -11,6 +11,12 @@ export interface UpsertResult {
   storeSlug: string;
 }
 
+// Strip U+FFFD mojibake that leaks in from mis-decoded source titles — it
+// poisons the SERP snippet and the Product JSON-LD name. All ingest sources
+// (indiafreestuff, desidime, telegram, member submits) route through
+// upsertFromIngest, so one guard here covers every writer.
+const deMojibake = (s: string): string => s.replace(/�/g, '').replace(/\s+/g, ' ').trim();
+
 // Admin panel/URLs may send status as kebab or lowercase ("pending-review");
 // the DB enum is UPPER_SNAKE ("PENDING_REVIEW"). Normalise so the query doesn't
 // blow up with a Prisma enum error. Unknown values pass through unchanged.
@@ -77,8 +83,8 @@ export class DealsService {
     const data = {
       slug: dto.slug,
       sourceSlug: dto.sourceSlug ?? null,
-      title: dto.title,
-      description: dto.description ?? null,
+      title: deMojibake(dto.title),
+      description: dto.description ? deMojibake(dto.description) : null,
       howTo: dto.howTo ?? [],
       image: dto.image ?? null,
       mrp: dto.mrp ?? null,

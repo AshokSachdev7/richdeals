@@ -27,6 +27,23 @@ const nextConfig = {
   },
   // Web talks to the API over HTTP only; transpile the shared workspace.
   transpilePackages: ["@deals/shared"],
+  // Baseline security headers on every route. No CSP here — AdSense/GTM/marketplace
+  // CDNs would need a hand-tuned allowlist and a wrong one blanks the page; these
+  // five are safe sitewide. HSTS is 2y+preload (DO terminates TLS, always https).
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Permissions-Policy", value: "geolocation=(), microphone=(), camera=()" },
+        ],
+      },
+    ];
+  },
   // SEO: consolidate the thin BBD duplicate into the richer keeper. Both target
   // the "big billion days 2026" cluster; GSC query×page showed them splitting
   // equity (pos 21 vs 11, both 0 clicks). 308 passes link equity to the keeper.
