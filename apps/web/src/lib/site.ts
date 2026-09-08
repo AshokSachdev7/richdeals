@@ -110,6 +110,31 @@ export function discountOf(deal: Pick<DealDTO, "discountPct" | "mrp" | "price">)
   return null;
 }
 
+// SINGLE SOURCE OF TRUTH for "should Google index this deal page?". Used by
+// both app/[dealSlug]/page.tsx (robots.index) AND app/sitemap.ts (which URLs
+// ship) — they MUST agree, so they call this, never re-inline the rule.
+//
+// Hybrid prune (owner directive 2026-09-09, chasing AdSense approval without
+// killing deal SEO): index only genuinely useful, fresh deals; noindex the
+// low-value / thin / stale long tail. Those pages stay LIVE (never 404) and
+// keep working in the affiliate flow — they just drop out of Google's index so
+// ~9k near-identical merchant-style pages stop reading as scaled thin content.
+// Gate = must have price + image + not expired, AND:
+//   - real saving (discountOf ≥ 20%, computed from discountPct or MRP/price so
+//     Amazon PDPs with hidden MRP still qualify off their own %), OR a
+//     substantive original writeup (description ≥ 200 chars, our rewrite not a stub)
+//   - AND fresh: created within 120 days (stale deal prices rot + age drags quality)
+export function dealIndexable(
+  deal: Pick<DealDTO, "status" | "price" | "image" | "description" | "discountPct" | "mrp" | "createdAt">,
+): boolean {
+  if (deal.status === "EXPIRED" || deal.price == null || !deal.image) return false;
+  const disc = discountOf(deal);
+  const valuable = (disc != null && disc >= 20) || (deal.description?.length ?? 0) >= 200;
+  if (!valuable) return false;
+  const ageDays = (Date.now() - new Date(deal.createdAt).getTime()) / 86_400_000;
+  return ageDays <= 120;
+}
+
 // Clean marketplace product name — strips the " at ₹X – Store" tail + pipe junk.
 export function dealProductName(
   deal: Pick<DealDTO, "title">,

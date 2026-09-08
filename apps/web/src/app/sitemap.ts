@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getDeals, getStores, getCategories, getPosts } from "@/lib/api";
-import { absUrl } from "@/lib/site";
+import { absUrl, dealIndexable } from "@/lib/site";
 import { COMPARISONS } from "@/lib/comparisons";
 
 // ISR-cached (not force-dynamic): with ~2000 deals the per-request render is
@@ -64,20 +64,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     throw new Error("sitemap: deal fetch returned 0 — refusing to cache degraded sitemap");
   }
 
-  // Only submit deals the page itself lets Google index. Must match the robots
-  // rule in app/[dealSlug]/page.tsx EXACTLY: real deal = has price AND image AND
-  // real substance — a visible saving (discountPct) OR a substantive original
-  // description (≥120 chars). Firehosing 4358 thin deal URLs starved crawl
-  // budget and left ~2500 stuck in "Discovered – currently not indexed"; but
-  // discountPct alone wrongly excluded 1603 legit Amazon PDP deals (MRP hidden
-  // → null discount, yet price + image + median-180c description + FAQ).
-  const indexableDeals = allDeals.filter(
-    (d) =>
-      d.status !== "EXPIRED" &&
-      d.price != null &&
-      !!d.image &&
-      (d.discountPct != null || (d.description?.length ?? 0) >= 120),
-  );
+  // Only submit deals the page itself lets Google index — same helper the
+  // robots rule uses in app/[dealSlug]/page.tsx, so the two can't drift.
+  const indexableDeals = allDeals.filter(dealIndexable);
 
   const dealRoutes: MetadataRoute.Sitemap = indexableDeals.map((d) => ({
     url: absUrl(`/${d.slug}`),
