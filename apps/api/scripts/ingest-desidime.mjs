@@ -8,7 +8,7 @@
 // (curl is bot-blocked on PDPs) — DesiDime card prices go stale fast.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import { JUNK, GROCERY, affiliate, verifyFromHtml } from './lib/ingest-common.mjs';
+import { JUNK, GROCERY, RESTRICTED, affiliate, verifyFromHtml } from './lib/ingest-common.mjs';
 import { PrismaClient } from '@prisma/client';
 
 const OUT = process.argv[2] || './dd-candidates.json';
@@ -63,7 +63,7 @@ for (const list of LISTS) {
   for (const c of got) if (!seen.has(c.id) && !dead.has(c.id)) { seen.add(c.id); found.push(c); }
   sleep(GAP);
 }
-const junk = found.filter((c) => JUNK.test(c.title) || GROCERY.test(c.title));
+const junk = found.filter((c) => JUNK.test(c.title) || GROCERY.test(c.title) || RESTRICTED.test(c.title));
 const keep = found.filter((c) => !junk.includes(c));
 console.log(`discovered ${found.length} cards, ${junk.length} junk/other-store dropped`);
 

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Script from "next/script";
 import { Rubik, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
 import SiteHeader from "@/components/SiteHeader";
 import Analytics from "@/components/Analytics";
+import AdSense from "@/components/AdSense";
 import TelegramModal from "@/components/TelegramModal";
 import { SITE_NAME, SITE_URL, SITE_TAGLINE, absUrl } from "@/lib/site";
 
@@ -87,15 +87,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${rubik.variable} ${nunito.variable}`}>
       <body>
-        {/* AdSense site verification + ad serving. Publisher id matches
-            public/ads.txt — without this tag on the site the application
-            cannot be reviewed, ads.txt alone is not enough. */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7298984420457042"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {/* AdSense loader + site verification. Publisher id matches
+            public/ads.txt — without this tag the application cannot be
+            reviewed, ads.txt alone is not enough. ADS-PRIV-04: AdSense
+            component fails safe to non-personalised ads outside India (no
+            CMP yet), personalised only when Cloudflare confirms loc=IN. */}
+        <AdSense />
         <Analytics />
         <JsonLd data={orgSchema} />
         <JsonLd data={websiteSchema} />

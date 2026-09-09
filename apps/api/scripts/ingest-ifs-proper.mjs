@@ -7,14 +7,15 @@
 // Amazon browser tab (curl is bot-blocked on PDPs), then push as status:live.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import { JUNK, GROCERY, affiliate, verifyFromHtml } from './lib/ingest-common.mjs';
+import { JUNK, GROCERY, RESTRICTED, affiliate, verifyFromHtml } from './lib/ingest-common.mjs';
 
 const OUT = process.argv[2] || './ifs-candidates.json';
 const LISTS = ['https://indiafreestuff.in/deals', 'https://indiafreestuff.in/deals/superdeals'];
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36';
 const GAP = 2600;
 
-const sleep = (ms) => execFileSync(process.execPath, ['-e', `setTimeout(()=>{},${ms})`]);
+// ponytail: real blocking sleep, no child process (the old node -e spawn got SIGTERM-killed, status 143).
+const sleep = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 const curl = (u) => { try { return execFileSync('curl', ['-sL', '-A', UA, '-m', '25', u], { encoding: 'utf8', maxBuffer: 1 << 24 }); } catch { return ''; } };
 const curlFinal = (u) => { try { return execFileSync('curl', ['-sL', '-A', UA, '-m', '25', '-o', process.platform === 'win32' ? 'NUL' : '/dev/null', '-w', '%{url_effective}', u], { encoding: 'utf8' }).trim(); } catch { return ''; } };
 const dec = (s) => s ? s.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&#39;|&#x27;/g, "'").replace(/&quot;|&#34;/g, '"').replace(/&nbsp;/g, ' ').replace(/&#8377;/g, '₹').replace(/\s+/g, ' ').trim() : s;
@@ -45,7 +46,7 @@ const found = [];
 for (const list of LISTS) {
   const html = curl(list);
   for (const c of cards(html)) {
-    if (seen.has(c.slug) || JUNK.test(c.title) || GROCERY.test(c.title)) continue;
+    if (seen.has(c.slug) || JUNK.test(c.title) || GROCERY.test(c.title) || RESTRICTED.test(c.title)) continue;
     seen.add(c.slug); found.push(c);
   }
   sleep(GAP);
