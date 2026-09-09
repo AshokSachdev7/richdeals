@@ -27,7 +27,8 @@ export default function PrivacyPage() {
             <p>
               We do not require you to create an account or submit personal details to browse deals. We
               collect standard, non-identifying analytics — such as pages viewed, approximate region,
-              browser type and referring site — to understand traffic and improve the site.
+              browser type, referring site and your device&rsquo;s IP address — to understand traffic and
+              improve the site. IP addresses are used only in aggregate and for security, not to identify you.
             </p>
           </div>
 
@@ -39,6 +40,10 @@ export default function PrivacyPage() {
               use of advertising cookies enables it and its partners to serve ads to you based on your visits.
               You can opt out of personalised advertising by visiting{" "}
               <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" className="text-brand hover:underline">Google Ads Settings</a>.
+              These advertising vendors may also use web beacons (also called pixel tags or clear GIFs) and your
+              device&rsquo;s IP address to measure ad delivery, cap how often an ad is shown, and detect fraud.
+              You can review the vendors Google uses at{" "}
+              <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener" className="text-brand hover:underline">policies.google.com/technologies/partner-sites</a>.
             </p>
           </div>
 

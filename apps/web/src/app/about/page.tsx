@@ -37,6 +37,21 @@ export default function AboutPage() {
             </p>
           </div>
           <div>
+            <h2 className="mb-1 font-display text-lg font-bold text-ink">Who runs {SITE_NAME}</h2>
+            <p>
+              {SITE_NAME} is an independently owned and operated Indian deals publication. Every deal and
+              article is selected, price-checked and written by the {SITE_NAME} editorial team — we do not
+              auto-republish retailer feeds without review, and we do not accept payment to place a specific
+              deal. When we earn an affiliate commission it never changes which deals we feature or how we
+              describe them.
+            </p>
+            <p className="mt-2">
+              Reach the editorial team any time through our{" "}
+              <a href="/contact" className="text-brand hover:underline">contact page</a> for price
+              corrections, copyright or content-removal requests, and partnership enquiries.
+            </p>
+          </div>
+          <div>
             <h2 className="mb-1 font-display text-lg font-bold text-ink">Stay updated</h2>
             <p>Follow our Telegram channel (linked in the footer) for the freshest drops.</p>
           </div>
