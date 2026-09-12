@@ -48,6 +48,7 @@ ${SITE_NAME} publishes original deal write-ups (never copied), each with the cur
 - [All Stores](${absUrl("/stores")})
 - [Coupons](${absUrl("/coupons")})
 - [Freebies](${absUrl("/freebies")})
+- [Forum — community deal votes & reports](${absUrl("/forum")})
 - [Blog](${absUrl("/blog")})
 
 ## Stores
