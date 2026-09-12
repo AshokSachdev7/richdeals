@@ -52,6 +52,7 @@ export function dealItemListSchema(
           "@type": "Offer",
           priceCurrency: "INR",
           price: String(d.price),
+          priceValidUntil: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
           availability: d.status === "EXPIRED" ? "https://schema.org/Discontinued" : "https://schema.org/InStock",
           url,
           seller: { "@type": "Organization", name: d.store.name },

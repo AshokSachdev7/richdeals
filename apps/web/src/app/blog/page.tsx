@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getPosts } from "@/lib/api";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BlogCard from "@/components/BlogCard";
-import { SITE_NAME, absUrl } from "@/lib/site";
+import { SITE_NAME, absUrl, breadcrumbSchema } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -20,8 +20,30 @@ export const metadata: Metadata = {
 export default async function BlogPage() {
   const { items } = await getPosts();
 
+  const jsonLd = [
+    breadcrumbSchema([{ name: "Home", href: "/" }, { name: "Blog", href: "/blog" }]),
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: BLOG_TITLE,
+      description: BLOG_DESC,
+      url: absUrl("/blog"),
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: items.length,
+        itemListElement: items.map((post, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: absUrl(`/blog/${post.slug}`),
+          name: post.title,
+        })),
+      },
+    },
+  ];
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Blog", href: "/blog" }]} />
 
       <header className="mb-8 max-w-2xl">
