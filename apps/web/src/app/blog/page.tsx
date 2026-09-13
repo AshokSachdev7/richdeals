@@ -4,6 +4,7 @@ import { getPosts } from "@/lib/api";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BlogCard from "@/components/BlogCard";
 import { SITE_NAME, absUrl, breadcrumbSchema } from "@/lib/site";
+import POST_REDIRECTS from "../../../post-redirects.json";
 
 export const dynamic = "force-dynamic";
 
@@ -37,10 +38,13 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export default async function BlogPage({ searchParams }: Props) {
   const page = pageNum((await searchParams).page);
-  const { items: all } = await getPosts();
+  const { items } = await getPosts();
+  // Consolidated twins still have rows but their URLs 308 away — sitemap.ts and
+  // llms.txt already filter them; the listing was the one place still linking in.
+  const all = items.filter((p) => !(p.slug in POST_REDIRECTS));
   const totalPages = Math.max(1, Math.ceil(all.length / PER_PAGE));
   const start = (page - 1) * PER_PAGE;
-  const items = all.slice(start, start + PER_PAGE);
+  const pageItems = all.slice(start, start + PER_PAGE);
 
   const jsonLd = [
     breadcrumbSchema([{ name: "Home", href: "/" }, { name: "Blog", href: "/blog" }]),
@@ -52,8 +56,8 @@ export default async function BlogPage({ searchParams }: Props) {
       url: page > 1 ? absUrl(`/blog?page=${page}`) : absUrl("/blog"),
       mainEntity: {
         "@type": "ItemList",
-        numberOfItems: items.length,
-        itemListElement: items.map((post, i) => ({
+        numberOfItems: pageItems.length,
+        itemListElement: pageItems.map((post, i) => ({
           "@type": "ListItem",
           position: start + i + 1,
           url: absUrl(`/blog/${post.slug}`),
@@ -80,14 +84,14 @@ export default async function BlogPage({ searchParams }: Props) {
         </p>
       </header>
 
-      {items.length === 0 ? (
+      {pageItems.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center text-gray-500">
           No articles published yet. Check back soon!
         </div>
       ) : (
         <>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((post, i) => (
+            {pageItems.map((post, i) => (
               <BlogCard key={post.slug} post={post} featured={page === 1 && i === 0} />
             ))}
           </div>
