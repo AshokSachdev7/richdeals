@@ -1,5 +1,6 @@
 import { getStores, getCategories, getPosts } from "@/lib/api";
 import { absUrl, SITE_NAME } from "@/lib/site";
+import POST_REDIRECTS from "../../../post-redirects.json";
 
 // Always render live so a deploy-time API blip never caches an empty file.
 export const dynamic = "force-dynamic";
@@ -17,6 +18,7 @@ export async function GET() {
   // Guides are what AI engines actually cite — link the newest ones so
   // ChatGPT/Perplexity/AI Overviews pull our original write-ups, not just hubs.
   const guideLines = posts.items
+    .filter((p) => !(p.slug in POST_REDIRECTS))
     .slice(0, 30)
     .map((p) => `- [${p.title}](${absUrl(`/blog/${p.slug}`)})${p.excerpt ? `: ${p.excerpt}` : ""}`)
     .join("\n");

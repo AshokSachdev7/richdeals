@@ -1,3 +1,5 @@
+const POST_REDIRECTS = require('./post-redirects.json');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -44,26 +46,17 @@ const nextConfig = {
       },
     ];
   },
-  // SEO: consolidate the thin BBD duplicate into the richer keeper. Both target
-  // the "big billion days 2026" cluster; GSC query×page showed them splitting
-  // equity (pos 21 vs 11, both 0 clicks). 308 passes link equity to the keeper.
+  // SEO: fold cannibalizing blog duplicates into their keeper. The dead->keeper
+  // map lives in post-redirects.json so sitemap.ts and llms.txt can filter the
+  // same dead slugs out of what we submit (a 308'd URL in a sitemap is a
+  // crawl-budget tax, and we were submitting two of them). Keeper chosen on GSC
+  // impressions where rows existed, else body depth + sibling slug convention.
   async redirects() {
-    return [
-      {
-        source: "/blog/flipkart-big-billion-days-2026-guide",
-        destination: "/blog/flipkart-big-billion-days-2026-lowest-price-guide",
-        permanent: true,
-      },
-      // SEO: same cannibalization on the "free sample websites india" head term.
-      // GSC winner = free-sample-websites-india-2026 (87/98 cluster clicks,
-      // pos 6.9); the "-in-india" twin self-canonicals and splits equity. 308
-      // folds it into the keeper.
-      {
-        source: "/blog/free-sample-websites-in-india-2026",
-        destination: "/blog/free-sample-websites-india-2026",
-        permanent: true,
-      },
-    ];
+    return Object.entries(POST_REDIRECTS).map(([from, to]) => ({
+      source: `/blog/${from}`,
+      destination: `/blog/${to}`,
+      permanent: true,
+    }));
   },
 };
 

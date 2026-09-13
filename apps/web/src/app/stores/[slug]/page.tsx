@@ -34,7 +34,12 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   return {
     title,
     description,
-    robots: cursor ? { index: false, follow: true } : undefined,
+    // Deeper pages, and directory hubs with no live deals and no evergreen copy,
+    // are crawlable but not index-worthy. They stay live (owner directive
+    // 2026-08-08) — noindex,follow keeps the links flowing without filing 245
+    // near-identical empty pages in the index. Mirrors the sitemap filter.
+    robots:
+      cursor || (store.liveDeals === 0 && !seo) ? { index: false, follow: true } : undefined,
     alternates: { canonical: absUrl(`/stores/${store.slug}`) },
     openGraph: {
       title: `${title} | ${SITE_NAME}`,

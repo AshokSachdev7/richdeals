@@ -10,6 +10,9 @@ export interface StoreDTO {
   name: string;
   slug: string;
   logo: string | null;
+  // Live-deal count. Optional because only the endpoints that already compute
+  // it fill it in; web treats "absent" as "assume it has deals".
+  liveDeals?: number;
 }
 
 export interface CategoryDTO {

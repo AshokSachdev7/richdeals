@@ -22,7 +22,15 @@ export class StoresService {
         (a, b) =>
           b._count.deals - a._count.deals || a.name.localeCompare(b.name),
       )
-      .map((s) => ({ id: s.id, name: s.name, slug: s.slug, logo: s.logo }));
+      // liveDeals was already counted for the sort and thrown away; web needs it
+      // to decide which hubs are worth submitting/indexing (empty ones noindex).
+      .map((s) => ({
+        id: s.id,
+        name: s.name,
+        slug: s.slug,
+        logo: s.logo,
+        liveDeals: s._count.deals,
+      }));
   }
 
   async getBySlug(
@@ -39,7 +47,15 @@ export class StoresService {
       limit,
     );
     return {
-      store: { id: store.id, name: store.name, slug: store.slug, logo: store.logo },
+      store: {
+        id: store.id,
+        name: store.name,
+        slug: store.slug,
+        logo: store.logo,
+        // ponytail: first-page count is enough for the "is this hub empty?"
+        // index decision — deeper cursor pages are noindex,follow regardless.
+        liveDeals: deals.items.length,
+      },
       deals,
     };
   }

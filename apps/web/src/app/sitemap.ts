@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { getDeals, getStores, getCategories, getPosts } from "@/lib/api";
 import { absUrl, dealIndexable } from "@/lib/site";
 import { COMPARISONS } from "@/lib/comparisons";
+import { storeSeo } from "@/lib/store-seo";
+import POST_REDIRECTS from "../../post-redirects.json";
 
 // ISR-cached (not force-dynamic): with ~2000 deals the per-request render is
 // ~33 sequential API calls and was timing out. Cache for 30min instead.
@@ -78,12 +80,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const storeRoutes: MetadataRoute.Sitemap = stores.map((s) => ({
-    url: absUrl(`/stores/${s.slug}`),
-    lastModified: now,
-    changeFrequency: "daily",
-    priority: 0.6,
-  }));
+  // Only submit store hubs that have something to offer a searcher: live deals,
+  // or hand-written evergreen copy. The 245 imported directory hubs with neither
+  // stay LIVE and linked from /stores (owner directive 2026-08-08 — never 404
+  // them) but submitting empty near-duplicate pages is what a "crawled, not
+  // indexed" pile is made of. The store page noindexes the same set.
+  const storeRoutes: MetadataRoute.Sitemap = stores
+    .filter((s) => (s.liveDeals ?? 1) > 0 || storeSeo(s.slug, s.name))
+    .map((s) => ({
+      url: absUrl(`/stores/${s.slug}`),
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.6,
+    }));
 
   const categoryRoutes: MetadataRoute.Sitemap = categories.map((c) => ({
     url: absUrl(
@@ -94,12 +103,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const postRoutes: MetadataRoute.Sitemap = posts.items.map((p) => ({
-    url: absUrl(`/blog/${p.slug}`),
-    lastModified: new Date(p.updatedAt || p.publishedAt),
-    changeFrequency: "weekly",
-    priority: 0.5,
-  }));
+  // Slugs folded into a keeper by next.config redirects() answer 308 — never
+  // submit a URL we redirect away from.
+  const postRoutes: MetadataRoute.Sitemap = posts.items
+    .filter((p) => !(p.slug in POST_REDIRECTS))
+    .map((p) => ({
+      url: absUrl(`/blog/${p.slug}`),
+      lastModified: new Date(p.updatedAt || p.publishedAt),
+      changeFrequency: "weekly",
+      priority: 0.5,
+    }));
 
   const compareRoutes: MetadataRoute.Sitemap = COMPARISONS.map((c) => ({
     url: absUrl(`/compare/${c.slug}`),
