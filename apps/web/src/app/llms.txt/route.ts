@@ -48,6 +48,8 @@ ${SITE_NAME} publishes original deal write-ups (never copied), each with the cur
 - [Home — today's top deals](${absUrl("/")})
 - [Money Offers — credit cards & signup bonuses](${absUrl("/offers")})
 - [All Stores](${absUrl("/stores")})
+- [All Categories](${absUrl("/categories")})
+- [Price Compare](${absUrl("/compare")})
 - [Coupons](${absUrl("/coupons")})
 - [Freebies](${absUrl("/freebies")})
 - [Forum — community deal votes & reports](${absUrl("/forum")})
