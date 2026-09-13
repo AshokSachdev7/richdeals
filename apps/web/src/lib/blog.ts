@@ -1,4 +1,5 @@
 import type { PostDTO } from "@/lib/api";
+import POST_REDIRECTS from "../../post-redirects.json";
 
 // ~200 wpm reading speed; strip markdown noise for a rough word count.
 export function readTime(content: string | null): number {
@@ -34,7 +35,7 @@ export function relatedPosts(post: PostDTO, all: PostDTO[], n = 3): PostDTO[] {
   const cat = postCategory(post);
   const t = titleTokens(`${post.title} ${post.excerpt ?? ""}`);
   return all
-    .filter((p) => p.slug !== post.slug)
+    .filter((p) => p.slug !== post.slug && !(p.slug in POST_REDIRECTS))
     .map((p) => {
       const shared = [...titleTokens(`${p.title} ${p.excerpt ?? ""}`)].filter((w) => t.has(w)).length;
       return { p, score: shared * 2 + (postCategory(p) === cat ? 1 : 0), date: +new Date(p.publishedAt) };
