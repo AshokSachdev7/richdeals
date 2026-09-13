@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getDeals, getStores, getCategories, getPosts } from "@/lib/api";
 import { absUrl, dealIndexable } from "@/lib/site";
 import { COMPARISONS } from "@/lib/comparisons";
-import { storeSeo } from "@/lib/store-seo";
+import { hasStoreSeo } from "@/lib/store-seo";
 import POST_REDIRECTS from "../../post-redirects.json";
 
 // ISR-cached (not force-dynamic): with ~2000 deals the per-request render is
@@ -86,7 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // them) but submitting empty near-duplicate pages is what a "crawled, not
   // indexed" pile is made of. The store page noindexes the same set.
   const storeRoutes: MetadataRoute.Sitemap = stores
-    .filter((s) => (s.liveDeals ?? 1) > 0 || storeSeo(s.slug, s.name))
+    .filter((s) => (s.liveDeals ?? 1) > 0 || hasStoreSeo(s.slug))
     .map((s) => ({
       url: absUrl(`/stores/${s.slug}`),
       lastModified: now,

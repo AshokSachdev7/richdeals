@@ -9,7 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import SortControl from "@/components/SortControl";
 import Pager from "@/components/Pager";
 import CollectionSeo from "@/components/CollectionSeo";
-import { storeSeo } from "@/lib/store-seo";
+import { hasStoreSeo, storeSeo } from "@/lib/store-seo";
 import { SITE_NAME, absUrl, dealItemListSchema, breadcrumbSchema } from "@/lib/site";
 
 export const revalidate = 300;
@@ -39,7 +39,9 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     // 2026-08-08) — noindex,follow keeps the links flowing without filing 245
     // near-identical empty pages in the index. Mirrors the sitemap filter.
     robots:
-      cursor || (store.liveDeals === 0 && !seo) ? { index: false, follow: true } : undefined,
+      cursor || (store.liveDeals === 0 && !hasStoreSeo(store.slug))
+        ? { index: false, follow: true }
+        : undefined,
     alternates: { canonical: absUrl(`/stores/${store.slug}`) },
     openGraph: {
       title: `${title} | ${SITE_NAME}`,

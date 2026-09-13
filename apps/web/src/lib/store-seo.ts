@@ -139,3 +139,8 @@ const genericStoreSeo = (slug: string, name: string): StoreSeo => ({
 // hand-tuned map; the map entries win when present.
 export const storeSeo = (slug: string, name?: string): StoreSeo | undefined =>
   STORE_SEO[slug] ?? (name ? genericStoreSeo(slug, name) : undefined);
+
+// storeSeo() never returns undefined for a named store — every hub gets the
+// generic fallback copy. Index/sitemap decisions need the *hand-written* set,
+// so ask for that explicitly instead of truth-testing storeSeo().
+export const hasStoreSeo = (slug: string) => slug in STORE_SEO;
