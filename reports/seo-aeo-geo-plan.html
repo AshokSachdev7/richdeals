@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RichDeals Search Programme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ink:#141a22;
+  --ink-2:#3d4a58;
+  --ink-3:#6b7a8a;
+  --rule:#d8dee6;
+  --rule-2:#eaeef3;
+  --paper:#f7f8fa;
+  --card:#ffffff;
+  --accent:#0f5f66;
+  --accent-soft:#e2efef;
+  --gap:#b06a12;
+  --gap-soft:#f6ecdd;
+  --good:#2c6e49;
+  --bad:#a13b2e;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --body:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  --display:"Newsreader",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e7ecf2; --ink-2:#b3c0cd; --ink-3:#8593a2;
+    --rule:#2b3542; --rule-2:#212a35;
+    --paper:#121821; --card:#19212b;
+    --accent:#5fc0c4; --accent-soft:#1b3336;
+    --gap:#e0a256; --gap-soft:#332816;
+    --good:#7cc196; --bad:#e08878;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e7ecf2; --ink-2:#b3c0cd; --ink-3:#8593a2;
+  --rule:#2b3542; --rule-2:#212a35;
+  --paper:#121821; --card:#19212b;
+  --accent:#5fc0c4; --accent-soft:#1b3336;
+  --gap:#e0a256; --gap-soft:#332816;
+  --good:#7cc196; --bad:#e08878;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:0 72px}
+a{color:var(--accent)}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0}
+h1{font-size:clamp(34px,5.5vw,54px);line-height:1.06;letter-spacing:-.015em}
+h2{font-size:clamp(23px,3vw,31px);line-height:1.15;letter-spacing:-.01em}
+h3{font-size:19px;line-height:1.25}
+h4{font-size:16px;font-family:var(--body);font-weight:600}
+p{margin:0 0 14px}
+.lede{font-family:var(--display);font-size:clamp(17px,2.2vw,21px);line-height:1.5;color:var(--ink-2);max-width:64ch}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 10px}
+
+header.masthead{border-bottom:1px solid var(--rule);padding-block:44px 30px;margin-bottom:36px}
+.meta-strip{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:22px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.meta-strip b{color:var(--ink-2);font-weight:500}
+
+section{margin-block:52px}
+section > .eyebrow{margin-bottom:6px}
+.sec-intro{max-width:70ch;color:var(--ink-2);margin-top:12px}
+
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:16px 18px}
+.stat .n{font-family:var(--display);font-size:30px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat .k{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);margin-top:9px}
+.stat .s{font-size:13px;color:var(--ink-2);margin-top:6px;line-height:1.45}
+.stat.warn{border-left:3px solid var(--gap)}
+.stat.ok{border-left:3px solid var(--good)}
+.stat.crit{border-left:3px solid var(--bad)}
+
+.tablebox{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--rule-2);vertical-align:top}
+thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--rule);white-space:nowrap;font-weight:500}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+td.slug{font-family:var(--mono);font-size:12px;color:var(--ink-2);word-break:break-word}
+caption{caption-side:bottom;text-align:left;padding:10px 13px;font-size:12px;color:var(--ink-3);line-height:1.5}
+
+.tag{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:2px;white-space:nowrap}
+.t-build{background:var(--accent-soft);color:var(--accent)}
+.t-skip{background:var(--rule-2);color:var(--ink-3)}
+.t-later{background:var(--gap-soft);color:var(--gap)}
+.t-done{background:var(--accent-soft);color:var(--accent)}
+
+.phase{border-left:2px solid var(--rule);padding-left:22px;margin-left:6px}
+.phase > .step{position:relative;padding-bottom:30px}
+.phase > .step:last-child{padding-bottom:0}
+.phase > .step::before{content:"";position:absolute;left:-27px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--accent);outline:3px solid var(--paper)}
+.step-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:7px}
+.step-when{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.step p{max-width:70ch;margin-bottom:8px}
+.step ul{margin:8px 0 0;padding-left:18px;max-width:70ch}
+.step li{margin-bottom:5px}
+
+.callout{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--gap);border-radius:3px;padding:15px 18px;margin:20px 0}
+.callout p:last-child{margin-bottom:0}
+.callout h4{margin-bottom:7px}
+
+.cols{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:22px}
+.col h4{margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--rule)}
+.col ul{margin:0;padding-left:17px}
+.col li{margin-bottom:7px;font-size:14px;color:var(--ink-2)}
+.col li b{color:var(--ink);font-weight:600}
+
+code{font-family:var(--mono);font-size:12.5px;background:var(--rule-2);padding:1px 5px;border-radius:2px;word-break:break-word}
+
+footer{border-top:1px solid var(--rule);padding-top:22px;margin-top:60px;font-size:12.5px;color:var(--ink-3);max-width:78ch}
+footer p{margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">richdeals.in &middot; organic programme</p>
+  <h1>Winning the queries<br>freekaamaal already owns</h1>
+  <p class="lede">A competitor gap export names 1,409 URLs we have no page for. This is the plan to convert the tractable slice of that into ranked, answerable, citable pages &mdash; at 3&ndash;4 posts a day, the only rate this site is allowed to publish.</p>
+  <div class="meta-strip">
+    <span><b>Drafted</b> 2026-09-13</span>
+    <span><b>Source</b> reports/keyword-gap-freekaamaal.html</span>
+    <span><b>Surface</b> Google organic + AI Overviews, Bing/Copilot, ChatGPT, Perplexity</span>
+    <span><b>Market</b> India &middot; en-IN</span>
+    <span><b>Mode</b> site inventory + advisory</span>
+  </div>
+</header>
+
+<section>
+  <p class="eyebrow">01 &middot; Where we actually stand</p>
+  <h2>The asset is big. The traffic is not.</h2>
+  <p class="sec-intro">Every number below is read from our own production database or Search Console, on 2026-09-13. Nothing here is estimated.</p>
+
+  <div class="grid g3" style="margin-top:22px">
+    <div class="stat ok"><div class="n">297</div><div class="k">published posts</div><div class="s">0 coverless, 0 missing seoTitle, 0 missing seoDesc.</div></div>
+    <div class="stat ok"><div class="n">9,689</div><div class="k">live deals</div><div class="s">246 expired, 0 stuck in pending review.</div></div>
+    <div class="stat ok"><div class="n">253</div><div class="k">store hubs</div><div class="s">Across 12 categories. Every hub renders even at zero deals.</div></div>
+    <div class="stat crit"><div class="n">3</div><div class="k">GSC clicks / 28d</div><div class="s">Against 164 impressions, site-wide. This is the number the programme has to move.</div></div>
+    <div class="stat warn"><div class="n">105</div><div class="k">meta-length misses</div><div class="s">90 seoDesc under 150 chars, 15 over 160 &mdash; our own house rule, not a ranking rule.</div></div>
+    <div class="stat warn"><div class="n">5</div><div class="k">thin posts</div><div class="s">Under 3,500 characters of body. Merge or expand, do not bulk-delete.</div></div>
+  </div>
+
+  <div class="callout">
+    <h4>Read the traffic number correctly</h4>
+    <p>3 clicks / 164 impressions over 28 days means almost nothing on this site is <em>ranked</em>, not that nothing is <em>indexed</em>. 297 posts producing 164 impressions is a visibility problem at the query level: we hold pages for topics nobody searches, or we hold them at positions nobody scrolls to. Adding a 298th post of the same kind changes nothing. The gap export matters precisely because it names queries with demand attached.</p>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">02 &middot; Coverage ledger</p>
+  <h2>What this plan is built on, and what it is not</h2>
+
+  <div class="tablebox" style="margin-top:22px">
+  <table>
+    <thead><tr><th>Input</th><th class="num">Count</th><th>Evidence level</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>Gap rows exported from the competitor report</td><td class="num">1,409</td><td>Third-party tool export</td><td>Target discovery only</td></tr>
+      <tr><td>Rows usable after dropping blocked / grey</td><td class="num">1,300</td><td>Third-party tool export</td><td>Clustered and ranked below</td></tr>
+      <tr><td>Our published posts (DB)</td><td class="num">297</td><td>Observed &mdash; Prisma read</td><td>Dedup, internal-link targets</td></tr>
+      <tr><td>Posts already carrying an FAQ <code>##</code> heading</td><td class="num">264</td><td>Observed &mdash; body parse</td><td>FAQPage schema fires on these</td></tr>
+      <tr><td>Posts already carrying a HowTo <code>##</code> heading</td><td class="num">97</td><td>Observed &mdash; body parse</td><td>HowTo schema fires on these</td></tr>
+      <tr><td>Live GSC performance, 28-day window</td><td class="num">3 / 164</td><td>Observed &mdash; GSC API</td><td>The baseline to beat</td></tr>
+      <tr><td>Live SERP positions for target queries</td><td class="num">unknown</td><td>Not checked</td><td>&mdash;</td></tr>
+      <tr><td>Field Core Web Vitals (CrUX)</td><td class="num">unknown</td><td>Not checked</td><td>&mdash;</td></tr>
+      <tr><td>Backlink profile</td><td class="num">unknown</td><td>Not checked</td><td>&mdash;</td></tr>
+    </tbody>
+    <caption><b>Evidence rule in force throughout:</b> every Volume, Visits and SD figure in this document comes from the third-party gap export. They are that vendor&rsquo;s model output, not measured traffic and not Google data. They are used to <em>rank targets against each other</em>. No figure here forecasts our traffic, and nothing in this plan guarantees indexing, ranking, a rich result or an AI citation.</caption>
+  </table>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">03 &middot; The gap, clustered</p>
+  <h2>1,300 rows collapse into eight jobs</h2>
+  <p class="sec-intro">Sorted by the export&rsquo;s estimated visit total. The verdict column is the editorial decision &mdash; it is driven by whether the query has commercial intent we can actually serve with a deal, an affiliate link, or a genuinely useful answer.</p>
+
+  <div class="tablebox" style="margin-top:22px">
+  <table>
+    <thead><tr><th>Cluster</th><th class="num">Rows</th><th class="num">Est. visits</th><th class="num">Median SD</th><th>Verdict</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><b>best-X roundup</b></td><td class="num">468</td><td class="num">35,229</td><td class="num">26</td><td><span class="tag t-build">Build, filtered</span></td><td>Only where we hold live affiliate deals for the products. Otherwise it is a listicle with nothing behind it.</td></tr>
+      <tr><td><b>telecom utility</b></td><td class="num">147</td><td class="num">26,861</td><td class="num">24</td><td><span class="tag t-build">Build first</span></td><td>Highest intent-to-effort ratio on the board. Facts are public, stable and verifiable from operator and TRAI documentation.</td></tr>
+      <tr><td><b>other</b> (TV, film, trivia)</td><td class="num">369</td><td class="num">17,969</td><td class="num">27</td><td><span class="tag t-skip">Skip</span></td><td>Serial schedules and actor trivia. No commercial intent, rots weekly, and we would be a worse source than the broadcaster.</td></tr>
+      <tr><td><b>OTT plans</b></td><td class="num">39</td><td class="num">10,221</td><td class="num">32</td><td><span class="tag t-later">Later, narrow</span></td><td>Plan-and-price pages only. The &ldquo;best K-dramas&rdquo; half is the <em>other</em> cluster wearing a different hat.</td></tr>
+      <tr><td><b>store hub</b></td><td class="num">103</td><td class="num">7,659</td><td class="num">24</td><td><span class="tag t-build">Build on existing hubs</span></td><td>We already own 253 hub pages. This is upgrading pages that exist, not writing new ones &mdash; the cheapest work here.</td></tr>
+      <tr><td><b>how-to</b></td><td class="num">112</td><td class="num">7,601</td><td class="num">27</td><td><span class="tag t-build">Build</span></td><td>Lowest difficulty band in the export, and the format our HowTo + FAQ schema already handles.</td></tr>
+      <tr><td><b>refer &amp; earn</b></td><td class="num">32</td><td class="num">3,612</td><td class="num">22</td><td><span class="tag t-skip">Skip</span></td><td>Referral-code pages are scaled low-value content by definition and half the apps are dead. Not worth the trust cost.</td></tr>
+      <tr><td><b>price page</b></td><td class="num">30</td><td class="num">1,809</td><td class="num">21</td><td><span class="tag t-skip">Skip</span></td><td>Dominated by state-wise liquor pricing. Unverifiable, regulated, and outside what this site is.</td></tr>
+    </tbody>
+    <caption>Rows and difficulty (SD) are third-party export values; &ldquo;Est. visits&rdquo; is the vendor&rsquo;s modelled traffic for the competitor&rsquo;s ranking URL, not a forecast for us.</caption>
+  </table>
+  </div>
+
+  <div class="callout">
+    <h4>Half the export is deliberately left on the floor</h4>
+    <p>Skipping <em>other</em>, <em>refer-earn</em> and <em>price-page</em> drops roughly 431 rows and about 23,000 estimated visits. That is the correct trade. Those clusters are the ones the competitor ranks for because they published everything, and they are exactly the pattern &mdash; scaled pages with no first-hand value &mdash; that carries real downside risk. We take the 869 rows where we can be genuinely better.</p>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">04 &middot; Strategy</p>
+  <h2>Three layers on one page, not three programmes</h2>
+  <p class="sec-intro">SEO, AEO and GEO are not separate workstreams here. They are three things a single well-built page must do, and the page template already does two of them. The distinction only matters in what we verify.</p>
+
+  <div class="cols">
+    <div class="col">
+      <h4>SEO &mdash; be eligible and be relevant</h4>
+      <ul>
+        <li><b>Query-first titles.</b> The gap export hands us the exact phrasing people use &mdash; <code>recharge of airtel</code>, <code>jio balance check missed call number</code>. The H1 and seoTitle answer that phrasing, not a prettier version of it.</li>
+        <li><b>One page per intent, never per keyword.</b> <code>how-to-check-jio-number</code> and <code>vi-number-check-code</code> are different operators, so different pages. Four Netflix-plan slugs are one page.</li>
+        <li><b>Internal links carry the topic.</b> Each cluster gets a hub and every spoke links up; the hub links down to its spokes. 297 orphan-ish posts is the current state.</li>
+        <li><b>IndexNow on every publish.</b> Already enforced &mdash; publishing runs through <code>insert-blog-mdmeta.mjs</code>, which pings. A batch that skipped the ping is not shipped.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>AEO &mdash; be the extractable answer</h4>
+      <ul>
+        <li><b>Answer in the first 60 words.</b> The code, the number, the price &mdash; before any preamble. <code>*333#</code> appears in sentence one of the Jio post, not in section four.</li>
+        <li><b>HowTo + FAQPage already auto-fire.</b> <code>blog/[slug]/page.tsx</code> parses a <code>## How to&hellip;</code> heading with numbered steps into HowTo schema, and a <code>## FAQ</code> heading into FAQPage. 264 of 297 posts already trip the FAQ path; 97 trip HowTo.</li>
+        <li><b>Visible copy must match the schema.</b> Non-negotiable. The FAQ renders on the page; schema-only markup is a manual-action risk, not a shortcut.</li>
+        <li><b>Valid schema is not eligibility.</b> We verify the JSON-LD parses and matches the visible page. We do not claim a rich result will appear.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>GEO &mdash; be citable when quoted</h4>
+      <ul>
+        <li><b>Self-contained passages.</b> An answer engine lifts one section, not the page. Each <code>##</code> block must make sense with zero context above it &mdash; no &ldquo;as mentioned above&rdquo;.</li>
+        <li><b>Attributable facts, sourced.</b> The port guide cites TRAI&rsquo;s MNP rules; the balance guide cites Jio&rsquo;s own help pages. Fact plus named source is what survives extraction.</li>
+        <li><b>Crawler access stays open.</b> <code>robots.ts</code> already allows GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, PerplexityBot and Google-Extended. These are distinct controls for distinct jobs and stay distinct.</li>
+        <li><b>Measure honestly.</b> One prompt returning a citation is a sample, not a report. Track it as a log, never as a ranking.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">05 &middot; Execution</p>
+  <h2>The phases</h2>
+  <p class="sec-intro">Publishing is capped at 4 posts per IST day by hard rule and enforced in code. That cap, not research capacity, sets every date below.</p>
+
+  <div class="phase" style="margin-top:26px">
+
+    <div class="step">
+      <div class="step-head"><h3>Phase 0 &mdash; Template work</h3><span class="step-when">shipped 2026-09-13</span> <span class="tag t-done">done</span></div>
+      <p>HowTo and FAQPage extraction shipped in <code>blog/[slug]/page.tsx</code> and verified live in production on a new post: 1 Article, 1 BreadcrumbList, 1 FAQPage with 6 Question/Answer pairs, 1 HowTo with 5 HowToStep, plus Organization, WebSite and ImageObject. No per-post storage and no migration &mdash; every existing post that already has the right headings gained the schema on deploy.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><h3>Phase 1 &mdash; Telecom utility cluster</h3><span class="step-when">2026-09-13 &rarr; 09-26 &middot; ~40 posts</span></div>
+      <p>The whole cluster, hub-and-spoke, at 3 posts a day. These queries are asked by people holding a phone with a problem, the answers are public and verifiable, and the difficulty band is the softest of any cluster with real volume.</p>
+      <ul>
+        <li>Hub: <code>/blog/how-to-save-on-mobile-recharge-india-2026</code> &mdash; already live, becomes the cluster index.</li>
+        <li>Every spoke links up to the hub and out to <code>/offers</code>; the hub gains a linked index of spokes as they ship.</li>
+        <li>Each post opens with the literal code or number, then a numbered <code>## How to&hellip;</code> block, then <code>## FAQ</code>.</li>
+        <li>Facts sourced from the operator&rsquo;s own help pages or TRAI. No screenshots of tariffs, which change.</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><h3>Phase 2 &mdash; Low-difficulty how-to</h3><span class="step-when">2026-09-27 &rarr; 10-08 &middot; ~30 posts</span></div>
+      <p>The account-and-order how-tos: cancel a Flipkart order, delete PhonePe history, track a Myntra order, check a PhonePe balance. Same template, same schema path. These are the cheapest remaining wins in the export &mdash; several sit at SD 13&ndash;24.</p>
+      <ul>
+        <li>Hub: a new <code>/blog/shopping-account-help-india-2026</code> index, linking every spoke.</li>
+        <li>Each post links to the relevant store hub we already own, which gives the 253 hub pages internal links they currently lack.</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><h3>Phase 3 &mdash; Store hubs, upgraded not created</h3><span class="step-when">2026-10-09 &rarr; 10-18 &middot; no new posts</span></div>
+      <p>The store-hub cluster wants pages we already have. redbus, KFC, Zomato, Swiggy, Rapido, Flipkart, Adidas, Naaptol all exist as hubs. The work is template-level, so it lands on all 253 at once rather than one page at a time.</p>
+      <ul>
+        <li>Per-store intro copy answering &ldquo;how do coupon codes work at this store&rdquo; &mdash; written, not generated from a pattern.</li>
+        <li>FAQPage on the hub template, built from real hub fields the way <code>dealFaq()</code> already does for deal pages.</li>
+        <li>Hubs link to their category, to related stores, and to the how-to posts from Phase 2.</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><h3>Phase 4 &mdash; best-X, only where deals exist</h3><span class="step-when">2026-10-19 onward</span></div>
+      <p>468 rows, and most of them are not for us. The filter is one query against our own deal table: if we hold live, price-verified deals for the product category, the roundup has something real behind it and we build it. If we do not, we skip it &mdash; a roundup with no products is the scaled-content pattern we are refusing everywhere else.</p>
+      <ul>
+        <li>Candidate leaders from the export: sunscreen for men, sulphate-free shampoo, facial cleanser for oily skin, body wash, pregnancy test kit, keypad phones.</li>
+        <li>Every product row carries a live price from our DB and a <code>rel="sponsored nofollow"</code> outbound through <code>/out/:id</code>.</li>
+        <li>Drop any roundup where fewer than 5 products have a current verified price. Better no page than a stale one.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <h4>Standing block on Phase 4 that the owner has to clear</h4>
+    <p>Nothing currently refreshes prices on the 9,689 live deals. A best-X roundup is only as good as the prices in it, so Phase 4 is not safe to ship at scale until a price-refresh pass runs. The pass is written and waiting for the word. This is the largest unbuilt lever on the site and it blocks the largest cluster in the gap export.</p>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">06 &middot; Queue</p>
+  <h2>Phase 1, in publishing order</h2>
+  <p class="sec-intro">The first three rows are written. Two are staged and blocked only by today&rsquo;s cap being met at 4/4 &mdash; they publish when the IST day rolls.</p>
+
+  <div class="tablebox" style="margin-top:22px">
+  <table>
+    <thead><tr><th class="num">#</th><th>Slug</th><th>Target query (export phrasing)</th><th class="num">Vol</th><th class="num">Vis</th><th class="num">SD</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td class="slug">how-to-know-my-airtel-mobile-number-india-2026</td><td>how to see airtel number</td><td class="num">33,100</td><td class="num">2,087</td><td class="num">23</td><td><span class="tag t-done">published</span></td></tr>
+      <tr><td class="num">2</td><td class="slug">jio-balance-check-ussd-code-india-2026</td><td>jio balance check missed call number</td><td class="num">90,500</td><td class="num">1,662</td><td class="num">23</td><td><span class="tag t-later">staged</span></td></tr>
+      <tr><td class="num">3</td><td class="slug">how-to-port-jio-to-airtel-india-2026</td><td>how to port jio to airtel</td><td class="num">49,500</td><td class="num">1,122</td><td class="num">20</td><td><span class="tag t-later">staged</span></td></tr>
+      <tr><td class="num">4</td><td class="slug">airtel-recharge-plan-india-2026</td><td>recharge of airtel</td><td class="num">823,000</td><td class="num">5,391</td><td class="num">38</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">5</td><td class="slug">airtel-data-loan-number-india-2026</td><td>airtel data loan number</td><td class="num">165,000</td><td class="num">1,018</td><td class="num">27</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">6</td><td class="slug">how-to-check-airtel-data-balance-india-2026</td><td>airtel check balance number</td><td class="num">74,000</td><td class="num">914</td><td class="num">24</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">7</td><td class="slug">vi-loan-number-india-2026</td><td>vi data loan</td><td class="num">14,800</td><td class="num">757</td><td class="num">22</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">8</td><td class="slug">jio-data-loan-india-2026</td><td>jio data loan number</td><td class="num">74,000</td><td class="num">678</td><td class="num">25</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">9</td><td class="slug">jio-mnp-offer-india-2026</td><td>mnp jio offer</td><td class="num">2,400</td><td class="num">665</td><td class="num">25</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">10</td><td class="slug">how-to-check-bsnl-balance-validity-data-india-2026</td><td>bsnl balance check</td><td class="num">60,500</td><td class="num">614</td><td class="num">31</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">11</td><td class="slug">how-to-check-vodafone-balance-india-2026</td><td>balance check for vodafone</td><td class="num">18,100</td><td class="num">548</td><td class="num">26</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">12</td><td class="slug">how-to-get-port-code-india-2026</td><td>port msg for jio</td><td class="num">74,000</td><td class="num">525</td><td class="num">21</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">13</td><td class="slug">vi-number-check-code-india-2026</td><td>vi number check code</td><td class="num">27,100</td><td class="num">305</td><td class="num">13</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">14</td><td class="slug">how-to-check-jio-number-india-2026</td><td>jio number how to check</td><td class="num">27,100</td><td class="num">302</td><td class="num">20</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">15</td><td class="slug">airtel-bill-payment-offers-india-2026</td><td>airtel pay bill</td><td class="num">74,000</td><td class="num">713</td><td class="num">34</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">16</td><td class="slug">how-to-stop-flash-messages-in-vi-india-2026</td><td>how to stop idea flash message</td><td class="num">60,500</td><td class="num">262</td><td class="num">31</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">17</td><td class="slug">call-forwarding-deactivate-code-india-2026</td><td>forward call code</td><td class="num">90,500</td><td class="num">343</td><td class="num">22</td><td><span class="tag t-build">queued</span></td></tr>
+      <tr><td class="num">18</td><td class="slug">jio-gigafiber-plans-price-benefits-india-2026</td><td>jio fibernet plans</td><td class="num">368,000</td><td class="num">776</td><td class="num">46</td><td><span class="tag t-build">queued</span></td></tr>
+    </tbody>
+    <caption>Vol / Vis / SD are third-party gap-export estimates for the competitor&rsquo;s ranking URL. Ordering is by a judgment of intent and answerability, not strictly by any one of those columns &mdash; row 4 leads on volume but is the hardest page in the list to keep accurate, so it sits behind three easier wins that build the cluster first.</caption>
+  </table>
+  </div>
+
+  <h3 style="margin-top:34px">Phase 2 shortlist</h3>
+  <div class="tablebox" style="margin-top:14px">
+  <table>
+    <thead><tr><th>Slug</th><th>Target query</th><th class="num">Vol</th><th class="num">Vis</th><th class="num">SD</th><th>Links to</th></tr></thead>
+    <tbody>
+      <tr><td class="slug">how-to-cancel-the-order-in-flipkart-india-2026</td><td>cancel order flipkart</td><td class="num">1,900</td><td class="num">411</td><td class="num">31</td><td>/stores/flipkart</td></tr>
+      <tr><td class="slug">how-to-delete-phonepe-history-permanently-india-2026</td><td>how to delete messages in phonepe</td><td class="num">49,500</td><td class="num">358</td><td class="num">27</td><td>upi-cashback-offers-2026</td></tr>
+      <tr><td class="slug">how-to-check-phonepe-wallet-balance-india-2026</td><td>phonepe balance</td><td class="num">12,100</td><td class="num">240</td><td class="num">21</td><td>upi-cashback-offers-2026</td></tr>
+      <tr><td class="slug">how-to-cancel-ticket-in-bookmyshow-india-2026</td><td>how to cancel movie ticket in bookmyshow</td><td class="num">3,600</td><td class="num">227</td><td class="num">24</td><td>/stores/bookmyshow</td></tr>
+      <tr><td class="slug">how-to-delete-flipkart-account-india-2026</td><td>how to delete flipkart account</td><td class="num">2,400</td><td class="num">199</td><td class="num">18</td><td>/stores/flipkart</td></tr>
+      <tr><td class="slug">how-to-track-myntra-orders-india-2026</td><td>myntra tracking</td><td class="num">33,100</td><td class="num">154</td><td class="num">27</td><td>/stores/myntra</td></tr>
+      <tr><td class="slug">how-to-cancel-your-order-on-swiggy-india-2026</td><td>swiggy cancel order</td><td class="num">14,800</td><td class="num">148</td><td class="num">27</td><td>/stores/swiggy</td></tr>
+      <tr><td class="slug">how-to-track-sbi-atm-card-complete-info-in-2-minutes-india-2026</td><td>track sbi card application</td><td class="num">22,200</td><td class="num">188</td><td class="num">23</td><td>hub</td></tr>
+      <tr><td class="slug">how-to-apply-coupon-code-in-flipkart</td><td>how to use flipkart coupons</td><td class="num">1,600</td><td class="num">116</td><td class="num">36</td><td>/stores/flipkart</td></tr>
+    </tbody>
+    <caption>Third-party export estimates. <code>meesho-seller-account-login</code> (est. vol 673,000) is deliberately excluded: it is a login query, the searcher wants Meesho&rsquo;s own login screen, and we cannot be a better destination for that than Meesho.</caption>
+  </table>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">07 &middot; Link architecture</p>
+  <h2>Hub and spoke, because 297 loose posts rank like 297 loose posts</h2>
+  <p class="sec-intro">Every post already carries at least one internal link by house rule. What is missing is direction &mdash; links that make a topic legible rather than just satisfying a count.</p>
+
+  <div class="cols">
+    <div class="col">
+      <h4>Telecom hub</h4>
+      <ul>
+        <li><b>Hub:</b> <code>how-to-save-on-mobile-recharge-india-2026</code></li>
+        <li>Every Phase 1 spoke links up to it in the closing section, in context, never as a bare &ldquo;read more&rdquo;.</li>
+        <li>Hub gains a linked spoke index, updated as each ships.</li>
+        <li>All spokes link to <code>/offers</code> where recharge cashback is live.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Payments &amp; account hub</h4>
+      <ul>
+        <li><b>Hub:</b> <code>upi-cashback-offers-2026</code>, with <code>best-cashback-coupon-sites-india-2026</code> and <code>cashback-vs-coupons-vs-reward-points-india</code> as siblings.</li>
+        <li>PhonePe, Paytm and bank how-tos from Phase 2 attach here.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Store hubs</h4>
+      <ul>
+        <li>253 hubs exist and are largely unlinked from editorial content.</li>
+        <li>Phase 2 fixes this as a side effect &mdash; each order/tracking how-to names its store and links the hub.</li>
+        <li>Hub template then links back to the how-to, closing the loop.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">08 &middot; Guardrails</p>
+  <h2>What we will not do</h2>
+  <div class="cols">
+    <div class="col">
+      <h4>Refused outright</h4>
+      <ul>
+        <li>Referral-code pages, the whole 32-row cluster.</li>
+        <li>State-wise liquor price pages.</li>
+        <li>Serial schedules, actor trivia, dumb-charades lists.</li>
+        <li>Any roundup whose products we cannot price-verify.</li>
+        <li>Bulk-deleting the 5 thin posts without reading them.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Claims we will not make</h4>
+      <ul>
+        <li>That a page will be indexed, ranked, or shown as a rich result.</li>
+        <li>That schema validity equals feature eligibility.</li>
+        <li>That any export estimate is our forecast traffic.</li>
+        <li>That one AI-engine citation is a measurement.</li>
+        <li>That a traffic change was caused by an update, from timing alone.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Rules already binding</h4>
+      <ul>
+        <li>3&ndash;4 posts per IST day. Never 0, never 5 &mdash; enforced in the publish script.</li>
+        <li>Cover image and alt text on every post, no exceptions.</li>
+        <li>IndexNow ping on every publish, HTTP status reported.</li>
+        <li>Affiliate links <code>rel="sponsored nofollow"</code> through <code>/out/:id</code>.</li>
+        <li>Never copy source text or images.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">09 &middot; Measurement</p>
+  <h2>How we will know, and when</h2>
+
+  <div class="tablebox" style="margin-top:22px">
+  <table>
+    <thead><tr><th>Check</th><th>Command / source</th><th>Cadence</th><th>Decision rule</th></tr></thead>
+    <tbody>
+      <tr><td>Impressions on cluster queries</td><td><code>node apps/api/scripts/gsc-pull.mjs 28 query</code></td><td>Weekly</td><td>Phase 1 impressions must be non-zero by 2026-10-11 (~2 weeks after the last Phase 1 post). Zero at that date means the cluster is not the problem &mdash; domain authority is, and the lever moves to off-page.</td></tr>
+      <tr><td>Indexed page count</td><td>GSC coverage report</td><td>Weekly</td><td>New posts appearing in the index at all. Not a ranking claim.</td></tr>
+      <tr><td>Schema parses on new posts</td><td>Fetch the live URL, count JSON-LD blocks</td><td>Per post</td><td>HowTo and FAQPage present and matching visible copy, or the post is broken.</td></tr>
+      <tr><td>IndexNow accepted</td><td>Publish script output</td><td>Per publish</td><td>Non-2xx means the batch is not shipped. Bing GET is the documented fallback.</td></tr>
+      <tr><td>AI-engine citation log</td><td>Manual prompt spot-check</td><td>Monthly</td><td>Logged as dated samples. Never reported as a rank.</td></tr>
+      <tr><td>Field Core Web Vitals</td><td>CrUX &mdash; <b>not yet pulled</b></td><td>&mdash;</td><td>Open gap. Lab timings from the uptime sweep are not a substitute.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout">
+    <h4>The honest read on the ceiling</h4>
+    <p>A prior audit found only 8 queries ranking at all, every one of them between position 26 and 68. That pattern &mdash; broad indexing, uniformly deep positions &mdash; points at domain authority rather than on-page quality, and no amount of schema fixes it. This plan is still the right work: it replaces low-intent pages with pages that have demand and a reason to be cited, which is the precondition for links. But if Phase 1 lands zero impressions by the decision date, the constraint is off-page, and the next tick should say so rather than writing post 340.</p>
+  </div>
+</section>
+
+<footer>
+  <p><b>Limitations.</b> No live SERP positions, backlink data or field CWV were pulled for this plan. Competitor gap figures are a single vendor&rsquo;s export and were not cross-checked against a second source. Cluster verdicts are editorial judgment applied to those estimates, not measurements.</p>
+  <p><b>Rerun inputs.</b> Gap rows: <code>apps/api/_gap.json</code> (1,409 rows, parsed from <code>reports/keyword-gap-freekaamaal.html</code>). Inventory: Prisma reads against production Postgres. Traffic: <code>apps/api/scripts/gsc-pull.mjs</code>, 28-day window ending 2026-09-13.</p>
+  <p>richdeals.in &middot; drafted 2026-09-13 &middot; local report, not published anywhere</p>
+</footer>
+
+</div>
+</body>
+</html>
