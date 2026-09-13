@@ -18,10 +18,15 @@ export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ slug: string }> };
 
-// Pull Q/A pairs from a "## FAQ" section (### question → answer) for FAQPage
+// Writers reach for six different spellings of the same H2. Matching only
+// "## FAQ" silently dropped FAQPage schema AND the accordion on the ~32
+// published posts that spell it "Frequently asked questions" / "Quick answers".
+const FAQ_H2 = /^##\s+(?:quick\s+)?(?:faqs?|frequently[- ]asked[- ]questions|common questions|quick answers)\s*$/im;
+
+// Pull Q/A pairs from the FAQ section (### question → answer) for FAQPage
 // schema + a styled accordion — big AEO/rich-result win.
 function extractFaq(md: string): { q: string; a: string }[] {
-  const i = md.search(/^##\s+FAQ/im);
+  const i = md.search(FAQ_H2);
   if (i < 0) return [];
   const parts = md.slice(i).split(/^###\s+/m).slice(1);
   const out: { q: string; a: string }[] = [];
@@ -33,6 +38,33 @@ function extractFaq(md: string): { q: string; a: string }[] {
     if (q && a) out.push({ q, a });
   }
   return out;
+}
+
+// AEO: answer engines quote procedures and ranked lists far more readily than
+// prose. Both extractors read the REAL visible markdown — no invented steps,
+// no schema for anything that is not on the page.
+function extractHowTo(md: string): { name: string; steps: { name: string; text: string }[] } | null {
+  const m = md.match(/^##\s+(how (?:to|do i)[^\n]*)$/im);
+  if (!m) return null;
+  const body = md.slice(m.index! + m[0].length).split(/^##\s+/m)[0];
+  const steps: { name: string; text: string }[] = [];
+  for (const line of body.split(/\r?\n/)) {
+    const li = line.match(/^\s*\d+[.)]\s+(.+)$/);
+    if (!li) continue;
+    const text = li[1].replace(/\*\*/g, "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").trim();
+    if (text.length < 6) continue;
+    steps.push({ name: (text.split(/[.:—–]/)[0].trim() || text).slice(0, 90), text });
+  }
+  return steps.length >= 2 ? { name: m[1].trim(), steps } : null;
+}
+
+function extractItemList(md: string, title: string): string[] {
+  if (!/^\s*(?:\d+\s+)?best\b/i.test(title) && !/\btop\s+\d+\b/i.test(title)) return [];
+  const head = md.split(FAQ_H2)[0];
+  const items = [...head.matchAll(/^###\s+(.+)$/gm)]
+    .map((x) => x[1].replace(/\*\*/g, "").replace(/^\d+[.)]\s*/, "").trim())
+    .filter((x) => x.length > 2 && !/^(faq|why|how|what|verdict|bottom line|who should)\b/i.test(x));
+  return items.length >= 3 ? items.slice(0, 20) : [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -101,8 +133,31 @@ export default async function BlogPostPage({ params }: Props) {
       }
     : null;
 
+  const howTo = extractHowTo(content);
+  const howToSchema = howTo
+    ? {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name: howTo.name,
+        image: post.coverImage || undefined,
+        step: howTo.steps.map((st, i) => ({ "@type": "HowToStep", position: i + 1, name: st.name, text: st.text })),
+      }
+    : null;
+
+  const listItems = extractItemList(content, post.title);
+  const itemListSchema = listItems.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: post.title,
+        numberOfItems: listItems.length,
+        itemListOrder: "https://schema.org/ItemListOrderDescending",
+        itemListElement: listItems.map((name, i) => ({ "@type": "ListItem", position: i + 1, name })),
+      }
+    : null;
+
   // Render prose from everything BEFORE the FAQ section; FAQ shown as accordions.
-  const bodyMd = faq.length ? content.slice(0, content.search(/^##\s+FAQ/im)) : content;
+  const bodyMd = faq.length ? content.slice(0, content.search(FAQ_H2)) : content;
   // ponytail: template already renders post.title as the page <h1>. Strip a leading
   // markdown H1 (77/208 posts lead with `# Title`) so the body doesn't emit a second one.
   const html = marked.parse(bodyMd.replace(/^\s*#\s+.*(?:\r?\n)+/, ""), { async: false }) as string;
@@ -116,6 +171,8 @@ export default async function BlogPostPage({ params }: Props) {
       <JsonLd data={articleSchema} />
       <JsonLd data={breadcrumbSchema} />
       {faqSchema && <JsonLd data={faqSchema} />}
+      {howToSchema && <JsonLd data={howToSchema} />}
+      {itemListSchema && <JsonLd data={itemListSchema} />}
       <Breadcrumbs items={crumbs} />
 
       {/* Header */}
