@@ -157,6 +157,31 @@ branded cover → DO Spaces → `post.cover`; covers only `cover IS NULL` by
 default, `ALL_COVERS=1` to redo all). `blog/[slug]/page.tsx` already renders
 `alt={post.title}` + Article JSON-LD.
 
+## Crons (session-only)
+
+All scheduled work runs as **session crons** (CronCreate) — in-memory, they
+die when the Claude session exits and auto-expire after 7 days. The roster
+(source of truth) is `.claude/cron-schedules.md`: 8 jobs — telegram-deal-monitor
+(`37 * * * *`), deal-ingest indiafreestuff (`23 */2 * * *`), CONTENT-SEO blog
+(`9 */6 * * *`), INDEXNOW (`53 */6 * * *`), SCHEMA-AUDIT (`9 4 * * *`), SITEMON
++ CEO audit (`47 * * * *`), AI-OVERVIEW (`9 11 * * 3`), SEO-AUDIT-FIX daily
+(`28 5 * * *` — full-site qiaomu-seo audit + apply safe on-page fixes with full
+permission/CEO mode + deploy + freshness ping; asks before money/creds/prod-delete/paid-data/outside-posting).
+
+**When the owner says "restore all crons" (or "recreate all crons"):** read
+`.claude/cron-schedules.md` and recreate every job in it with CronCreate,
+verify with CronList, report the table. Do NOT ask which ones — restore the
+whole roster. (desidime `7,37 * * * *` + tg-broadcast run as external OS/Task
+Scheduler cron, not session crons — only recreate those if explicitly asked.)
+
+## GEO rewrite (E-GEO patterns)
+
+`.claude/geo-rewrite-playbook.md` = leaderboard-winning generative-engine
+rewrite patterns (from psbagga17/E-GEO), applied by blogger / deal-ingest /
+desidime-ingest at write time. Strictly white-hat (structure + clarity, no
+fabricated facts — the playbook lists the black-hat blocklist). Spawn the
+`geo-optimizer` agent to bulk re-optimize existing live deals/posts.
+
 ## Hard rules
 
 - BLOG: 2-3 original posts published EVERY day (never 0, never >4).
@@ -240,3 +265,18 @@ default, `ALL_COVERS=1` to redo all). `blog/[slug]/page.tsx` already renders
   `/feed.xml`, `/api/deals`), unpushed commits. The blog rule broke silently
   for 3 days (2026-07-25 → 07-27) because no BLOG tick existed and nobody
   looked — that is the failure mode this rule exists to prevent.
+
+- NO ARTIFACTS, EVER. SESSION OR LOCAL ONLY (owner directive 2026-09-13).
+  Never publish a claude.ai Artifact. No exceptions, no one-offs, not for a
+  report, a dashboard, a chart, a plan or a demo, and never because it would
+  look nicer. An artifact is bound to one Claude session/account, it is not on
+  richdeals.in, and nothing keeps it in sync once the data moves.
+  Output has exactly two homes:
+    1. the terminal reply, for anything read once;
+    2. a plain standalone `.html` (or `.md`) file in `reports/` in this repo,
+       for anything kept — doctype + meta charset + viewport, all data inline,
+       opens by double-click, lives in git, survives the session.
+  Nothing hosted, nothing live, nothing recurring: no artifact dashboards, no
+  artifact database, no artifact watch, no comment auto-replies, and no cron or
+  routine that feeds or refreshes a hosted page. Cron ticks report in the
+  terminal and write their file to `reports/`.
