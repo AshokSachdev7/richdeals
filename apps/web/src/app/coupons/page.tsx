@@ -17,7 +17,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   return {
     title: "Coupon Codes Today — Amazon, Flipkart & More",
     description: `Verified coupon codes and promo offers today from Amazon, Flipkart, Myntra and more Indian stores — copy, paste and save on ${SITE_NAME}. Tested and updated daily.`,
-    robots: cursor ? { index: false, follow: true } : undefined,
+    robots: cursor ? { index: false, follow: true } : { index: true, follow: true },
     alternates: { canonical: absUrl("/coupons") },
     openGraph: { title: "Coupon Codes Today — Amazon, Flipkart & More", description: `Verified coupon codes and promo offers today from Amazon, Flipkart, Myntra and more Indian stores on ${SITE_NAME}.`, url: absUrl("/coupons"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: "Coupon Codes Today — Amazon, Flipkart & More" },
