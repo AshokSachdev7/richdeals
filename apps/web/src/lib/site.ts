@@ -33,7 +33,7 @@ export function itemListSchema(paths: string[]) {
 // Price-less deals still list (name + url + image), just without an Offer,
 // since a bare item inside an ItemList is valid where a lone Product isn't.
 export function dealItemListSchema(
-  deals: (Pick<DealDTO, "title" | "slug" | "price" | "image" | "status"> & {
+  deals: (Pick<DealDTO, "title" | "slug" | "price" | "image" | "status" | "createdAt"> & {
     store: { name: string };
   })[],
   name: string,
@@ -52,7 +52,8 @@ export function dealItemListSchema(
           "@type": "Offer",
           priceCurrency: "INR",
           price: String(d.price),
-          priceValidUntil: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
+          ...(d.status === "EXPIRED" ? {} : { priceValidUntil: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10) }),
+          validFrom: d.createdAt.slice(0, 10),
           availability: d.status === "EXPIRED" ? "https://schema.org/Discontinued" : "https://schema.org/InStock",
           url,
           seller: { "@type": "Organization", name: d.store.name },

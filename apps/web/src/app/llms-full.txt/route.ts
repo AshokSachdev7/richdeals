@@ -63,6 +63,8 @@ ${dealBlocks}
 
 ## More
 - Homepage: ${absUrl("/")}
+- Freebies hub: ${absUrl("/freebies")}
+- Free samples guide: ${absUrl("/blog/how-to-get-free-samples-freebies-india")}
 - All deals sitemap: ${absUrl("/sitemap.xml")}
 - Concise index: ${absUrl("/llms.txt")}
 - RSS: ${absUrl("/feed.xml")}

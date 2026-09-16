@@ -116,7 +116,7 @@ export default async function DealPage({ params }: Props) {
   const crumbs = [
     { name: "Home", href: "/" },
     { name: deal.store.name, href: `/stores/${deal.store.slug}` },
-    { name: deal.title, href: `/${deal.slug}` },
+    { name: dealProductName(deal), href: `/${deal.slug}` },
   ];
 
   // Google requires a numeric price on the Offer for Product rich results, AND
@@ -124,9 +124,11 @@ export default async function DealPage({ params }: Props) {
   // 'offers', 'review' or 'aggregateRating' should be specified" — GSC critical).
   // We never fabricate ratings or reviews, so a price-less deal gets NO Product
   // block at all; BreadcrumbList + FAQPage still carry the page.
-  const offerPrice = deal.price ?? deal.mrp ?? null;
-  const priceValidUntil = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
-  const validFrom = new Date().toISOString().slice(0, 10);
+  // No price → no Offer (never fall back to MRP: schema would contradict the page).
+  const offerPrice = deal.price;
+  // Expired deals carry no future validity; validFrom is when the deal was posted, not render time.
+  const priceValidUntil = expired ? undefined : new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
+  const validFrom = deal.createdAt.slice(0, 10);
   // Google Merchant Listings caps Product 'name' at 150 chars; the raw deal
   // title (with its "at ₹X – Store" tail) overran it on long items. Use the
   // cleaned name, truncated at a WORD boundary well under the limit (~110) so

@@ -52,6 +52,7 @@ ${SITE_NAME} publishes original deal write-ups (never copied), each with the cur
 - [Price Compare](${absUrl("/compare")})
 - [Coupons](${absUrl("/coupons")})
 - [Freebies](${absUrl("/freebies")})
+- [How to get free samples & freebies in India (guide)](${absUrl("/blog/how-to-get-free-samples-freebies-india")})
 - [Forum — community deal votes & reports](${absUrl("/forum")})
 - [Blog](${absUrl("/blog")})
 

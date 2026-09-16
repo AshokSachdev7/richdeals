@@ -34,7 +34,8 @@ function extractFaq(md: string): { q: string; a: string }[] {
     const nl = p.indexOf("\n");
     if (nl < 0) continue;
     const q = p.slice(0, nl).trim();
-    const a = p.slice(nl + 1).split(/^##\s+/m)[0].trim();
+    // Schema text is plain — strip **bold** and [text](url) like extractHowTo().
+    const a = p.slice(nl + 1).split(/^##\s+/m)[0].replace(/\*\*/g, "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").trim();
     if (q && a) out.push({ q, a });
   }
   return out;
