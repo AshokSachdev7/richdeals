@@ -28,14 +28,17 @@ const FAQ_H2 = /^##\s+(?:quick\s+)?(?:faqs?|frequently[- ]asked[- ]questions|com
 function extractFaq(md: string): { q: string; a: string }[] {
   const i = md.search(FAQ_H2);
   if (i < 0) return [];
-  const parts = md.slice(i).split(/^###\s+/m).slice(1);
+  // ~119 posts write questions as a bold line (`**Q?**`, answer after) instead
+  // of `### Q` — normalise to headings so they get FAQPage + the accordion too.
+  const sect = md.slice(i).split(/^##(?!#)/m).slice(0, 2).join("##").replace(/^\*\*([^*\n]+\?)\*\*[ \t]*/gm, "### $1\n");
+  const parts = sect.split(/^###\s+/m).slice(1);
   const out: { q: string; a: string }[] = [];
   for (const p of parts) {
     const nl = p.indexOf("\n");
     if (nl < 0) continue;
-    const q = p.slice(0, nl).trim();
+    const q = p.slice(0, nl).replace(/\\([*#_[\]])/g, "$1").trim();
     // Schema text is plain — strip **bold** and [text](url) like extractHowTo().
-    const a = p.slice(nl + 1).split(/^##\s+/m)[0].replace(/\*\*/g, "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").trim();
+    const a = p.slice(nl + 1).split(/^##\s+/m)[0].replace(/\*\*/g, "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/\\([*#_[\]])/g, "$1").trim();
     if (q && a) out.push({ q, a });
   }
   return out;
