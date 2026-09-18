@@ -112,3 +112,143 @@ All Amazon, `?tag=ashoksachdev-21`, published at the **verified live PDP price**
 3. External crons — DesiDime Task Scheduler `7,37 * * * *` and tg-broadcast — recreate or retire.
 4. Free-samples cluster consolidation (46 of 313 slugs).
 5. Scratch-file cleanup under `apps/api/`.
+
+---
+
+# DEAL-INGEST — indiafreestuff — tick 2 (2026-09-18, evening)
+
+## Pipeline
+
+| Stage | Count |
+|---|---|
+| Listing cards read (`/deals` + `/deals/superdeals`, GAP 2600ms) | 46 |
+| Resolved `?rto=` → real product URL | 44 |
+| Dropped as non-product at resolve | 2 |
+| Already in DB (dedup on `productId`) | 8 |
+| Fresh | 36 |
+| Excluded as junk before verification | 1 |
+| Price-verified (34 Amazon in logged-in tab + 1 Myntra ld+json) | 35 |
+| Rejected at verification | 5 |
+| **Pushed `status:live`** | **30** |
+
+IndexNow: `DONE: IndexNow -> HTTP 200 for 32 urls` (30 deal slugs + `/` + `/offers`).
+
+## Discovery route — RSS is dead
+
+`curl -A <browser UA> https://feeds.feedburner.com/indiafreestuff` → **HTTP 000, size 0, exit 100**.
+Fell through to the listing-page route in `ingest-ifs-proper.mjs`, which is the only path that
+works. CLAUDE.md and `.claude/agents/deal-ingest.md` both still name RSS as primary — new rot
+item #17.
+
+## Dropped at resolve (2)
+
+| Source slug | Resolved to | Why |
+|---|---|---|
+| `flipkart-bbd-the-big-billion-daysale-ear` | `dl.flipkart.com/dl/early-bird-deals-store` | sale hub, not a product |
+| `jiomart-quick-offer--free-rs100-shopping` | `https://www.jiomart.com/` | bare homepage |
+
+## Dedup hits (8, all already LIVE)
+
+B00TO7JUFG, B0G1V3G8D9, B0H94NFR7V, B0FDL28K43, B0CFFNH13X, B09ZPQ91LF, B00QEYUWPO, B0FCSD2BKM.
+
+## Rejected (5 + 1 junk)
+
+| ASIN | Reason |
+|---|---|
+| B086188X2F | "(Min Buy 4)" PVC mat set — min-quantity condition, not a clean single-product buy (excluded pre-verify) |
+| B0FDB6MK5R | BABYGO rompers — live ₹1,998 vs source ₹199, MRP null; ~10x gap, source almost certainly priced a different variant |
+| B073WYXYMF | Titan Raga Viva — ₹5,695 / ₹6,645 = **-14%**, below the 30% floor |
+| B0FGJRHGVS | Madhabi fibre patch cord — price null, `inStock:false` |
+| B0FPR5TLPJ | Vega VO-05 helmet — ₹1,102 / ₹1,295 = **-15%**, below the 30% floor |
+| B0CH3GNKJD | Wonderchef Ultima chimney — price null, `inStock:false` |
+
+No Amazon coupon badge fired on any of the 34 verified PDPs (`coupon: null` throughout).
+
+## Pushed live (30)
+
+| Store | ID | Price | MRP | Off | Slug |
+|---|---|---|---|---|---|
+| Amazon | B0H4Z7Z4FX | 489 | 2499 | 80% | `action-slider-104-flip-flops-for-men-b0h4z7` |
+| Amazon | B0CM6R8DRL | 205 | 1999 | 90% | `7threads-women-fashion-vest-b0cm6r` |
+| Amazon | B0FGPQ68XD | 999 | 2499 | 60% | `amazon-basics-bluetooth-5-4-over-ear-headphones-b0fgpq` |
+| Amazon | B0G2RN72DS | 56 | 499 | 89% | `popo-toys-santa-claus-plush-soft-toy-b0g2rn` |
+| Amazon | B0HCDGH41H | 389 | 1399 | 72% | `kids-table-tennis-trainer-set-with-rebound-shaft-b0hcdg` |
+| Amazon | B0HJNN9FPL | 649 | 1599 | 59% | `actual-7d-double-bedsheet-with-2-pillow-covers-b0hjnn` |
+| Amazon | B0FK5DH1D3 | 2699 | 5999 | 55% | `lifelong-bouncette-5-in-1-hot-air-brush-1200w-b0fk5d` |
+| Amazon | B00U5AZRIK | 455 | 3999 | 89% | `flomaster-towelmate-seat-cover-for-maruti-swift-b00u5a` |
+| Amazon | B0FKH7HR7C | 845 | 2935 | 71% | `qube-by-fort-collins-women-jacket-b0fkh7` |
+| Amazon | B0FFH6BN9M | 149 | 599 | 75% | `oneplus-nord-ce5-mood-magnetic-case-b0ffh6` |
+| Amazon | B0GMKCTMSK | 804 | 1999 | 60% | `bata-bent-slip-on-sneakers-for-men-b0gmkc` |
+| Amazon | B0GXGHCWR9 | 99 | 350 | 72% | `cotton-kitchen-napkins-pack-of-5-16x16-inch-b0gxgh` |
+| Amazon | B0H7XJXNGM | 299 | 699 | 57% | `pla-marble-3d-printer-filament-1-75mm-200g-b0h7xj` |
+| Amazon | B0F493T88C | 624 | 2599 | 76% | `highlander-dad-fit-cotton-jeans-for-men-b0f493` |
+| Amazon | B08DGCTHFB | 749 | 3399 | 78% | `symbol-quilted-bomber-jacket-for-men-b08dgc` |
+| Amazon | B0HK1BD4R4 | 85 | 399 | 79% | `round-pvc-table-placemat-15-inch-b0hk1b` |
+| Amazon | B0FJS63G5Q | 429 | 999 | 57% | `solimo-glass-baking-dish-1700ml-b0fjs6` |
+| Amazon | B0DZ6NHJRX | 1754 | 2520 | 30% | `anchor-by-panasonic-penta-6-module-cover-plate-b0dz6n` |
+| Amazon | B0CHRYZLJZ | 591 | 2999 | 80% | `wildhorn-crossbody-sling-bag-b0chry` |
+| Amazon | B0GW939G9M | 379 | 999 | 62% | `liberty-a-ha-home-slippers-for-men-b0gw93` |
+| Amazon | B0D8TR9FC6 | 1950 | 6499 | 70% | `puma-retaliate-3-running-shoes-b0d8tr` |
+| Amazon | B0GZC669HC | 169 | 510 | 67% | `khadi-aloe-vera-neem-tulsi-soap-pack-of-6-b0gzc6` |
+| Amazon | B0BPN3H7NR | 484 | 1199 | 60% | `stainless-steel-airtight-container-set-of-5-b0bpn3` |
+| Amazon | B0DRY18MQN | 281 | 1299 | 78% | `spenz-28l-gym-duffel-bag-with-shoe-compartment-b0dry1` |
+| Amazon | B083V4MZNZ | 285 | 1001 | 71% | `negi-educational-world-globe-b083v4` |
+| Amazon | B0CJ96HKZP | 189 | 650 | 71% | `crompton-laser-ray-neo-24w-led-batten-b0cj96` |
+| Amazon | B09HPTHSP4 | 2232 | 19999 | 89% | `steel-frame-cushioned-visitor-office-chair-b09hpt` |
+| Amazon | B0D17ZZRQ8 | 149 | 499 | 70% | `tied-ribbons-krishna-with-kamdhenu-cow-metal-idol-b0d17z` |
+| Amazon | B0F4928541 | 1650 | 5499 | 70% | `puma-blaze-lite-running-shoes-for-men-b0f492` |
+| Myntra | b0edf35808d3 | 299 | 1499 | 80% | `aqueria-3-in-1-brightening-body-wash-875ml-b0edf3` |
+
+All 29 Amazon links carry `?tag=ashoksachdev-21`; the Myntra link goes through Cuelinks
+(`cid=527`). All images are marketplace CDN (`m.media-amazon.com`, `assets.myntassets.com`) —
+none from `images.indiafreestuff.in`. Every title, description and `howTo` is original copy.
+
+Source-price drift seen but not treated as a reject where the live price still cleared the
+floor: B0G2RN72DS (source 63 → live 56), B0HCDGH41H (244 → 389), B0FJS63G5Q (416 → 429),
+B0DZ6NHJRX (686 → 1754), B0GW939G9M (276 → 379), B0GZC669HC (185 → 169), B0DRY18MQN (188 → 281).
+Published at the verified live price in every case.
+
+## CEO audit (verified against the DB this tick)
+
+- Prod 7/7 endpoints 200 (checked in the SITEMON tick an hour earlier).
+- LIVE 10,196 → 10,226 after this push. PENDING_REVIEW 0. Null price 0, null image 0.
+- Posts 313; posts/day IST for the last 7 days = 3, 3, 3, 3, 4, 4, 3 — never 0, never over 4.
+- Coverless posts 0, seo-less posts 0.
+- **tg-broadcast cursor now ~89 behind DB max** (was 59 before this batch of 30). The external
+  cron is not firing. Draining it fires ~89 messages at the channel in one burst, so it is NOT
+  being drained without the owner's go-ahead.
+
+## Rot list — 17 items (#17 new)
+
+1. `apps/api/scripts/lib/ingest-common.mjs` still has no Amazon extractor — hand-re-derived for
+   the **19th tick running**. Owes: same-origin verifier, implausible-MRP guard,
+   `data-a-dynamic-image` fallback, trailing-dot price strip, shopsy `finalPrice` fallback,
+   Flipkart browser-tab fallback, shortlink body-grep fallback, resolved-URL `/s?` assert.
+2. Source-vs-live price drift is the dominant reject reason across every source.
+3. indiafreestuff Flipkart links structurally dead (this tick: `dl.flipkart.com/dl/early-bird-deals-store`).
+4. **tg-broadcast external cron not firing — cursor drift 37 → 57 → 58 → 59 → ~89.**
+5. `curlFinal` cannot follow client-side redirects (`rogerkart.com/r/…`).
+6. ~~`amazn.lt` NXDOMAIN~~ — corrected, transient DNS only.
+7. `.claude/agents/deal-ingest.md` stale on 4 points, plus the RSS point below.
+8. `where to get free samples`: 11,072 impressions / pos 6.8 / 0 clicks; 46 of 313 slugs.
+9. Organic collapse: last-28d GSC = 2 clicks / 67 impressions.
+10. W6 and W8 both need an API change.
+11. ~607 untracked scratch files under `apps/api/`.
+12. CLAUDE.md documents chunked sitemaps that prod 404s.
+13. `link.amazon` shortlinks can expand to `/s?hidden-keywords=` — the reject must run on the
+    resolved URL.
+14. Flipkart PDPs serve no ld+json to a real browser either, not merely to curl.
+15. tg seen-cache and DB disagree in both directions; only the DB check catches it.
+16. The Amazon ₹-coupon badge is not extracted by any shared code — hand-derived again.
+17. **NEW — the indiafreestuff Feedburner RSS feed is dead (HTTP 000).** CLAUDE.md
+    ("their RSS (feedburner) first, homepage HTML fallback") and `.claude/agents/deal-ingest.md`
+    both still describe RSS as the primary discovery path. Only the listing-page route works.
+
+## Open owner decisions (5, unchanged)
+
+1. Ratify publish-at-verified-live-price + the 30% discount floor in CLAUDE.md, and extend it to
+   say coupon-inclusive source prices are reconciled, not rejected.
+2. Permanent DB pool cap in `apps/api/.env`.
+3. External crons — DesiDime `7,37 * * * *` and tg-broadcast — recreate or retire.
+4. Free-samples cluster consolidation (46 of 313 slugs).
+5. Scratch-file cleanup under `apps/api/`.
