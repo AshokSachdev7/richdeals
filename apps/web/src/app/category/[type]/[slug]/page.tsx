@@ -34,11 +34,11 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const name = cat?.name || titleize(slug);
   const label = CATEGORY_TYPE_LABEL[type];
   const title = `${name} ${label} Deals & Offers`;
-  const description = `Best ${name} deals & coupons in India — verified live prices from Amazon, Flipkart & 100+ stores, updated daily on ${SITE_NAME}.`;
+  const description = `Best ${name} deals, offers & coupons in India — live prices verified from Amazon, Flipkart, Myntra & 100+ stores, updated fresh every day on ${SITE_NAME}.`;
   return {
     title,
     description,
-    robots: cursor ? { index: false, follow: true } : undefined,
+    robots: cursor ? { index: false, follow: true } : { index: true, follow: true },
     alternates: { canonical: absUrl(`/category/${type}/${slug}`) },
     openGraph: { title: `${title} | ${SITE_NAME}`, description, type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
   };

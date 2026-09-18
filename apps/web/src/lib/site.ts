@@ -291,11 +291,11 @@ export function dealFaq(
   if (kind === "electronics") {
     faqs.push({
       q: `Does ${name} come with a warranty?`,
-      a: `Yes. Bought through ${store}'s listing, ${name} carries the standard manufacturer warranty — keep the digital invoice from your order for any service or replacement claim.`,
+      a: `Warranty cover comes from the seller, not from ${SITE_NAME} — the ${store} listing for ${name} states the manufacturer warranty period, if one applies. Check it on the product page and keep the digital invoice for any service or replacement claim.`,
     });
     faqs.push({
       q: `Is No-Cost EMI available on ${name}?`,
-      a: `On ${store}, No-Cost EMI and card EMI are commonly offered on electronics in this price range. The exact EMI and bank options appear on the ${store} checkout page before you pay.`,
+      a: `Whether No-Cost EMI applies to ${name} depends on the seller, your card and the order value. The exact EMI and bank options are shown on the ${store} checkout page before you pay.`,
     });
   } else if (kind === "fashion") {
     faqs.push({
@@ -305,12 +305,12 @@ export function dealFaq(
   } else if (kind === "beauty") {
     faqs.push({
       q: `Is ${name} 100% genuine and safe to use?`,
-      a: `Yes — this opens ${name} on ${store}'s original listing, so you get the seller's authentic product with ingredients, shade/variant options and buyer reviews. Pick the exact shade or variant you want on the page, and check the seller rating before ordering.`,
+      a: `This deal opens ${name} on ${store}'s own listing, where the ingredients, shade or variant options, seller name and buyer reviews are shown. Pick the exact variant you want and check the seller rating and recent reviews before ordering.`,
     });
   } else if (kind === "grocery") {
     faqs.push({
       q: `Is ${name} a genuine product with a good expiry date?`,
-      a: `Yes — this links to ${name} on ${store}'s marketplace listing. Check the seller rating and pack details on the product page, and prefer listings with recent reviews for freshness.`,
+      a: `This links to ${name} on ${store}'s marketplace listing, where the pack details, seller rating and reviews are shown. Check the pack size and expiry information on the product page, and prefer listings with recent reviews for freshness.`,
     });
   } else if (kind === "lighting") {
     faqs.push({

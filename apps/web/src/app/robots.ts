@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { absUrl } from "@/lib/site";
+import { SITE_URL, absUrl } from "@/lib/site";
 
 // AI/LLM crawlers explicitly welcomed for GEO citations (ChatGPT, Claude,
 // Perplexity, Google AI, Bing/Copilot, Common Crawl, etc.). /llms.txt +
@@ -31,6 +31,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "*", ...allowRules },
     ],
     sitemap: absUrl("/sitemap.xml"),
-    host: absUrl("/"),
+    // Yandex's Host directive takes a bare hostname — no scheme, no trailing slash.
+    host: new URL(SITE_URL).host,
   };
 }

@@ -41,13 +41,15 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     robots:
       cursor || (store.liveDeals === 0 && !hasStoreSeo(store.slug))
         ? { index: false, follow: true }
-        : undefined,
+        : { index: true, follow: true },
     alternates: { canonical: absUrl(`/stores/${store.slug}`) },
     openGraph: {
       title: `${title} | ${SITE_NAME}`,
       description,
       type: "website",
-      images: store.logo ? [{ url: store.logo }] : undefined,
+      // Logo-less stores still need an og:image — fall back to the site card
+      // rather than shipping a link preview with no image at all.
+      images: [{ url: store.logo ?? absUrl("/og.png"), width: 1200, height: 630 }],
     },
   };
 }

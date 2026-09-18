@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getDeals, getStores, getCategories, getPosts } from "@/lib/api";
-import { absUrl, dealIndexable } from "@/lib/site";
+import { SITE_URL, absUrl, dealIndexable } from "@/lib/site";
 import { COMPARISONS } from "@/lib/comparisons";
 import { hasStoreSeo } from "@/lib/store-seo";
 import POST_REDIRECTS from "../../post-redirects.json";
@@ -30,7 +30,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: absUrl("/"), lastModified: now, changeFrequency: "hourly", priority: 1 },
+    // SITE_URL, not absUrl("/") — the homepage canonical has no trailing slash.
+    { url: SITE_URL, lastModified: now, changeFrequency: "hourly", priority: 1 },
     { url: absUrl("/offers"), lastModified: now, changeFrequency: "hourly", priority: 0.9 },
     { url: absUrl("/categories"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/stores"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
