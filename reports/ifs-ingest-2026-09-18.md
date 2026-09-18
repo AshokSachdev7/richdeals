@@ -180,3 +180,114 @@ Run inline via `node apps/api/scripts/ingest-ifs-proper.mjs` (listing pages only
 3. DesiDime Task Scheduler job `7,37 * * * *` (external cron, needs explicit go-ahead).
 4. Free-samples cluster consolidation (46 of 313 slugs).
 5. Scratch-file cleanup under `apps/api/`.
+
+## 19:2x IST tick (DEAL-INGEST indiafreestuff) — 17 pushed live
+
+### Funnel
+
+| Stage | Count |
+|---|---|
+| Cards discovered (2 listing pages, 2.6s spacing) | 26 |
+| Resolved `?rto=` → real store URL | 24 |
+| Unresolvable `?rto=` (JS/meta redirect, curlFinal cannot follow) | 2 |
+| Non-Amazon (Myntra) — both verified out-of-stock, dropped | 2 |
+| Amazon candidates | 22 |
+| Fresh after DB dedup (`productId` OR `affiliateUrl contains`) | 19 |
+| Verified live on the PDP (logged-in same-origin fetch) | 19 |
+| Dropped at verification | 2 |
+| **Pushed `status:live`** | **17** |
+
+No 403/429 from indiafreestuff at 2.6s spacing. Dups were `B0B9G9J7WD` (#10499),
+`B0FH1XC6YY` (#10483), `B0FF5BBC91` (#10485) — all already LIVE.
+
+### Pushed (verified live PDP price, `?tag=ashoksachdev-21`)
+
+| ASIN | Product | Card ₹ | Live ₹ | MRP | Off |
+|---|---|---|---|---|---|
+| B0FPG7KMKJ | Dr. Rashel De-Tan Sunscreen SPF 30 100ml x2 | 167 | 176 | 700 | 75% |
+| B09F9FM3BW | Eastman 6pc Bi-Hex Ring Spanner Set 6-17mm | 311 | 311 | 471 | 34% |
+| B0D1CNWBJP | Shatras Pink Lily Floor Cleaner 5L | 224 | 229 | 1199 | 81% |
+| B0H5J4L51J | IBELL TURBOSTICK650 Stick Vacuum 600W | 2199 | 2198 | 5190 | 58% |
+| B0GMGRG7CF | VINR Vitamin C + Shea Lip Balm 15g x3 | 249 | 249 | 1499 | 83% |
+| B0FS1R6GYL | Giordano GZ-992 Analog Couple Watch Set | 3299 | 3299 | 11995 | 72% |
+| B0HC38NJ55 | Food Stain Remover 200ml | 170 | 179 | 1499 | 88% |
+| B0H5K3WVNG | PROSAC Vigor R7 RGB Gaming Mouse | 179 | 179 | 999 | 82% |
+| B01CM8S644 | Titan Analog Gold Dial Women's Watch | 2195 | 2195 | — | — |
+| B0FQWT5WNW | Wonderchef Modena Bowl + Strainer/Grater | 699 | 699 | 1390 | 50% |
+| B0CPYB6T66 | Himalaya Adult Diaper Pants L, 10ct | 285 | 285 | 600 | 53% |
+| B08JHRLC7L | Amazon Brand Myx Women's Fitted Leggings | 199 | 199 | 679 | 71% |
+| B0FMTHPHSQ | HIRA After Hours Perfume for Men 50ml | 474 | 499 | 1999 | 75% |
+| B0GG9CC71Z | Lakme Peptide Lip IV 10g | 211 | 211 | 399 | 47% |
+| B0FTSKR17S | Cinthol Sandal Foam Body Wash 750ml | 184 | 184 | 330 | 44% |
+| B0FLDH1HLW | EVEREADY UTSAV 33ft 46 LED Pixel Light | 144 | 149 | 499 | 70% |
+| B0GG41PH9Q | GOLWYN Air Tight Container Set 500ml x12 | 640 | 674 | 1350 | 50% |
+
+Nine were exact to the card price. Eight drifted up 1-5%; all kept their discount,
+so they published at the **verified live price**, per the TICK Q precedent.
+`B01CM8S644` has no `.basisPrice` MRP on the PDP — `mrp`/`discountPct` left null
+rather than invented.
+
+### Dropped at verification
+
+| ASIN | Product | Reason |
+|---|---|---|
+| B0FW59CQ5Y | Symbol Women Night Suit | no `#add-to-cart-button` → out of stock |
+| B09W5X18HV | Bata womens Ivy Slide | ₹274 card → ₹398 live (+45%); only 27% off MRP 549, under the 30% floor |
+
+Two Myntra rows (`11ccf4e72cbc`, `7f80d1184b66`, both the same Bata sneaker) were
+killed earlier by `verifyFromHtml` as out-of-stock.
+
+### Freshness
+
+- `indexnow-ping.mjs` 17 slugs → **HTTP 200 for 19 urls** (17 + `/` + `/offers`).
+- `sitemap.xml` is ISR `revalidate=1800`; no new static route, so no hand edit.
+- `llms.txt` is `force-dynamic` off `getDeals()`; carries the batch on next request.
+- Prod spot-check, 9/9 HTTP 200: `/`, `/offers`, `/blog`, `/sitemap.xml`, `/feed.xml`,
+  `/api/deals`, `/llms.txt`, plus two of the new deal pages
+  (`shatras-…-b0d1cn`, `golwyn-…-b0gg41`), 0.13-0.58s.
+
+### CEO audit
+
+| Check | Value | Verdict |
+|---|---|---|
+| LIVE deals | 10172 (was 10155) | +17, matches the push |
+| EXPIRED | 257 | flat |
+| PENDING_REVIEW | 0 | clean, auto-approve holding |
+| LIVE null price / null image | 0 / 0 | clean |
+| maxLiveId | 10517, IST 2026-09-18 | current |
+| Posts published | 313 | — |
+| Coverless / seoTitle-less / seoDesc-less | 0 / 0 / 0 | clean |
+| Posts per day IST (last 5) | 4, 3, 3, 3, 3 | inside 2-4, rule held |
+
+### Rot flagged (unchanged from last tick unless noted)
+
+1. `apps/api/scripts/lib/ingest-common.mjs` still has no Amazon extractor — the
+   selector set was hand-re-derived for the **12th tick running**. It also owes the
+   same-origin fetch+DOMParser verifier, an implausible-MRP guard, the
+   `data-a-dynamic-image` image fallback, a trailing-dot price strip, a shopsy
+   `finalPrice` fallback, a Flipkart browser-tab fallback, and the shortlink
+   body-grep fallback. Top unshipped code fix.
+2. `curlFinal` cannot follow client-side redirects — cost 2 of 26 cards this tick
+   (`tokyo-gym-supporter`, `tasty-lunch-box`). Same root cause as (1)'s body-grep item.
+3. indiafreestuff Flipkart links remain structurally dead
+   (`dl.flipkart.com/dl/indiafreestuff/p/indiafreestuff` tracking landings).
+4. Telegram yield has collapsed (0 of 25 rows last tick, 2 of 25 before that) —
+   indiafreestuff is now the only reliable source. `amzn.lt` still NXDOMAIN.
+5. `.claude/agents/deal-ingest.md` still stale on 4 points (placeholder Amazon tag,
+   EarnKaro routing, `data/deals/index.json` dedup, `pending-review`).
+6. `where to get free samples`: 11,072 impressions / pos 6.8 / **0 clicks** across 46
+   of 313 slugs. Highest-value unshipped SEO action; needs a merge/prune.
+7. Organic still at 2 clicks / 67 impressions last 28d.
+8. W6 (`/coupons` + `/freebies` ignore `?type=`) and W8 (`sku` from ASIN needs
+   `productId` on the shared DTO) both still need an API change.
+9. ~605 untracked scratch files under `apps/api/` — the `reports/` orphans fixed
+   last tick were the same neglect, one directory over.
+
+### Open owner decisions
+
+1. Ratify publish-at-verified-live-price (and the 30% discount floor) in CLAUDE.md —
+   the written ±₹1 rule would have killed 8 of the 17 good deals this tick.
+2. Permanent DB pool cap in `apps/api/.env`.
+3. DesiDime Task Scheduler job `7,37 * * * *` — recreate or retire.
+4. Free-samples cluster consolidation.
+5. Scratch-file cleanup under `apps/api/`.
