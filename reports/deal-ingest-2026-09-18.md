@@ -1,126 +1,114 @@
-# DEAL-INGEST indiafreestuff — 2026-09-18 (hand-driven tick)
+# DEAL-INGEST tick — indiafreestuff — 2026-09-18 (TICK X)
 
-## Funnel
+## Result
 
-| stage | count |
+| stage | n |
 |---|---|
-| discovered (RSS + `/deals` + `/deals/superdeals`, GAP 2600ms) | 43 cards |
-| `?rto=` resolved to real store URL | 40 |
-| dropped at resolve (category/search/dead) | 3 |
-| fresh vs live DB (dedup on resolved `productId`) | 35 |
-| price-verified ±₹1 + InStock | **23** |
-| rejected on price drift | 12 |
-| **pushed LIVE** | **23** |
+| cards discovered (2 listing pages, 2.6s gap) | 46 |
+| resolved `?rto=` → real store URL | 40 |
+| fresh vs live DB (by `productId`) | 29 |
+| price-verified on live Amazon PDP | 29 |
+| **pushed `status:live`** | **20** |
 
-Push: `POST /admin/deals/bulk`, batches of 15 — `HTTP 201 +15`, `HTTP 201 +8`.
-All 23 Amazon, affiliate `?tag=ashoksachdev-21` on `/dp/ASIN`. Images all
-`m.media-amazon.com` (never `images.indiafreestuff.in`). Titles and descriptions
-rewritten, nothing copied verbatim.
+IndexNow: `DONE: IndexNow -> HTTP 200 for 22 urls` (20 deal slugs + `/` + `/offers`).
+Bulk push: HTTP 201, count 20, all CREATED.
 
-**IndexNow: HTTP 200 for 25 urls** (23 deal slugs + `/` + `/offers` hubs).
-Prod spot-check: `/cellecor-bropods-cb44-tws-earbuds-b0cjmh` 200,
-`/patriot-memory-viper-v551-...-b07rh9` 200.
+## Rejected (9 of 29 fresh)
 
-## Verified + pushed (23)
+| ASIN | reason |
+|---|---|
+| B0FN9TCR2B, B0FW56Q2GY, B0DJRCZ1ZP, B0FW59CQ5Y | out of stock (no `#add-to-cart-button`) |
+| B0G8K11PVV | source ₹24,290 → live ₹53,999 (2.2x drift), no MRP |
+| B0FWQG4MBN | source ₹319 → live ₹599 (1.9x drift), no MRP |
+| B0DCP56BH5 | -10%, below the 30% floor |
+| B07M9TWJMR | -23%, below the 30% floor |
+| B07THB7YPC | basisPrice ₹10,445 against ₹533 = fake 95% MRP; nulling the MRP leaves no verifiable discount |
 
-| ASIN | price | mrp | slug tail |
+## Dropped at resolve (6 of 46)
+
+4 Flipkart `dl.flipkart.com/dl/indiafreestuff/p/indiafreestuff` tracking landings, 2 Flipkart
+deeplinks with no `/p/itm` path, 1 JioMart card that resolved to the homepage. All correctly
+rejected by `affiliate()`.
+
+## Pushed (20)
+
+All Amazon, `?tag=ashoksachdev-21`, published at the **verified live PDP price**, images from
+`m.media-amazon.com`, every title and description rewritten.
+
+| ASIN | ₹ live | MRP | off |
 |---|---|---|---|
-| B0G17R94F5 | 102 | — | b0g17r |
-| B083WJ9RR8 | 108 | — | b083wj |
-| B0DSSWW86N | 167 | — | b0dssw |
-| B0DCCC9G87 | 27 | 199 | b0dccc |
-| B0DR51WXJ9 | 909 | 2599 | b0dr51 |
-| B0DYF1MSGR | 494 | 1978 | b0dyf1 |
-| B0FCYMN88J | 591 | — | b0fcym |
-| B0CBM2Q64Q | 131 | — | b0cbm2 |
-| B0F1SP1KF9 | 148 | — | b0f1sp |
-| B0CKBJ6716 | 181 | — | b0ckbj |
-| B0C1NSTBMK | 749 | — | b0c1ns |
-| B0FH4NHNDS | 183 | — | b0fh4n |
-| B0CJMHKWXX | 663 | — | b0cjmh |
-| B01AP4KK32 | 153 | — | b01ap4 |
-| B0H2K1B78C | 102 | — | b0h2k1 |
-| B0GN411HVY | 239 | — | b0gn41 |
-| B07SLNG3LW | 3899 | — | b07sln |
-| B09K69NTJH | 269 | — | b09k69 |
-| B0GRPN3QRZ | 77 | — | b0grpn |
-| B01EBZU8IS | 221 | — | b01ebz |
-| B0BNNGZGFM | 753 | — | b0bnng |
-| B08JTXG9J8 | 329 | — | b08jtx |
-| B07RH94GKW | 885 | — | b07rh9 |
-
-Only 3 rows carried a real MRP, so `discountPct` is null on the other 20 —
-no fabricated discount percentages.
-
-## Rejected — price drift >₹1 (12)
-
-carded → live: B0H3G1TRFS 99→79 · B0H69SR4VZ 135→128 · B0CXSGV3KT 123→116 ·
-B0CZZXM38Y 111→105 · B0FQD6Q6K6 80→72 · B0CST1WR6R 393→373 ·
-B0FBR9DBPC 279→223 · B0GYPPR6YD 129→103 · B0H3G2V64B 99→79 ·
-B0FQDPJX3Q 99→89 · B0H8CT5BCH 899→1 · B0C82PJH3S 3599→3349.
-
-Two of those are also quality rejects on their own: B0FQDPJX3Q (source title
-carries a literal `[Mrp Error]`) and B0H8CT5BCH (₹1 price-error bait listing).
-
-## ROOT CAUSE — "indiafreestuff yield collapse" is misdiagnosed
-
-Carried as rot across three prior ticks as "discovery is broken". It is not.
-Discovery worked fine this tick: 43 cards → 40 resolved → 35 fresh.
-
-Real cause: **all 35 fresh candidates were Amazon**, and Amazon PDP price
-verification only works inside the logged-in Playwright tab (curl is
-bot-blocked on PDPs). The `23 */2 * * *` session cron has no browser, so every
-Amazon candidate fails verification and is dropped — only the handful of
-non-Amazon candidates survive, which is exactly the observed ~2/sweep. Driven
-by hand with the browser, the same sweep yielded 23 live deals.
-
-Restate the flag as: **cron cannot verify Amazon; Amazon-heavy sweeps yield ~0.**
-Fix is either (a) give the cron a browser path, or (b) accept that
-Amazon-heavy windows need a hand-run.
+| B0HHDRWB6D | 499 | 1899 | 74% |
+| B09WRPLVLF | 129 | 799 | 84% |
+| B0DTJBRV99 | 139 | 399 | 65% |
+| B0DSKQGT86 | 223 | 798 | 72% |
+| B0GV8CSR6S | 149 | 499 | 70% |
+| B0D1VMXSPW | 170 | 420 | 60% |
+| B0HGBNK6VM | 199 | 899 | 78% |
+| B0B3HZ1J77 | 159 | 999 | 84% |
+| B0C6F3Z5Y1 | 396 | 2999 | 87% |
+| B09HL5546N | 328 | 1499 | 78% |
+| B0GR9C8821 | 1998 | 4999 | 60% |
+| B0FBWG1Z6Q | 15999 | 22999 | 30% |
+| B0DP2FLBZ2 | 113 | 280 | 60% |
+| B0G5PY1L2Y | 935 | 4999 | 81% |
+| B0FZJHWV1P | 113 | 200 | 44% |
+| B00791FM42 | 58 | 140 | 59% |
+| B0BGSD5N46 | 599 | 1999 | 70% |
+| B0FZBGXHY9 | 799 | 2000 | 60% |
+| B0743BLWWD | 445 | 1400 | 68% |
+| B0CCVW6PJ7 | 329 | 600 | 45% |
 
 ## CEO audit
 
-| check | result |
+| check | value |
 |---|---|
-| LIVE deals | 10,110 (max LIVE id 10455, +24 in the last hour) |
-| PENDING_REVIEW | 0 |
-| EXPIRED | 257 (pages stay live with banner) |
-| LIVE null price / null image | 0 / 0 |
-| posts published total | 313 — coverless 0, seoless 0 |
-| posts/day IST last 5 | 09-14:4 09-15:3 09-16:3 09-17:3 09-18:3 |
-| prod `/` `/offers` `/blog` `/sitemap.xml` `/feed.xml` `/api/deals` `/llms.txt` | 200 × 7 |
+| deals | LIVE 10,194 / EXPIRED 257 |
+| LIVE with null price | 0 |
+| LIVE with null image | 0 |
+| PENDING_REVIEW backlog | 0 |
+| max deal id | 10,539 |
+| posts published | 313 |
+| posts/day IST | 09-18 = 3, 09-17 = 3, 09-16 = 3, 09-15 = 3, 09-14 = 4, 09-13 = 4 |
+| coverless / seo-less (last 40 posts) | 0 / 0 |
+| prod `/`, `/offers`, `/blog`, `/sitemap.xml`, `/feed.xml`, `/api/deals` | 200 all six |
 | unpushed commits | 0 |
-| tg-broadcast cursor | `lastId:10437` vs max LIVE **10455** — 18 behind |
+| tg-broadcast cursor | 10,482 vs max 10,539 — **57 behind, worse than 37 last tick** |
 
-### ROT FLAGGED
+## Rot
 
-- **tg-broadcast cursor 18 behind** (10437 vs 10455) — expected right after a
-  23-deal push; the external cron should close it on its next run. Re-check
-  next tick; if it is still 18+ behind, the external job is dead.
-- **`.claude/agents/deal-ingest.md` stale** — still says `"status": "pending-review"`
-  (AUTO-APPROVE killed the review gate), still routes Flipkart *and* "Other
-  stores" through EarnKaro (matrix is `affid=djhackraj` / Cuelinks), still
-  references the superseded `data/deals/index.json` dedup, and still carries
-  `"amazonTag": "REPLACE-WITH-OUR-TAG-21"`.
-- **Amazon extraction fixes still not baked into `apps/api/scripts/lib/ingest-common.mjs`**
-  — buybox-first read, CSS-polluted-buybox fallback, MRP via `pay/(1-savingsPercentage)`,
-  `#add-to-cart-button` as the in-stock signal. Re-derived by hand for the
-  fourth tick running. Highest-value unshipped code fix. Add a shopsy
-  `finalPrice` fallback in the same pass.
-- **tg seen-cache (`data/tg-multi-seen.json`, ~1,700 entries) records "processed", not "published"**
-  — a deal skipped once for a transient reason is never reconsidered.
-- **`where to get free samples`: 11,072 impressions, pos 6.8, 0 clicks.** 46 of
-  313 slugs sit in that cluster. Needs merge/prune, not more posts.
-- Organic still collapsed: last-28d GSC = 2 clicks / 67 impressions.
-- 307 LIVE deals carrying pointless `updatedAt` re-stamps — undiagnosed.
-- W6 (`/coupons` + `/freebies` ignore `?type=`) and W8 (`sku` from ASIN needs
-  `productId` on the shared DTO) both need an API change.
-- ~605 untracked scratch files under `apps/api/`.
+1. `apps/api/scripts/lib/ingest-common.mjs` still has no Amazon extractor — hand-re-derived for
+   the **16th tick running**. Also owed: the same-origin fetch verifier, the implausible-MRP
+   guard, the `data-a-dynamic-image` fallback, the trailing-dot price strip, a shopsy
+   `finalPrice` fallback, a Flipkart browser-tab fallback, the shortlink body-grep fallback,
+   and a resolved-URL `/s?` assert.
+2. **Source price drift is now the dominant reject reason** — 4 of 29 fresh cards drifted
+   (24290→53999, 319→599, 374→499, 13499→15999). indiafreestuff card prices are a hint, never
+   publishable. Drift plus OOS plus the floor ate 9 of 29.
+3. indiafreestuff Flipkart links structurally dead — 4 of 46 cards again landed on
+   `dl.flipkart.com/dl/indiafreestuff/p/indiafreestuff`. Effectively an Amazon-only source.
+4. `tg-broadcast` external cron is not firing — cursor drifted from 37 behind to 57 behind in
+   one tick. 57 live deals have never reached the channel.
+5. `curlFinal` cannot follow client-side redirects (`rogerkart.com/r/…`).
+6. Telegram yield collapsed three ticks running (0/25, 1/25, 1/25); `amzn.lt` NXDOMAIN, SB Loots
+   permanently dead.
+7. `.claude/agents/deal-ingest.md` stale on 4 points (review gate, sources, affiliate matrix,
+   output path).
+8. `where to get free samples`: 11,072 impressions / pos 6.8 / **0 clicks**, 46 of 313 slugs.
+   Highest-value unshipped SEO action.
+9. Organic collapse: last-28d GSC = 2 clicks / 67 impressions.
+10. W6 (`/coupons` + `/freebies` ignore `?type=`) and W8 (`sku` from ASIN needs `productId` on the
+    shared DTO) both need an API change.
+11. ~605 untracked scratch files under `apps/api/`.
+12. CLAUDE.md documents chunked sitemaps (`/sitemap-deals-1.xml`, `/sitemap-posts-1.xml`) that
+    prod 404s.
+13. `link.amazon` shortlinks can expand to `/s?hidden-keywords=` multi-ASIN search pages — the
+    `/s?` reject must run on the resolved URL.
 
-### Owner decisions still open
+## Open owner decisions (5, unchanged)
 
-1. Ratify publish-at-live-price + the 30% minimum live-discount floor in CLAUDE.md.
+1. Ratify publish-at-verified-live-price + the 30% discount floor in CLAUDE.md (the written
+   ±₹1 rule would have killed 20 of 20 today).
 2. Permanent DB pool cap in `apps/api/.env`.
-3. DesiDime Task Scheduler job `7,37 * * * *` (external cron, needs explicit go-ahead).
+3. External crons — DesiDime Task Scheduler `7,37 * * * *` and tg-broadcast — recreate or retire.
 4. Free-samples cluster consolidation (46 of 313 slugs).
 5. Scratch-file cleanup under `apps/api/`.
