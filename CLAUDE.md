@@ -113,9 +113,9 @@ ClaudeBot, PerplexityBot, Google-Extended, etc.); `/llms.txt` +
 
 ## Telegram deal sourcing (multi-group)
 
-Source groups live in `data/tg-groups.json` (the "Deals" folder — 7 groups:
-dealdost, NonStopDeals, CoolDeals, CoolzTricks, LootDeals24x7, Rogerkart,
-OMGLoot). Scanned in a logged-in browser, NOT a bot token (channels aren't ours).
+Source groups live in `data/tg-groups.json` — **13 groups** (that file is the
+source of truth; do not hardcode the list here). Scanned in a logged-in browser,
+NOT a bot token (channels aren't ours).
 
 **Browser: use the Playwright MCP (`playwright`), profile "richDeals"** —
 `.mcp.json` pins `--browser chrome --user-data-dir F:\new_projects\deals\.pw-profile`,
@@ -127,8 +127,10 @@ read with `browser_evaluate`.
 
 Hard-won constraints:
 - The webK client (`web.telegram.org/a/`) will NOT open a different chat via
-  `location.hash` from a script — messages don't load (msgEls 0). Switching
-  chats needs a **trusted click** on the sidebar item, or `navigate_page`.
+  `location.hash` from a script — messages don't load (msgEls 0). `browser_navigate`
+  to `web.telegram.org/a/#<chatid>` ALSO fails (hash stripped, 0 messages). Only a
+  **trusted click** on the sidebar row works: `browser_find({text:"<group>"})` → take
+  the `ref` → `browser_click({target:ref, element:"...", ref})`.
 - Cheapest reliable read (~1k tokens): ONE `browser_evaluate` over
   `.chat-list .ListItem.Chat`, returning `{title, last}` per row from
   `.title h3` + `.subtitle .last-message`. All groups' newest deal in one call.
