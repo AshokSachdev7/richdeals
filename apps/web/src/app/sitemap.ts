@@ -11,11 +11,15 @@ import POST_REDIRECTS from "../../post-redirects.json";
 export const revalidate = 1800;
 
 // The public API caps limit at 60, so page through every LIVE deal by cursor
-// to get all deal URLs into the sitemap (bounded for safety).
+// to get all deal URLs into the sitemap. The bound is only a runaway guard —
+// the loop exits on the first page without a nextCursor, so raising it costs
+// nothing until we actually have that many deals. It was 200 (a 12,000-deal
+// ceiling); at 10.3k LIVE and ~136 new/day that was ~13 days from silently
+// truncating the sitemap with no error.
 async function fetchAllDeals() {
   const out = [];
   let cursor: number | undefined;
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 2000; i++) {
     const page = await getDeals({ limit: 60, cursor });
     out.push(...page.items);
     if (!page.nextCursor) break;
