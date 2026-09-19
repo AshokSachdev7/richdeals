@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getForumFeed, getLeaderboard, type ForumTab } from "@/lib/forum";
-import { SITE_NAME, absUrl, formatINR } from "@/lib/site";
+import { absUrl, formatINR } from "@/lib/site";
 import ProductImage from "@/components/ProductImage";
 import VoteBox from "@/components/VoteBox";
 
@@ -16,7 +16,7 @@ const TABS: { key: ForumTab; label: string }[] = [
 ];
 
 export const metadata: Metadata = {
-  title: `Deals Forum — vote, discuss and report live deals | ${SITE_NAME}`,
+  title: `Deals Forum — vote, discuss and report live deals`,
   description:
     "The RichDeals community forum. Vote deals up or down, tell everyone whether a price is still working, and earn karma for helping other shoppers.",
   alternates: { canonical: absUrl("/forum") },

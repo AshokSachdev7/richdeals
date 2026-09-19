@@ -100,6 +100,8 @@ export function dealSeoTitle(
   if (name.lastIndexOf("(") > name.lastIndexOf(")")) {
     name = name.slice(0, name.lastIndexOf("(")).replace(/[,\s]+$/, "").trim();
   }
+  // the cut above can land on a separator ("Dog Biscuits Mix Flavour," + " @ ₹287") — strip it last
+  name = name.replace(/[,\-–—:;/&+]+$/, "").trim();
   return `${name}${price}${off}`;
 }
 
