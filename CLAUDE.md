@@ -129,8 +129,11 @@ Hard-won constraints:
 - The webK client (`web.telegram.org/a/`) will NOT open a different chat via
   `location.hash` from a script — messages don't load (msgEls 0). `browser_navigate`
   to `web.telegram.org/a/#<chatid>` ALSO fails (hash stripped, 0 messages). Only a
-  **trusted click** on the sidebar row works: `browser_find({text:"<group>"})` → take
-  the `ref` → `browser_click({target:ref, element:"...", ref})`.
+  **trusted click** on the sidebar row works: `browser_find({text:"<group>"})` → read
+  the row's `/url:` (it is `#<chatid>`) → `browser_click({target:'a[href="#<chatid>"]',
+  element:"...", ref})`. **`target` is a CSS SELECTOR, not the ref and not link text** —
+  passing either fails (`does not match any elements`, or a CSS parse error on emoji in
+  the title). `browser_find` also needs `text:`/`regex:`, not a prose `query:`.
 - Cheapest reliable read (~1k tokens): ONE `browser_evaluate` over
   `.chat-list .ListItem.Chat`, returning `{title, last}` per row from
   `.title h3` + `.subtitle .last-message`. All groups' newest deal in one call.
