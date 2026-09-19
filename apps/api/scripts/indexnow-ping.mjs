@@ -17,7 +17,7 @@ if (!args.length) { console.error('usage: node scripts/indexnow-ping.mjs <deal-s
 
 // Deal pages live at the site root, so a slug IS its path. Listing pages get
 // pinged too — a new deal changes them.
-const paths = rawPaths ? args : ['/', '/offers', ...args.map((s) => `/${s.replace(/^\//, '')}`)];
+const paths = rawPaths ? args : ['/', '/offers', '/sitemap.xml', ...args.map((s) => `/${s.replace(/^\//, '')}`)];
 const urlList = [...new Set(paths)].map((u) => BASE + u);
 
 const res = await fetch('https://api.indexnow.org/indexnow', {
