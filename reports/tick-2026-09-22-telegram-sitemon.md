@@ -71,3 +71,33 @@ tick this session) — not re-flagged as new rot, tracked to completion there.
 **ROT: scheduling, unchanged.** Both of these ticks ran because this session is
 open. `schtasks` still has zero richdeals/desidime/broadcast entries, so nothing
 fires once it closes. Owner call pending.
+
+## BLOG tick 2026-09-22 (closed out after this tick)
+
+3 posts published, all DB-verified (#379-#381), all with a cover, both SEO
+fields inside limits, and every internal link resolving 200 on prod:
+
+| # | Slug | seoTitle | Words | Internal links |
+|---|---|---|---|---|
+| 379 | `do-you-need-a-watch-winder-automatic-watch-india-2026` | 52 ch | 1143 | `/oryx-watch-winder-4-automatic-watches-led`, `/offers` |
+| 380 | `cheap-ipad-stylus-alternative-apple-pencil-price-india-2026` | 54 ch | 998 | `/digiroot-ipad-pencil-fast-charge-palm-rejection-b0cp91`, `/kingone-upgraded-stylus-pen-for-ipad-2018-onwards-b09kgv`, `/offers` |
+| 381 | `phone-cooling-fan-gaming-worth-it-india-2026` | 54 ch | 1018 | `/un1que-rgb-phone-cooling-fan-semiconductor-cooler`, `/offers` |
+
+seoDesc 156/154/152 chars. IndexNow pinged through `insert-blog-mdmeta.mjs`
+(HTTP 200). Covers, post pages and all four linked deal pages checked live:
+11/11 → 200, no dead internal links.
+
+Topic selection deliberately avoided the saturated clusters (best-X-under-Y,
+free-samples, store-coupon, X-vs-Y). Six candidates were SERP-checked first;
+RO/UV/UF, lithium-vs-lead-acid, cabin-baggage-size, geyser-sizing and
+hard-vs-soft-luggage were dropped because dedicated 2026 competitor guides
+already own those queries.
+
+posts/day IST after this tick: 09-17=3 09-18=3 09-19=3 **09-20=2 09-21=1** 09-22=3.
+
+**09-21 stays broken and is not fixable.** One post against a 2-3 minimum.
+Backfilling it would need a 4th post dated to a past day, which either breaks
+the ≤4/day cap or backdates a publish — neither is worth it. Recorded, not
+papered over. Cause is the same structural gap as the deal outage: session
+crons died with the previous session and there is no OS-level scheduler entry,
+so the BLOG tick simply never fired on 09-21.
