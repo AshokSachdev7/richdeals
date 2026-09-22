@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description:
     "Found a genuine price drop? Post the product link on RichDeals. We verify the price, publish the deal with your name on it and credit ₹1 to your account.",
   alternates: { canonical: `${SITE_URL}/submit` },
+  openGraph: { title: "Post a Deal — Earn ₹1 per Published Deal" },
 };
 
 export default function SubmitPage() {

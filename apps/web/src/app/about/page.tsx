@@ -4,8 +4,9 @@ import { SITE_NAME, SITE_TAGLINE, absUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: `${SITE_NAME} — ${SITE_TAGLINE}. How we find and verify the best deals in India.`,
+  description: `${SITE_NAME} — ${SITE_TAGLINE}. How we find, verify and publish genuine price drops from Amazon, Flipkart and 100+ Indian stores every day.`,
   alternates: { canonical: absUrl("/about") },
+  openGraph: { title: "About Us" },
 };
 
 export default function AboutPage() {

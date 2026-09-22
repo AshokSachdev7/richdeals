@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   description:
     "The RichDeals community forum. Vote deals up or down, tell everyone whether a price is still working, and earn karma for helping other shoppers.",
   alternates: { canonical: absUrl("/forum") },
+  openGraph: { title: "Deals Forum — vote, discuss and report live deals" },
 };
 
 const ago = (iso: string) => {

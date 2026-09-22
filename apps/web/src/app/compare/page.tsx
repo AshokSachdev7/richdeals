@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Buying Guides — Compare Before You Buy",
   description: `Simple, up-to-date buying guides for Indian shoppers on ${SITE_NAME}: QLED vs OLED, SSD vs HDD, AMOLED vs OLED, front load vs top load and more, with clear verdicts.`,
   alternates: { canonical: absUrl("/compare") },
+  openGraph: { title: "Buying Guides — Compare Before You Buy" },
 };
 
 // Per-guide visual meta — icon + accent tint keyed by slug. Static class strings
