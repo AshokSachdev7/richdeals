@@ -4,7 +4,7 @@ description: >
   Monitors ONE Telegram deal group and pushes proper single-product deals to
   the RichDeals site. Reads the group in the already-logged-in controlled
   Chrome, extracts deal messages, resolves shortlinks, swaps affiliate tags
-  (Amazon / Flipkart / Cuelinks), and pushes via the admin API. Ignores ads,
+  (Amazon / Flipkart / InRDeals for Myntra / Cuelinks), and pushes via the admin API. Ignores ads,
   sponsored banners, and non-deal chatter. Runs on a schedule (~2.5 min) via
   ScheduleWakeup or /loop. Never posts ads or multi-product "loot" category
   posts as single deals.
@@ -33,7 +33,8 @@ Do NOT read any other chat/channel. The controlled Chrome is already logged in.
    - Parses title + Deal Price + MRP + Discount straight from the message text.
    - Resolves shortlink → real store URL (unwraps EarnKaro/linkredirect `dl=`).
    - Affiliate: Amazon `?tag=ashoksachdev-21`, Flipkart `affid=djhackraj`,
-     everything else Cuelinks `cid=527`.
+     Myntra InRDeals `id=inr678975705` (Cuelinks deactivated for Myntra,
+     owner 2026-09-22), everything else Cuelinks `cid=527`.
    - Store CDN image used directly (media-amazon / flixcart / myntassets — fast).
    - Pushes to `/admin/deals/bulk` (auto-revalidates ISR pages, NO rebuild).
 4. Delete any `linkredirect`/`linksredirect` garbage store+deals that slip in.

@@ -78,7 +78,7 @@ browser UA (Cloudflare serves 200 — no JS challenge for the HTML).
   landing, not a product).
 - **Affiliate swap**: their Amazon tag is `desidime01-21`, Flipkart
   `affid=salescueli&affExtParam1/2` — strip and apply ours. All other stores
-  go through Cuelinks (see the ALL STORES hard rule).
+  go through Cuelinks — except Myntra, which goes through InRDeals (see the ALL STORES hard rule).
 - **Verify before push**: non-Amazon via `productLd()` (ld+json price, ±₹1,
   InStock); Amazon in the logged-in browser tab. Dedup by resolved `productId`
   against the live DB via Prisma (no admin dedup endpoint exists). Push
@@ -224,6 +224,9 @@ fabricated facts — the playbook lists the black-hat blocklist). Spawn the
   resolves. Affiliate matrix (`ingest.config.json`):
   - Amazon → `?tag=ashoksachdev-21` on `/dp/ASIN`
   - Flipkart → `?pid=…&affid=djhackraj` (path must be `/p/itm…`)
+  - **Myntra → InRDeals** (owner 2026-09-22: the Cuelinks account is
+    DEACTIVATED for Myntra, those links earn nothing)
+    `https://inr.deals/track?id=inr678975705&src=merchant-detail-backend&campaign=cps&url=<encoded clean url>`
   - **everything else → Cuelinks**
     `https://linksredirect.com/?cid=527&source=linkkit&url=<encoded clean url>`
   Price verification: non-Amazon merchants serve

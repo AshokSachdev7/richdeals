@@ -43,6 +43,8 @@ const slugFor = (name, productId) =>
 // new one keeps the live URL, so the endsWith(productId) assert has to let it through.
 const LEGACY_SLUGS = new Set(['wipro-northwest-nowa-6a-bell-push-white-pack-of-10-b0bnnk']);
 
+const INRDEALS = (url) =>
+  `https://inr.deals/track?id=inr678975705&src=merchant-detail-backend&campaign=cps&url=${encodeURIComponent(url)}`;
 const CUELINKS = (url) =>
   `https://linksredirect.com/?cid=527&source=linkkit&url=${encodeURIComponent(url)}`;
 
@@ -286,7 +288,8 @@ for (const d of deals) {
     // Verified HTTP 200 + matching ld name/price on this path form; itm hash unrecoverable.
     d.affiliateUrl = `https://www.flipkart.com/${kebab(d.name).slice(0, 60).replace(/-+$/, '')}/p/itme?pid=${d.productId}&affid=djhackraj`;
   } else {
-    d.affiliateUrl = CUELINKS(d.buyUrl);
+    // Cuelinks is deactivated for Myntra (owner 2026-09-22) -> InRDeals.
+    d.affiliateUrl = d.store === 'myntra' ? INRDEALS(d.buyUrl) : CUELINKS(d.buyUrl);
   }
   d.discountPct = Math.round((1 - d.price / d.mrp) * 100);
   d.title = `${d.name} at ₹${d.price.toLocaleString('en-IN')} (${d.discountPct}% Off) – ${d.storeName}`;

@@ -1,6 +1,6 @@
 ---
 name: desidime-ingest
-description: Ingests deals from desidime.com/new every 30 minutes. Reads the listing cards (no per-deal-page fetch), resolves each Buy Now redirect to the real merchant URL, swaps in our affiliate tag (Amazon / Flipkart / Cuelinks for every other store), verifies the live price, and pushes fresh deals LIVE to RichDeals. Never publishes an unverified price.
+description: Ingests deals from desidime.com/new every 30 minutes. Reads the listing cards (no per-deal-page fetch), resolves each Buy Now redirect to the real merchant URL, swaps in our affiliate tag (Amazon / Flipkart / InRDeals for Myntra / Cuelinks for every other store), verifies the live price, and pushes fresh deals LIVE to RichDeals. Never publishes an unverified price.
 tools: Bash, Read, Write, Grep, Glob
 ---
 
@@ -27,7 +27,9 @@ between requests to desidime.com and to merchants). Read the JSON, then push.
   app promo, bare "flat N% off"; `GROCERY`: perishables and FMCG).
 - Affiliate swap — **every store counts, not just Amazon/Flipkart**:
   Amazon → `tag=ashoksachdev-21`, Flipkart → `affid=djhackraj`, everything
-  else → Cuelinks `https://linksredirect.com/?cid=527&source=linkkit&url=…`.
+  Myntra → InRDeals `https://inr.deals/track?id=inr678975705&src=merchant-detail-backend&campaign=cps&url=…`
+  (Cuelinks is deactivated for Myntra, owner 2026-09-22);
+  every other store → Cuelinks `https://linksredirect.com/?cid=527&source=linkkit&url=…`.
 - Price-verifies non-Amazon merchants from their `application/ld+json`
   `Product.offers.price` (±₹1, must be InStock) and writes `verify` +
   `livePrice` / `liveTitle` / `liveImage` on each candidate.
@@ -47,7 +49,9 @@ between requests to desidime.com and to merchants). Read the JSON, then push.
    off — DesiDime MRPs are frequently fictional.
 4. **Rewrite the title and write an original 1-2 sentence description.** Never
    copy DesiDime's copy. Say what the product actually is and who it suits, in
-   plain language, no hype and no fabricated specs.
+   plain language, no hype and no fabricated specs. Apply
+   `.claude/geo-rewrite-playbook.md` (product noun first, benefit summary,
+   synonym spread, editorial tone; obey its black-hat blocklist).
 5. **Push `status: live`** to `http://localhost:4000/admin/deals/bulk` with
    header `x-admin-key: dev-admin-key-change-me`. Slug = kebab title + the
    lowercased productId. No manual review gate — auto-approve is the standing

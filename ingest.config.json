@@ -6,10 +6,12 @@
   "affiliate": {
     "amazon": "own-tag",
     "flipkart": "affid",
-    "default": "cuelinks"
+    "default": "cuelinks",
+    "myntra": "inrdeals"
   },
-  "notes": "Flipkart product-feed API returns 500 (discontinued). Use affid on scraped Flipkart URLs. Source = scrapers (freekaamaal curl-ok; indiafreestuff needs headless).",
+  "notes": "Flipkart product-feed API returns 500 (discontinued). Use affid on scraped Flipkart URLs. Source = scrapers (freekaamaal curl-ok; indiafreestuff needs headless). Myntra uses InRDeals (owner 2026-09-22): the Cuelinks account is deactivated for Myntra, so linksredirect.com Myntra links earn nothing.",
   "sources": [
+    "https://www.indiafreestuff.in/pages/getdeals",
     "https://www.indiafreestuff.in/category/shopping-sites/amazon",
     "https://www.indiafreestuff.in/category/shopping-sites/flipkart",
     "https://www.indiafreestuff.in/category/shopping-sites/myntra",
@@ -18,5 +20,7 @@
   ],
   "outputDir": "data/deals",
   "maxDealsPerRun": 60,
-  "requestDelayMs": 1500
+  "requestDelayMs": 1500,
+  "inrdealsId": "inr678975705",
+  "inrdealsPrefix": "https://inr.deals/track?id={id}&src=merchant-detail-backend&campaign=cps&url="
 }

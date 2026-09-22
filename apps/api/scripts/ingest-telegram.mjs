@@ -78,7 +78,8 @@ function affiliate(finalUrl) {
     const m = u.pathname.match(/\/(\d{6,})\/buy/);
     if (!m) return null; // myntra category/loot page
     const clean = `${u.origin}${u.pathname}`;
-    return { store: 'myntra', productId: m[1], page: clean, affiliateUrl: `https://linksredirect.com/?cid=${CUELINKS_CID}&source=linkkit&url=${encodeURIComponent(clean)}` };
+    // Cuelinks deactivated for Myntra (owner 2026-09-22) -> InRDeals.
+    return { store: 'myntra', productId: m[1], page: clean, affiliateUrl: `https://inr.deals/track?id=inr678975705&src=merchant-detail-backend&campaign=cps&url=${encodeURIComponent(clean)}` };
   }
   const store = h.split('.')[0];
   const clean = `${u.origin}${u.pathname}`;
