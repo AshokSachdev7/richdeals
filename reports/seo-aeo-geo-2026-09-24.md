@@ -19,4 +19,4 @@ Deal pages rank at position 1–3 for long-tail India product queries. The last 
 2. `/stores/flipkart` sits at position 47–70 for sale queries. Retune it the same way (check that the items match the H1).
 3. Authority is the ceiling. Backlinks need the owner, because outside posting requires approval.
 
-IndexNow: HTTP 200 (blog keepers + /freebies + /coupons, --paths).
+IndexNow: api.indexnow.org HTTP 422 on the 4 paths (known blog-ping quirk) → Bing GET fallback HTTP 200 ×4 (blog keepers + /freebies + /coupons).
