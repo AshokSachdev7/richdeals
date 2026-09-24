@@ -1,4 +1,4 @@
-// TELEGRAM-DEAL-MONITOR tick 2026-09-24m
+// TELEGRAM-DEAL-MONITOR tick 2026-09-25a
 //
 // Sidebar scrape of 13 groups -> shortlinks resolved -> dedup vs tg-multi-seen + DB -> 1 new.
 // Amazon verified in logged-in tab (#centerCol). Channel price 1691 needed an 11% coupon not shown on the PDP; listed at live 1899.
@@ -62,7 +62,7 @@ for (const d of DEALS) {
 }
 if (new Set(out.map((r) => r.slug)).size !== out.length) throw new Error('duplicate slug');
 
-const file = process.argv[2] ?? 'tg-0924m-payload.json';
+const file = process.argv[2] ?? 'tg-0925a-payload.json';
 writeFileSync(file, JSON.stringify({ deals: out }));
 console.log(`pre-flight OK, ${out.length} rows -> ${file}`);
 console.log(`SLUGS: ${out.map((r) => r.slug).join(' ')}`);

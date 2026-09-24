@@ -1,4 +1,4 @@
-# TELEGRAM-DEAL-MONITOR tick — 2026-09-24m
+# TELEGRAM-DEAL-MONITOR tick — 2026-09-25a
 
 **Published: 1 deal LIVE** through `/admin/deals/bulk`. The response was `count:1` with `created:true`, and it read back as LIVE (id 11081).
 IndexNow: **HTTP 200 for 4 URLs** (1 slug + 3 hub paths).
@@ -27,7 +27,7 @@ IndexNow: **HTTP 200 for 4 URLs** (1 slug + 3 hub paths).
 - **Image:** `m.media-amazon.com` at `_SL1500_`.
 - **Content:** the description is original and ≥900 chars, with 4 how-to steps.
 - **Affiliate link:** Amazon `?tag=ashoksachdev-21`.
-- **Records:** `tg-multi-seen.json` grew from 1947 to 1950. Script: `apps/api/scripts/push-tg-0924m.mjs`.
+- **Records:** `tg-multi-seen.json` grew from 1947 to 1950. Script: `apps/api/scripts/push-tg-0925a.mjs`.
 
 ## CEO audit (checked against the DB)
 - **Deals:** 10734 LIVE, max id 11081, 0 PENDING_REVIEW. No LIVE deal has a null price or null image.

@@ -1,4 +1,4 @@
-# SITEMON + CEO audit — 2026-09-24n (18:42 IST)
+# SITEMON + CEO audit — 2026-09-25b (00:12 IST)
 
 ## Production endpoints
 | Path | HTTP | Time |
@@ -13,14 +13,14 @@
 
 ## Deal count check
 - **DB:** 10734 LIVE, highest deal id 11081.
-- **Prod:** `/api/deals` returns deal 11081 (Caresmith, from tick 0924m) as its newest item. Prod and DB match.
+- **Prod:** `/api/deals` returns deal 11081 (Caresmith, from tick 0925a) as its newest item. Prod and DB match.
 - **Sitemap:** `sitemap.xml` lists 10047 URLs.
 
 ## CEO audit (checked against the DB)
 - **PENDING_REVIEW:** 0 deals.
 - **Null price / null image:** 0 / 0.
 - **Posts:** 327 in total. None is missing a cover or SEO fields.
-- **Posts per day (IST):** 09-16=3, 09-17=3, 09-18=3, 09-19=3, 09-20=2, 09-21=1, 09-22=3, 09-23=2, 09-24=3. No day at 0, none over the cap of 4.
+- **Posts per day (IST):** 09-16=3, 09-17=3, 09-18=3, 09-19=3, 09-20=2, 09-21=1, 09-22=3, 09-23=2, 09-24=3 (09-25 had just begun at 0; blog cron covers it). No finished day at 0, none over the cap of 4.
 - **Broadcast cursor:** re-read from the file, lastId is 11081, the same as the highest deal id. It is fully caught up.
 - **Git:** 0 commits waiting to be pushed.
 
