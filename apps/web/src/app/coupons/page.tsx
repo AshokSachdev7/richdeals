@@ -9,16 +9,16 @@ import { HubBullets, HubFaq, newestUpdated } from "@/components/HubExplainer";
 import { SITE_NAME, absUrl, itemListSchema, breadcrumbSchema } from "@/lib/site";
 
 const BULLETS = [
-  { label: "What's here", text: "live coupon and promo-code offers from Amazon, Flipkart, Myntra and other Indian stores." },
-  { label: "How to use", text: "open a listing, copy the code, and apply it in the store's promo-code box before payment." },
-  { label: "If a code fails", text: "check the offer terms on the store page — most codes are limited by product, minimum cart value, payment method or first-order status." },
+  { label: "What's here", text: "live deals that carry an extra coupon on top of the sale price — mostly Amazon clip coupons, plus bank and store offers." },
+  { label: "How to use", text: "open a listing, go to the product page, tick the coupon box under the price, then add to cart — the coupon comes off at checkout." },
+  { label: "Price shown", text: "the listed price is the verified price before the coupon; the coupon note on each deal says how much extra comes off." },
 ];
 
 const FAQ = [
-  { q: "Are these coupon codes verified?", a: "Each code here comes from the store's own offer and is listed with the terms we saw when it was added. Stores can pull or change a code at any time, so check the discount in your cart before you pay." },
-  { q: "How do I use a coupon code?", a: "Open the listing, copy the code, go to the store, add the product to your cart, and paste the code into the promo-code box at checkout before completing payment." },
-  { q: "Why didn't my code work?", a: "Most codes are restricted by product, minimum cart value, payment method or first-order status. If the discount does not apply, the offer terms on the store page name the restriction." },
-  { q: "How often are coupons updated?", a: "New codes are added through the day as they are found. The date above the list is when the newest listing on this page was added." },
+  { q: "What is an Amazon clip coupon?", a: "A clip coupon is an extra discount shown as a checkbox under the price on an Amazon product page. Tick it before adding the item to your cart and the amount is taken off at checkout — no code to type." },
+  { q: "Is the price on this page before or after the coupon?", a: "Before. We list the price we verified on the product page; the coupon note on each deal says how much more the coupon takes off. Coupons we could not confirm are marked as claimed, not verified." },
+  { q: "Why didn't the coupon apply?", a: "Clip coupons run out, are limited to one per account, or apply only to a specific seller or size. If the checkbox is gone from the product page, the coupon has ended." },
+  { q: "How often are coupon deals updated?", a: "New coupon deals are added through the day as they are found. The date above the list is when the newest listing on this page was added." },
 ];
 
 export const dynamic = "force-dynamic";
@@ -29,19 +29,19 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   // Paged variants are crawl paths to older coupons, not index targets.
   const { cursor } = await searchParams;
   return {
-    title: "Coupon Codes Today — Amazon, Flipkart & More",
-    description: `Verified coupon codes and promo offers today from Amazon, Flipkart, Myntra and more Indian stores — copy, paste and save on ${SITE_NAME}. Tested and updated daily.`,
+    title: "Amazon Coupons Today – Clip Coupon Deals in India",
+    description: `Amazon clip coupons and extra-coupon deals in India today — price-checked products with an extra coupon on top of the sale price, updated daily on ${SITE_NAME}.`,
     robots: cursor ? { index: false, follow: true } : { index: true, follow: true },
     alternates: { canonical: absUrl("/coupons") },
-    openGraph: { title: "Coupon Codes Today — Amazon, Flipkart & More", description: `Verified coupon codes and promo offers today from Amazon, Flipkart, Myntra and more Indian stores on ${SITE_NAME}.`, url: absUrl("/coupons"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
-    twitter: { card: "summary_large_image", title: "Coupon Codes Today — Amazon, Flipkart & More" },
+    openGraph: { title: "Amazon Coupons Today – Clip Coupon Deals", description: `Price-checked deals with an extra coupon on top, updated daily on ${SITE_NAME}.`, url: absUrl("/coupons"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", title: "Amazon Coupons Today – Clip Coupon Deals" },
   };
 }
 
 export default async function CouponsPage({ searchParams }: Props) {
   const { sort, cursor } = await searchParams;
   const { items, nextCursor } = await getDeals({
-    type: "COUPON",
+    coupon: true, // ponytail: no deal is typed COUPON; "coupon" = has a couponNote
     sort,
     cursor: cursor ? Number(cursor) : undefined,
     limit: 40,
@@ -52,11 +52,11 @@ export default async function CouponsPage({ searchParams }: Props) {
       <JsonLd data={breadcrumbSchema(crumbs)} />
       <JsonLd data={itemListSchema(items.map((d) => `/${d.slug}`))} />
       <Breadcrumbs items={crumbs} />
-      <h1 className="mb-1 text-2xl font-extrabold">Coupon Codes Today</h1>
+      <h1 className="mb-1 text-2xl font-extrabold">Amazon Coupons &amp; Clip Coupon Deals Today</h1>
       <p className="mb-4 max-w-2xl text-sm leading-relaxed text-gray-600">
-        Working promo codes and discount coupons for Amazon, Flipkart, Myntra and more Indian stores — every code
-        here is tested and updated daily, so you can copy, paste and save at checkout without hunting for one that
-        still works.
+        Deals with an extra coupon on top of the sale price, mostly Amazon clip coupons. Each price below was
+        checked on the product page when listed; the coupon note on the deal says how much more comes off when
+        you tick the coupon box before adding to cart.
       </p>
       <HubBullets bullets={BULLETS} updated={newestUpdated(items)} />
       <div className="mb-5 flex justify-end">

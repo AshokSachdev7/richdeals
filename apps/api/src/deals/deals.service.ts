@@ -35,6 +35,7 @@ export interface DealListQuery {
   limit?: number;
   sort?: string;
   maxPrice?: number;
+  coupon?: boolean;
 }
 
 @Injectable()
@@ -46,6 +47,7 @@ export class DealsService {
     if (q.feed === 'hot') where.isHot = true;
     if (q.feed === 'super') where.isSuper = true;
     if (q.maxPrice && q.maxPrice > 0) where.price = { gt: 0, lte: q.maxPrice };
+    if (q.coupon) where.AND = [{ couponNote: { not: null } }, { NOT: { couponNote: '' } }];
     if (q.store) where.store = { slug: q.store };
     if (q.category) where.categories = { some: { category: { slug: q.category } } };
     if (q.q && q.q.trim()) {

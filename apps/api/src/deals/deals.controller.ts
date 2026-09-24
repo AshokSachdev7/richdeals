@@ -16,6 +16,7 @@ export class DealsController {
     @Query('limit') limit?: string,
     @Query('sort') sort?: string,
     @Query('maxPrice') maxPrice?: string,
+    @Query('coupon') coupon?: string,
   ): Promise<Paginated<DealDTO>> {
     return this.deals.list({
       feed: feed ?? 'latest',
@@ -26,6 +27,7 @@ export class DealsController {
       limit: limit ? Number(limit) : undefined,
       sort,
       maxPrice: maxPrice ? Number(maxPrice) : undefined,
+      coupon: coupon === '1',
     });
   }
 

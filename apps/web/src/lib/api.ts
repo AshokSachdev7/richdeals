@@ -34,6 +34,7 @@ export interface DealQuery {
   feed?: DealFeed;
   type?: DealType;
   maxPrice?: number; // rupees, inclusive (powers /freebies)
+  coupon?: boolean; // only deals with a coupon note (powers /coupons)
   store?: string; // store slug
   categoryType?: "shopping-category" | "shopping-site";
   category?: string; // category slug
@@ -58,6 +59,7 @@ export function getDeals(params: DealQuery = {}): Promise<Paginated<DealDTO>> {
       feed: params.feed,
       type: params.type,
       maxPrice: params.maxPrice,
+      coupon: params.coupon ? 1 : undefined,
       store: params.store,
       categoryType: params.categoryType,
       category: params.category,
