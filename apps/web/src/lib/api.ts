@@ -33,6 +33,7 @@ async function apiGet<T>(path: string, fallback: T, revalidate: number = 300): P
 export interface DealQuery {
   feed?: DealFeed;
   type?: DealType;
+  maxPrice?: number; // rupees, inclusive (powers /freebies)
   store?: string; // store slug
   categoryType?: "shopping-category" | "shopping-site";
   category?: string; // category slug
@@ -56,6 +57,7 @@ export function getDeals(params: DealQuery = {}): Promise<Paginated<DealDTO>> {
     `/deals${qs({
       feed: params.feed,
       type: params.type,
+      maxPrice: params.maxPrice,
       store: params.store,
       categoryType: params.categoryType,
       category: params.category,
