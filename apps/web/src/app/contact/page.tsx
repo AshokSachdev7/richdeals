@@ -4,8 +4,9 @@ import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact Us",
-  description: `Get in touch with ${SITE_NAME} — report a dead deal or a wrong price, ask about our affiliate disclosure, or send a partnership enquiry.`,
+  description: `Get in touch with ${SITE_NAME} — report a dead deal or a wrong price, ask about our affiliate disclosure, or send a partnership enquiry. Reach us on Telegram too.`,
   alternates: { canonical: absUrl("/contact") },
+  openGraph: { title: "Contact Us" },
 };
 
 const TELEGRAM = "https://t.me/richdealsindia";

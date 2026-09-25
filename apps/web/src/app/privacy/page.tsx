@@ -4,8 +4,9 @@ import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: `How ${SITE_NAME} collects, uses and protects your information, including cookies and third-party advertising.`,
+  description: `How ${SITE_NAME} collects, uses and protects your information, including cookies, analytics and third-party advertising, and how you can opt out of tracking.`,
   alternates: { canonical: absUrl("/privacy") },
+  openGraph: { title: "Privacy Policy" },
 };
 
 export default function PrivacyPage() {

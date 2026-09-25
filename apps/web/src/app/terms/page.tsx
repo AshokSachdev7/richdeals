@@ -4,8 +4,9 @@ import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
-  description: `The terms governing your use of ${SITE_NAME} — a deals and coupons aggregator.`,
+  description: `The terms governing your use of ${SITE_NAME}, a deals and coupons aggregator for India: how prices and stock can change, and how our affiliate links work.`,
   alternates: { canonical: absUrl("/terms") },
+  openGraph: { title: "Terms of Use" },
 };
 
 export default function TermsPage() {

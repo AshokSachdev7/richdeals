@@ -4,8 +4,9 @@ import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Affiliate Disclosure",
-  description: `${SITE_NAME} earns affiliate commissions on some outbound links. Here's how that works.`,
+  description: `${SITE_NAME} earns affiliate commissions on some outbound links to Amazon, Flipkart and other Indian stores. Here's how it works and why it costs you nothing extra.`,
   alternates: { canonical: absUrl("/disclosure") },
+  openGraph: { title: "Affiliate Disclosure" },
 };
 
 export default function DisclosurePage() {

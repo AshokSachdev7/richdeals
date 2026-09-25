@@ -77,6 +77,24 @@ export function breadcrumbSchema(crumbs: { name: string; href: string }[]) {
   };
 }
 
+// Keep leading segments until the name is ≥15 chars, so a short prefix
+// ("Myntra | …", "Amazon Brand - …", "Mattress | …") isn't mistaken for the
+// whole product name.
+function headSegments(s: string, sep: RegExp, join: string): string {
+  const parts = s.split(sep);
+  let out = parts[0].trim();
+  for (let i = 1; i < parts.length && out.length < 15; i++) out = `${out}${join}${parts[i].trim()}`;
+  return out;
+}
+
+// Strip our appended " at ₹X – Store" tail and the pipe/dash marketing tail.
+function cleanDealName(title: string): string {
+  const s = title.replace(/\s+(?:at|@)\s*₹?[\d,]+.*$/i, ""); // + any trailing "(N% Off)"
+  return headSegments(headSegments(s, /\|/, " "), /\s[–-]\s/, " - ")
+    .replace(/[,\s]+$/, "")
+    .trim();
+}
+
 // Build an SEO-friendly <title> from a deal: clean product name + price +
 // discount. Strips our appended " at ₹X – Store", the messy pipe/dash marketing
 // tail, and caps length so Google doesn't truncate. Runs at render, so it
@@ -84,12 +102,7 @@ export function breadcrumbSchema(crumbs: { name: string; href: string }[]) {
 export function dealSeoTitle(
   deal: Pick<DealDTO, "title" | "price" | "discountPct" | "mrp"> & { store: { name: string } },
 ): string {
-  let name = deal.title
-    .replace(/\s+(?:at|@)\s*₹?[\d,]+.*$/i, "") // drop " at ₹X – Amazon" + any trailing "(N% Off)" tail
-    .split("|")[0]
-    .split(/\s[–-]\s/)[0]
-    .replace(/[,\s]+$/, "")
-    .trim();
+  let name = cleanDealName(deal.title);
   const disc = discountOf(deal);
   const price = deal.price != null ? ` @ ${formatINR(deal.price)}` : "";
   const off = disc != null ? ` (${disc}% Off)` : "";
@@ -143,13 +156,7 @@ export function dealIndexable(
 export function dealProductName(
   deal: Pick<DealDTO, "title">,
 ): string {
-  const name = deal.title
-    .replace(/\s+(?:at|@)\s*₹?[\d,]+.*$/i, "")
-    .split("|")[0]
-    .split(/\s[–-]\s/)[0]
-    .replace(/[,\s]+$/, "")
-    .trim();
-  return name || deal.title;
+  return cleanDealName(deal.title) || deal.title;
 }
 
 // Rough product-category detection from the title, so the FAQ can ask the
