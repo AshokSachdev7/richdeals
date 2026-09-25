@@ -1,4 +1,4 @@
-# SCHEMA-AUDIT, 2026-09-26 (10:10 IST)
+# SCHEMA-AUDIT, 2026-09-26 (04:40 IST)
 
 **0 errors, 0 missing blocks and 0 priceless Offers across 19 URLs.** Every URL returned HTTP 200.
 
@@ -60,7 +60,7 @@
 
 - **Deals:** 11,033 LIVE, 0 PENDING_REVIEW, 0 with a null price, 0 with a null image. Max id 11380.
 - **Posts:** 332, with 0 missing a cover and 0 missing SEO fields.
-- **Posts per IST day, 09-17 → 09-26:** 2/3/3/2/1/3/2/3/4/1. No day is 0. It is 10:10 IST, and the CONTENT-SEO cron runs at about 11:39.
+- **Posts per IST day, 09-17 → 09-26:** 2/3/3/2/1/3/2/3/4/1. No day is 0. It is 04:40 IST, and the CONTENT-SEO cron runs at about 06:09.
 - **Broadcast cursor:** 11380, equal to the max id.
 - **Prod:** all 7 endpoints return 200. The sitemap has 10,351 URLs.
 - **Git:** 0 unpushed commits before this report.

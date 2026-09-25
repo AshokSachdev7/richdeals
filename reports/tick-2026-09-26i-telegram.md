@@ -1,4 +1,4 @@
-# Telegram tick 2026-09-26i (08:33 IST)
+# Telegram tick 2026-09-26i (03:03 IST)
 
 **0 deals pushed.** Every deal link in the sidebar was already in `data/tg-multi-seen.json`. With nothing pushed, there was no IndexNow ping.
 

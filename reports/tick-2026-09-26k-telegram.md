@@ -1,12 +1,12 @@
-# Telegram tick 2026-09-26k (09:33 IST)
+# Telegram tick 2026-09-26k (04:03 IST)
 
 **0 deals pushed.** The sidebar is unchanged since tick 0926i: every deal link is already in `data/tg-multi-seen.json`. With nothing pushed, there was no IndexNow ping.
 
 ## Is the Telegram client live?
 
 Yes. The source groups have been quiet for hours, so I checked before calling the sweep empty:
-- The RichDeals row shows 02:34 UTC, which is our own Feetmax broadcast (IFS 0926h, pushed around 08:03 IST). The page is receiving updates in real time.
-- The newest post from a source group is SB Loots at 01:31 UTC (07:01 IST), the notification-settings post, which is not a deal. The browser clock reads UTC.
+- The RichDeals row shows 02:34 IST, which is our own Feetmax broadcast (IFS 0926h, pushed around 02:33 IST). The page is receiving updates in real time.
+- The newest post from a source group is SB Loots at 01:31 IST, the notification-settings post, which is not a deal. Sidebar times are local IST.
 
 ## Sweep (13 groups)
 
