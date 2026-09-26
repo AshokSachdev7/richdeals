@@ -51,6 +51,7 @@ export function dealItemListSchema(
         product.offers = {
           "@type": "Offer",
           priceCurrency: "INR",
+          eligibleRegion: { "@type": "Country", name: "IN" },
           price: String(d.price),
           ...(d.status === "EXPIRED" ? {} : { priceValidUntil: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10) }),
           validFrom: d.createdAt.slice(0, 10),

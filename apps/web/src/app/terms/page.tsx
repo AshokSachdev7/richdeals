@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Terms of Use",
   description: `The terms governing your use of ${SITE_NAME}, a deals and coupons aggregator for India: how prices and stock can change, and how our affiliate links work.`,
   alternates: { canonical: absUrl("/terms") },
-  openGraph: { title: "Terms of Use", url: absUrl("/terms"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+  openGraph: { locale: "en_IN", title: "Terms of Use", url: absUrl("/terms"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
 };
 
 export default function TermsPage() {

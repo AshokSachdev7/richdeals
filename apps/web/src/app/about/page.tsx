@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "About Us",
   description: `${SITE_NAME} — ${SITE_TAGLINE}. How we find, verify and publish genuine price drops from Amazon, Flipkart and 100+ Indian stores every day.`,
   alternates: { canonical: absUrl("/about") },
-  openGraph: { title: "About Us", url: absUrl("/about"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+  openGraph: { locale: "en_IN", title: "About Us", url: absUrl("/about"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
 };
 
 export default function AboutPage() {

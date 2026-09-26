@@ -44,6 +44,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
         : { index: true, follow: true },
     alternates: { canonical: absUrl(`/stores/${store.slug}`) },
     openGraph: {
+      locale: "en_IN",
       title: `${title} | ${SITE_NAME}`,
       description,
       type: "website",

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Affiliate Disclosure",
   description: `${SITE_NAME} earns affiliate commissions on some outbound links to Amazon, Flipkart and other Indian stores. Here's how it works and why it costs you nothing extra.`,
   alternates: { canonical: absUrl("/disclosure") },
-  openGraph: { title: "Affiliate Disclosure", url: absUrl("/disclosure"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+  openGraph: { locale: "en_IN", title: "Affiliate Disclosure", url: absUrl("/disclosure"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
 };
 
 export default function DisclosurePage() {

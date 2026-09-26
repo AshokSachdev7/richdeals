@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     types: { "application/rss+xml": absUrl("/feed.xml") },
   },
   openGraph: {
+    locale: "en_IN",
     type: "website",
     siteName: SITE_NAME,
     url: SITE_URL,
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     name: SITE_NAME,
     url: SITE_URL,
     logo: absUrl("/logo.png"),
+    areaServed: { "@type": "Country", name: "India" },
     description: `${SITE_NAME} is an Indian deals, coupons and freebies aggregator publishing original, price-verified discount write-ups across Amazon, Flipkart, Myntra, Ajio, Nykaa and 100+ stores.`,
     // Only real, resolving profiles — a fabricated sameAs weakens the entity graph.
     sameAs: [
@@ -74,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "@type": "WebSite",
     name: SITE_NAME,
     url: SITE_URL,
+    inLanguage: "en-IN",
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -85,7 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html lang="en" className={`${rubik.variable} ${nunito.variable}`}>
+    <html lang="en-IN" className={`${rubik.variable} ${nunito.variable}`}>
       <body>
         {/* AdSense loader + site verification. Publisher id matches
             public/ads.txt — without this tag the application cannot be

@@ -66,6 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     robots: { index: indexable, follow: true },
     alternates: { canonical },
     openGraph: {
+      locale: "en_IN",
       type: "website",
       url: canonical,
       title: `${seoTitle} | ${SITE_NAME}`,
@@ -154,6 +155,7 @@ export default async function DealPage({ params }: Props) {
           offers: {
             "@type": "Offer",
             priceCurrency: "INR",
+            eligibleRegion: { "@type": "Country", name: "IN" },
             price: String(offerPrice),
             priceValidUntil,
             validFrom,

@@ -31,7 +31,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     // not indexed — same pattern the store hubs use for cursor pages.
     robots: page > 1 ? { index: false, follow: true } : { index: true, follow: true },
     alternates: { canonical: url },
-    openGraph: { title, description: BLOG_DESC, url, type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+    openGraph: { locale: "en_IN", title, description: BLOG_DESC, url, type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description: BLOG_DESC },
   };
 }

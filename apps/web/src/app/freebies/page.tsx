@@ -33,7 +33,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     description: `Freebies and near-free deals in India, every one ₹99 or less and price-checked when listed — Amazon, Flipkart and more, updated through the day on ${SITE_NAME}.`,
     robots: cursor ? { index: false, follow: true } : { index: true, follow: true },
     alternates: { canonical: absUrl("/freebies") },
-    openGraph: { title: "Freebies Under ₹99 in India Today", description: `Near-free deals, every one ₹99 or less, updated today on ${SITE_NAME}.`, url: absUrl("/freebies"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+    openGraph: { locale: "en_IN", title: "Freebies Under ₹99 in India Today", description: `Near-free deals, every one ₹99 or less, updated today on ${SITE_NAME}.`, url: absUrl("/freebies"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: "Freebies Under ₹99 in India Today" },
   };
 }
