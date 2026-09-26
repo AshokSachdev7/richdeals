@@ -12,7 +12,9 @@ const KEY = '33f3a9d63ca15676bbd90586ea80e65f', BASE = 'https://richdeals.in';
 
 const argv = process.argv.slice(2);
 const rawPaths = argv[0] === '--paths';
-const args = rawPaths ? argv.slice(1) : argv;
+// Git Bash (MSYS) rewrites a leading-slash arg like /offers into C:/Program Files/Git/offers before node sees it, and
+// IndexNow then 422s the whole batch ("URLs are not related to your verified domain"). Undo that rewrite here.
+const args = (rawPaths ? argv.slice(1) : argv).map((a) => a.replace(/^[A-Za-z]:\/Program Files\/Git(?=\/)/, ''));
 if (!args.length) { console.error('usage: node scripts/indexnow-ping.mjs <deal-slug...>'); process.exit(1); }
 
 // Deal pages live at the site root, so a slug IS its path. Listing pages get
