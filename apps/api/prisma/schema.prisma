@@ -121,6 +121,7 @@ model Click {
   dealId  Int
   ts      DateTime @default(now())
   referer String?
+  ua      String?
   deal    Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
 
   @@index([dealId, ts])
