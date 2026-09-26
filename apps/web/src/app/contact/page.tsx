@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Contact Us",
   description: `Get in touch with ${SITE_NAME} — report a dead deal or a wrong price, ask about our affiliate disclosure, or send a partnership enquiry. Reach us on Telegram too.`,
   alternates: { canonical: absUrl("/contact") },
-  openGraph: { title: "Contact Us" },
+  openGraph: { title: "Contact Us", url: absUrl("/contact"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
 };
 
 const TELEGRAM = "https://t.me/richdealsindia";
