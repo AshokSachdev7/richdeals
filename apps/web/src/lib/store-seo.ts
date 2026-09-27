@@ -20,7 +20,7 @@ export const STORE_SEO: Record<string, StoreSeo> = {
     domain: "amazon.in",
     seoTitle: "Amazon Offers & Coupons Today — Deals Live Now",
     seoDesc:
-      "Amazon offers and coupon codes today, hand-picked and verified daily. See the biggest live Amazon India discounts, deal of the day picks and how to stack bank offers.",
+      "Amazon offers and coupon codes today, hand-picked and verified daily. See the biggest live Amazon India discounts, deal of the day picks and bank offer tips.",
     intro: [
       "Amazon India offers today are gathered here in one place: every deal on this page is a live, verified Amazon listing with the current price and discount pulled straight from the product page, refreshed through the day. Instead of scrolling endless category pages, you get the biggest genuine markdowns — Deal of the Day, Lightning Deals and coupon-linked prices — filtered so you skip the padded MRPs.",
       "The fastest way to save more on Amazon is to stack: apply any on-page coupon, then pay with a card running a bank offer or use Amazon Pay for cashback. Prices move fast and stock on the sharpest deals sells out, so treat the price you see as today's price — check back tomorrow for a fresh set.",
@@ -37,7 +37,7 @@ export const STORE_SEO: Record<string, StoreSeo> = {
     domain: "flipkart.com",
     seoTitle: "Flipkart Offers Today — Deals & Coupons Live Now",
     seoDesc:
-      "Flipkart offers today, verified and updated daily. Browse the biggest live Flipkart deals, discount coupons and how to combine bank offers and SuperCoins to save more.",
+      "Flipkart offers today, verified and updated daily. Browse the biggest live Flipkart deals, discount coupons and how to stack bank offers and SuperCoins.",
     intro: [
       "Flipkart offers today are collected on this page so you see the genuine discounts first: every deal is a live Flipkart listing with the current price and percentage off read straight from the product page and refreshed through the day. You skip the inflated struck-through MRPs and get the markdowns that are actually worth buying right now.",
       "To squeeze the most out of a Flipkart deal, combine it with a running bank or card offer at checkout and redeem SuperCoins where they apply. The sharpest deals — flash prices and sale-event drops — go out of stock fast, so the price you see today is the one to act on.",

@@ -40,7 +40,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     description,
     robots: cursor ? { index: false, follow: true } : { index: true, follow: true },
     alternates: { canonical: absUrl(`/category/${type}/${slug}`) },
-    openGraph: { locale: "en_IN", title: `${title} | ${SITE_NAME}`, description, type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+    openGraph: { siteName: SITE_NAME, locale: "en_IN", title: `${title} | ${SITE_NAME}`, description, type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
   };
 }
 

@@ -66,6 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     robots: { index: indexable, follow: true },
     alternates: { canonical },
     openGraph: {
+      siteName: SITE_NAME,
       locale: "en_IN",
       type: "website",
       url: canonical,
