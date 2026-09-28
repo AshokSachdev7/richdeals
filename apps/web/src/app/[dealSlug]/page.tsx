@@ -47,10 +47,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const priceBit = deal.price != null ? ` @ ${formatINR(deal.price)}` : "";
   // Cut at a word boundary — a hard slice(0,160) was ending descriptions
   // mid-word ("...or a col"), which AI snippet generation skips over.
-  const raw = deal.description || "";
+  // Short/missing copy (53-67c, or the full 200c+ marketplace title) is padded
+  // with the clean name + price tail, then capped — keeps every deal in 110-160c.
+  const tail = `${dealProductName(deal)}${priceBit}${discount != null ? ` — ${discount}% off` : ""} at ${deal.store.name}. Grab this ${deal.dealType.toLowerCase()} on ${SITE_NAME}.`;
+  const raw = (deal.description || "").split("\n")[0].trim();
+  const full = raw.length >= 110 ? raw : raw ? `${raw.replace(/[.\s]+$/, "")}. ${tail}` : tail;
   const description =
-    (raw.length > 160 ? raw.slice(0, 160).replace(/\s+\S*$/, "").replace(/[\s,;:–-]+$/, "") + "…" : raw) ||
-    `${deal.title}${priceBit}${discount != null ? ` — ${discount}% off` : ""} at ${deal.store.name}. Grab this ${deal.dealType.toLowerCase()} on ${SITE_NAME}.`;
+    full.length > 160 ? full.slice(0, 160).replace(/\s+\S*$/, "").replace(/[\s,;:–—-]+$/, "") + "…" : full;
   const canonical = absUrl(`/${deal.slug}`);
   const seoTitle = dealSeoTitle(deal);
 
