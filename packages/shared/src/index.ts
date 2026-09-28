@@ -41,6 +41,7 @@ export interface DealDTO {
   store: StoreDTO;
   categories: CategoryDTO[];
   priceHistory: { price: number; postedAt: string }[];
+  productId: string | null; // ASIN / Flipkart pid — emitted as Product.sku
   expiresAt: string | null;
   createdAt: string;
   // NOTE: affiliateUrl is NOT exposed raw. Web links to /out/:id on the API,

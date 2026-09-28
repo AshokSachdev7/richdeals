@@ -154,6 +154,8 @@ export default async function DealPage({ params }: Props) {
           name: productName,
           image: [deal.image],
           description: deal.description || deal.title,
+          // Marketplace id (ASIN / Flipkart pid) — real, stable, recommended by Merchant Listings.
+          ...(deal.productId ? { sku: deal.productId } : {}),
           // NOTE: the marketplace (Amazon/Flipkart) is the seller, not the brand —
           // real manufacturer is unknown for aggregated deals, so brand is omitted.
           offers: {

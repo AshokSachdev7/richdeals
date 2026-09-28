@@ -18,6 +18,7 @@ type DealWithRelations = {
   status: DealDTO['status'];
   isSuper: boolean;
   isHot: boolean;
+  productId: string | null;
   expiresAt: Date | null;
   createdAt: Date;
   store: { id: number; name: string; slug: string; logo: string | null };
@@ -64,6 +65,7 @@ export function toDealDTO(deal: DealWithRelations): DealDTO {
       price: p.price,
       postedAt: p.postedAt.toISOString(),
     })),
+    productId: deal.productId,
     expiresAt: deal.expiresAt ? deal.expiresAt.toISOString() : null,
     createdAt: deal.createdAt.toISOString(),
     outUrl: `${apiBase()}/out/${deal.id}`,
