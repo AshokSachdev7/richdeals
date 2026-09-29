@@ -118,7 +118,10 @@ export class DealsService {
     let created = false;
     if (existing) {
       id = existing.id;
-      await this.prisma.deal.update({ where: { id }, data });
+      // Never rewrite the slug of an existing deal: it is the indexed URL, and a
+      // re-ingest under a new slug used to 404 the old page (SEO loss).
+      const { slug: _keep, ...update } = data;
+      await this.prisma.deal.update({ where: { id }, data: update });
       // log price history only when the price actually moved
       if (data.price != null && existing.price !== data.price) {
         await this.prisma.priceHistory.create({ data: { dealId: id, price: data.price } });

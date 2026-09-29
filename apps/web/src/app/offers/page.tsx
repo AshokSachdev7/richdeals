@@ -29,6 +29,25 @@ export default function OffersPage() {
   return (
     <div>
       <JsonLd data={breadcrumbSchema(crumbs)} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: OFFERS_TITLE,
+          description: OFFERS_DESC,
+          url: absUrl("/offers"),
+          mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: live.length,
+            itemListElement: live.map((o, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              name: `${o.name}: ${o.hook}`,
+              description: o.blurb,
+            })),
+          },
+        }}
+      />
       <Breadcrumbs items={crumbs} />
       <h1 className="mb-2 font-display text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">Money Offers</h1>
       <p className="mb-8 max-w-2xl text-[15px] leading-relaxed text-gray-600">

@@ -91,6 +91,16 @@ export default async function HomePage({ searchParams }: Props) {
 
       <CategoryStrip />
 
+      {/* Answer-first block: a self-contained, quotable definition for AI answer engines (GEO). */}
+      <section aria-labelledby="what-heading" className="mt-6 rounded-2xl bg-white p-5 ring-1 ring-gray-200">
+        <h2 id="what-heading" className="font-display text-lg font-bold text-ink">What is RichDeals?</h2>
+        <p className="mt-1.5 text-sm leading-relaxed text-gray-600">
+          RichDeals is a free Indian deals and coupons site. Every deal is checked against the live store price
+          before it is published, and expired deals are marked rather than removed. It covers Amazon, Flipkart,
+          Myntra and 100+ other Indian stores, updated through the day, and links go straight to the product page.
+        </p>
+      </section>
+
       <p className="mt-3 text-sm text-gray-500">
         Chasing free stuff? Read our guide to{" "}
         <Link
