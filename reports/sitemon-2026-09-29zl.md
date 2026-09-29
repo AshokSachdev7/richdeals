@@ -23,3 +23,9 @@
 | Unpushed commits | 0 before this report |
 
 Result: **7/7 green, 0 rot, nothing to fix.**
+
+## Flag: DesiDime source is not running
+- **Task Scheduler:** only `\richdeals-tg-broadcast` is registered. No DesiDime task exists, although CLAUDE.md says `ingest-desidime.mjs` should run at `7,37 * * * *` as an external cron.
+- **Last Cuelinks deal:** id 11619, created 2026-09-27 at 22:05 IST. Cuelinks covers the non-Amazon/Flipkart stores, so there has been no DesiDime yield for about 2 days.
+- **Newest deal of any kind:** id 11924 at 20:03 IST today. The 20:29 IFS tick and the 21:04 Telegram tick each found 0 valid new deals, so nothing is stuck. The gap only means lower yield.
+- **Not fixed:** I did not register the task. That is a persistent OS-level scheduler change, and I can't tell whether the source was dropped on purpose. The owner needs to confirm whether it should be re-enabled.
