@@ -113,9 +113,9 @@ export default async function CategoriesPage() {
                   </svg>
                 </span>
                 <div className="mt-4">
-                  <span className="block font-display text-base font-bold leading-tight text-ink group-hover:text-brand">
+                  <h2 className="block font-display text-base font-bold leading-tight text-ink group-hover:text-brand">
                     {c.name}
-                  </span>
+                  </h2>
                   <span className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-gray-400 transition-colors group-hover:text-brand">
                     Shop deals
                     <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2">

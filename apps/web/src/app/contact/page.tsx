@@ -3,10 +3,10 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
+  title: "Contact Us — Report a Deal or Get Help",
   description: `Get in touch with ${SITE_NAME} — report a dead deal or a wrong price, ask about our affiliate disclosure, or send a partnership enquiry. Reach us on Telegram too.`,
   alternates: { canonical: absUrl("/contact") },
-  openGraph: { siteName: SITE_NAME, locale: "en_IN", title: "Contact Us", url: absUrl("/contact"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+  openGraph: { siteName: SITE_NAME, locale: "en_IN", title: "Contact Us — Report a Deal or Get Help", url: absUrl("/contact"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
 };
 
 const TELEGRAM = "https://t.me/richdealsindia";

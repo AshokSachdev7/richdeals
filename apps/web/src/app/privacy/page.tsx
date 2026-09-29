@@ -3,10 +3,10 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
+  title: "Privacy Policy — How We Handle Your Data",
   description: `How ${SITE_NAME} collects, uses and protects your information, including cookies, analytics and third-party advertising, and how you can opt out of tracking.`,
   alternates: { canonical: absUrl("/privacy") },
-  openGraph: { siteName: SITE_NAME, locale: "en_IN", title: "Privacy Policy", url: absUrl("/privacy"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
+  openGraph: { siteName: SITE_NAME, locale: "en_IN", title: "Privacy Policy — How We Handle Your Data", url: absUrl("/privacy"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
 };
 
 export default function PrivacyPage() {

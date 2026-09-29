@@ -53,7 +53,7 @@ export default async function StoresPage() {
                   </div>
                 )}
               </div>
-              <span className="text-sm font-medium">{s.name}</span>
+              <h2 className="text-sm font-medium">{s.name}</h2>
             </Link>
           ))}
         </div>
