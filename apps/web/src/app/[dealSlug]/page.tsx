@@ -51,7 +51,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // with the clean name + price tail, then capped — keeps every deal in 110-160c.
   const tail = `${dealProductName(deal)}${priceBit}${discount != null ? ` — ${discount}% off` : ""} at ${deal.store.name}. Grab this ${deal.dealType.toLowerCase()} on ${SITE_NAME}.`;
   const raw = (deal.description || "").split("\n")[0].trim();
-  const full = raw.length >= 110 ? raw : raw ? `${raw.replace(/[.\s]+$/, "")}. ${tail}` : tail;
+  const joined = raw.length >= 110 ? raw : raw ? `${raw.replace(/[.\s]+$/, "")}. ${tail}` : tail;
+  // Description-less deals with a short name still landed ~100c (159 live rows) — pad with the verify line.
+  const full = joined.length < 110 ? `${joined} Price checked on the live store page before listing.` : joined;
   const description =
     full.length > 160 ? full.slice(0, 160).replace(/\s+\S*$/, "").replace(/[\s,;:–—-]+$/, "") + "…" : full;
   const canonical = absUrl(`/${deal.slug}`);

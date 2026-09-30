@@ -3,7 +3,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { SITE_NAME, absUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Affiliate Disclosure",
+  title: "Affiliate Disclosure — How RichDeals Earns",
   description: `${SITE_NAME} earns affiliate commissions on some outbound links to Amazon, Flipkart and other Indian stores. Here's how it works and why it costs you nothing extra.`,
   alternates: { canonical: absUrl("/disclosure") },
   openGraph: { siteName: SITE_NAME, locale: "en_IN", title: "Affiliate Disclosure", url: absUrl("/disclosure"), type: "website", images: [{ url: absUrl("/og.png"), width: 1200, height: 630 }] },
