@@ -6,7 +6,7 @@
 - 3 Flipkart deals, tagged `affid=djhackraj`.
 
 The bulk push returned **count 20**. No row came back `created:false`, so no slug was rewritten. I read every price on the PDP:
-- **Amazon:** logged-in tab, reading `#corePrice`, `#availability` and add-to-cart.
+- **Amazon:** logged-in tab, reading price, `#availability` and add-to-cart.
 - **Flipkart:** ld+json in a browser tab, which showed price, InStock and rating.
 
 | Slug | Store | Price / MRP | Off |
@@ -33,9 +33,9 @@ The bulk push returned **count 20**. No row came back `created:false`, so no slu
 | dixcy-scott-full-sleeve-mens-thermal-top-tmlfa9geyxzy8s49 | Flipkart | ₹299 / 665 | 55% |
 
 ## Discovery
-- IFS listing pages 1–4 gave 127 slugs. 51 were new against the previous ticks.
+- 51 new IFS slugs against the previous ticks.
 - I dropped 7 before resolving:
-  - 6 multi-product "upto N% off" posts: all-brands kurta, royal-aquafresh, superdry, fyltr, hotstyle, aldo.
+  - 6 multi-product "upto N% off" posts.
   - 1 foot-patch item (health claim).
 - I resolved the other 44 via base64 `?rto=`.
 - 2 were already LIVE from today's telegram ticks: Luxor pen B0CCYPTT2K and Vaseline B08HN3N28W. **42 were fresh.**
@@ -44,7 +44,7 @@ The bulk push returned **count 20**. No row came back `created:false`, so no slu
 - **Amazon (14):**
   - acwo Twister 313: 3.2★
   - Kalaanj kurta, USPA briefs, Eitheo plush, Pepe jeans: no buyable price, no add-to-cart
-  - Plantex hooks, Cozyclad slippers, Duracell AAA 12pk, Lavish tealight: 3–5 ratings
+  - Plantex hooks, slippers, Duracell AAA 12pk, Lavish tealight: 3–5 ratings
   - Shiv trackpant 4pk: 0 ratings
   - Agaro puck screen, Gio watch: only 1 left
   - Wipro Vesta juicer: 3.5★
