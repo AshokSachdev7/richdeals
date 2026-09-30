@@ -47,7 +47,7 @@ const res = await fetch(
   {
     method: 'POST',
     headers: { authorization: `Bearer ${tok}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ startDate: iso(start), endDate: iso(end), dimensions: [DIM], rowLimit: ROWS }),
+    body: JSON.stringify({ startDate: iso(start), endDate: iso(end), dimensions: DIM.split(','), rowLimit: ROWS }),
   },
 );
 const j = await res.json();
@@ -59,6 +59,6 @@ console.log(`TOTAL  clicks=${tot.c}  impressions=${tot.i}  (top ${rows.length} r
 console.log('clicks  impr   pos   ctr%   ' + DIM);
 for (const r of rows) {
   console.log(
-    `${String(r.clicks).padStart(5)}  ${String(r.impressions).padStart(5)}  ${r.position.toFixed(1).padStart(5)}  ${(r.ctr * 100).toFixed(1).padStart(5)}   ${r.keys[0]}`,
+    `${String(r.clicks).padStart(5)}  ${String(r.impressions).padStart(5)}  ${r.position.toFixed(1).padStart(5)}  ${(r.ctr * 100).toFixed(1).padStart(5)}   ${r.keys.join(' | ')}`,
   );
 }

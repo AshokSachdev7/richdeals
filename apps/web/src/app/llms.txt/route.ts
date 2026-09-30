@@ -1,5 +1,6 @@
 import { getStores, getCategories, getPosts } from "@/lib/api";
 import { absUrl, SITE_NAME } from "@/lib/site";
+import { BEST_TOPICS } from "@/lib/best";
 import POST_REDIRECTS from "../../../post-redirects.json";
 
 // Always render live so a deploy-time API blip never caches an empty file.
@@ -53,6 +54,7 @@ ${SITE_NAME} publishes original deal write-ups (never copied), each with the cur
 - [Coupons](${absUrl("/coupons")})
 - [Freebies](${absUrl("/freebies")})
 - [How to get free samples & freebies in India (guide)](${absUrl("/blog/how-to-get-free-samples-freebies-india")})
+${BEST_TOPICS.map((t) => `- [${t.h1}](${absUrl(`/best/${t.slug}`)})`).join("\n")}
 - [Forum — community deal votes & reports](${absUrl("/forum")})
 - [Blog](${absUrl("/blog")})
 

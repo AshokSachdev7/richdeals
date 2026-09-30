@@ -140,6 +140,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <li><Link href="/categories" className="transition-colors hover:text-brand">Categories</Link></li>
                 <li><Link href="/stores" className="transition-colors hover:text-brand">Stores</Link></li>
                 <li><Link href="/coupons" className="transition-colors hover:text-brand">Coupons</Link></li>
+                <li><Link href="/best/football-under-500" className="transition-colors hover:text-brand">Football Under ₹500</Link></li>
+                <li><Link href="/best/dinner-sets" className="transition-colors hover:text-brand">Dinner Set Deals</Link></li>
                 <li><Link href="/blog" className="transition-colors hover:text-brand">Blog</Link></li>
                 <li><a href={absUrl("/feed.xml")} className="transition-colors hover:text-brand">RSS Feed</a></li>
               </ul>

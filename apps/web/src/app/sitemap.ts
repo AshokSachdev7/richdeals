@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getDeals, getStores, getCategories, getPosts } from "@/lib/api";
 import { SITE_URL, absUrl, dealIndexable } from "@/lib/site";
 import { COMPARISONS } from "@/lib/comparisons";
+import { BEST_TOPICS } from "@/lib/best";
 import { hasStoreSeo } from "@/lib/store-seo";
 import POST_REDIRECTS from "../../post-redirects.json";
 
@@ -41,6 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absUrl("/stores"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/coupons"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/freebies"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    ...BEST_TOPICS.map((t) => ({ url: absUrl(`/best/${t.slug}`), lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
     { url: absUrl("/blog"), lastModified: now, changeFrequency: "daily", priority: 0.6 },
     { url: absUrl("/compare"), lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: absUrl("/forum"), lastModified: now, changeFrequency: "hourly", priority: 0.6 },
