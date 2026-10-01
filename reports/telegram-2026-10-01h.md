@@ -6,7 +6,7 @@
 Every group's latest post was either already in `tg-multi-seen.json` (2,458 entries) or not a single-product deal:
 - **Already seen:** Dealzone CELLO falooda glasses (`link.amazon/B0a6jOfiH`), CoolzTricks `fkrt.cc/hg2mscp`, Rogerkart JBL ANC (`rogerkart.com/r/aPbzVrr`), Indian Cheap Deals handbag (`link.amazon/B05yvriRF`), Loot Deals 24x7 Syska power bank (`fkrt.co/l5KOxl`), Dealdost Nike (`amzn.to/4hvtna9`).
 - **Not a product:** SB Loots (notification-settings post), IFS Tips (ConfirmTkt PNR cashback), Hidden Loot (Supercoins challenge), OMG LOOTDEALS (video-earning promo), Online Shopping Deals (Nat Habit, a health/beauty spray that was already handled).
-- NonStopDeals and Deal Dibba sit below the rendered part of the sidebar; neither shows an unread post above the fold.
+- NonStopDeals and Deal Dibba were not among the 25 rendered sidebar rows, so their latest posts were not read this tick.
 
 ## CEO audit
 - Prod 7/7 return 200: `/`, `/offers`, `/blog`, `/sitemap.xml`, `/feed.xml`, `/llms.txt`, `/api/deals`
