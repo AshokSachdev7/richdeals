@@ -53,7 +53,8 @@ export default async function StoresPage() {
                   </div>
                 )}
               </div>
-              <h2 className="text-sm font-medium">{s.name}</h2>
+              {/* ponytail: card label, not a heading — 254 h2s flattened the outline */}
+              <p className="text-sm font-medium">{s.name}</p>
             </Link>
           ))}
         </div>
