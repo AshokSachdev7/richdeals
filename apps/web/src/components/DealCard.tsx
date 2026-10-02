@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { DealDTO } from "@deals/shared";
-import { formatINR, discountOf } from "@/lib/site";
+import { formatINR, discountOf, dealProductName } from "@/lib/site";
 import ProductImage from "./ProductImage";
 
 const STORE_LOGOS: Record<string, string> = {
@@ -131,7 +131,7 @@ export default function DealCard({ deal }: { deal: DealDTO }) {
             href={deal.outUrl}
             target="_blank"
             rel="sponsored nofollow noopener"
-            aria-label={`Shop ${deal.title} on ${deal.store.name}`}
+            aria-label={`Shop ${dealProductName(deal)} on ${deal.store.name}`}
             className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-lg bg-brand px-4 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-dark active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
           >
             Grab Deal
