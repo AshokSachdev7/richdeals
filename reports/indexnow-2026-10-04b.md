@@ -4,7 +4,7 @@
 
 ## What was submitted (6-hour window)
 
-- 5 deal pages created in the window: the 10-04c IFS batch tail and the DesiDime 1004c Milton set
+- 5 LIVE deal pages created in the last 6 hours (from a DB query on createdAt)
 - 1 post: `/blog/casserole-size-guide-rotis-per-litre-family-india`
 - `/sitemap.xml`, `/blog`, `/offers`, `/`
 
