@@ -21,7 +21,7 @@ Seen list: 2,760 → 2,762.
 
 | Check | Result |
 |---|---|
-| Posts today (IST) | 1. The cadence needs 1–2 more before midnight; the next blog cron (`9 */6`, 17:39 IST) covers it. |
+| Posts today (IST) | 1. The cadence needs 1–2 more before midnight; the next blog cron (`9 */6`) covers it. |
 | Coverless posts | 0 |
 | LIVE null price / null image | 0 / 0 |
 | PENDING_REVIEW | 0 |
