@@ -2,7 +2,7 @@
 
 **0 deals pushed.** No IndexNow ping because nothing was pushed.
 
-Stage 1 found 34 cards. 23 resolved to a single product, 6 were already in the DB, and 17 were fresh. All 17 were rejected after verification. 3 were new this tick; 14 were repeats from tick 10-10a, re-checked and still drifting.
+Stage 1 found 34 cards. 23 resolved to a single product, 6 were already in the DB, and 17 were fresh. All 17 were rejected after verification. 4 were new this tick; 13 were repeats from tick 10-10a, re-checked and still drifting.
 
 ## Rejected (new this tick)
 
