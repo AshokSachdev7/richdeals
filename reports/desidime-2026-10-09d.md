@@ -1,4 +1,4 @@
-# DESIDIME-INGEST tick 2026-10-09d (12:15 IST)
+# DESIDIME-INGEST tick 2026-10-09d (06:45 IST)
 
 Stage 1: 27 cards discovered, 14 junk/other dropped, 11 product-resolved, 2 already in DB, 9 fresh candidates.
 
