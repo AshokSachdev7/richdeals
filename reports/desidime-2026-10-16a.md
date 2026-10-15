@@ -1,48 +1,39 @@
-# DESIDIME 2026-10-16a (00:33 IST)
+# DESIDIME tick 2026-10-16a (~02:32 IST)
 
-**1 new deal pushed (bulk `count:1`, created). IndexNow HTTP 200 for 4 URLs.**
+**0 pushed. No IndexNow ping, because nothing was pushed.**
 
-## Stage 1
+Stage 1 (`ingest-desidime.mjs`) read 33 listing cards:
 
-`ingest-desidime.mjs` read the listing cards on `/new` and the homepage.
+- 15 were dropped as junk or non-product links: app-store promos (CRED, Paytm), Myntra listing/search pages, and a Flipkart Samsung TV whose link was a malformed `/p/itme`.
+- 11 resolved to a single product. 1 of those was already in the DB, leaving 10 fresh candidates.
 
-| Step | Count |
-|---|---|
-| Cards discovered | 35 |
-| Resolved to a single product | 13 |
-| Already in the live DB | 0 |
-| Dropped by the script | 6 non-Amazon rows: JioMart ×2 (no ld+json), Flipkart Bosch dryer + HP laptop (price drift), Myntra boAt 551 (price drift), Instamart Cello (out of stock) |
-| Amazon candidates | 7, checked in the logged-in Playwright tab (in-tab PDP fetch) |
+## Candidates
 
-## Pushed (1)
+| # | Product | Store | Card price | Result |
+|---|---|---|---|---|
+| 1 | Kokila No-PPD shampoo hair colour 400ml (B0CP5S82ZV) | Amazon | ₹697 | Rejected: price drift. PDP shows ₹712, in stock. That is ₹15 over the ±₹1 limit. |
+| 2 | Acer EK220Q E3 21.5" IPS monitor (B0CLY9HWHN) | Amazon | ₹5,220 | Rejected: price drift. PDP shows ₹5,799, in stock. ₹579 over, and at ₹5,799 vs ₹7,599 MRP this is an everyday price, not a deal. |
+| 3 | L'Oréal shampoo 800ml (B0F8R6FHYX) | Amazon | none | Rejected: no card price. "Follow the step" means a stacked coupon, which can't be verified. |
+| 4 | Hero bikes/scooties (B0FGY91JB5) | Amazon | ₹79,982 | Rejected: it is an SBI credit-card offer ("up to ₹12,500 off"), not a product price. |
+| 5 | Kalyan 2g 24K gold coin pendant (B0DHVWY583) | Amazon | ₹29,660 | Rejected: gold price moves daily. No MRP or discount, and a `priceValidUntil` of +14 days would be wrong. |
+| 6 | MMTC-PAMP 2g Lakshmi gold pendant (B0B7WZ55MT) | Amazon | ₹29,479 | Rejected: same reason as #5. |
+| 7 | Muthoot 2g Ganesha gold pendant (B0D2J9GX3J) | Amazon | ₹29,180 | Rejected: same reason as #5. |
+| 8 | Hauser XO gel pen, pack of 5 | JioMart | ₹5 | Rejected: no ld+json on the page, and it is ultra-low-ticket. |
+| 9 | Veeba tomato ketchup 1kg | JioMart | ₹49 | Rejected: no ld+json on the page, and it is grocery. |
+| 10 | Bosch 8kg tumble dryer (WMNGZSEVTHHQDGST) | Flipkart | ₹27,740 | Rejected: price drift (`verify=price-drift`). |
 
-| ID | Deal | Price | MRP | Verification | Prod |
-|---|---|---|---|---|---|
-| 13108 | Milton Prudent 350 Thermosteel bottle, 360 ml (B0F1T79B57) | ₹399 | ₹830 (52%) | `priceAmount` ₹399 = card price; PDP shows MRP ₹830; In stock + add-to-cart; no coupon | 200 in 0.26s |
+DesiDime card prices went stale within hours again. The PDP-verify gate did its job.
 
-- **Affiliate:** Amazon `tag=ashoksachdev-21`.
-- **Image:** the `Aqua Green 360 ml` hiRes, keyed by `landingAsinColor`.
-- **Copy:** an original rewrite, following the GEO playbook.
-
-## Rejected (6 Amazon)
-
-| Item | Card | PDP now | Reason |
-|---|---|---|---|
-| MMTC PAMP Lakshmi 2g gold pendant | ₹29,479 | ₹32,480 | Price drift |
-| Kalyan Ayodhya 2g gold coin | ₹29,660 | ₹32,590 | Price drift |
-| Muthoot Ganesha 2g gold pendant | ₹29,180 | ₹32,280 | Price drift |
-| Philips 75" 8100 QLED TV | ₹65,249 | ₹69,999 | Price drift |
-| Samsung 65" Mini LED TV | ₹58,290 | no price, no add-to-cart | Can't verify the price |
-| Hero bikes/scooters | ₹79,982 | n/a | The price needs an SBI card offer |
-
-## CEO audit
+## CEO audit (verified against the DB)
 
 | Check | Result |
 |---|---|
-| Posts today (IST, 10-16) | 0 at 00:33. The IST day is 33 minutes old, so this is not rot. The CONTENT-SEO cron came due at 00:09 while the session was busy and should run next. The next SITEMON tick checks that it landed. |
-| Posts with no cover / no SEO / deals with null price / null image / pending | 0 / 0 / 0 / 0 / 0 |
-| LIVE deals / DB max id | 12,591 / 13108 |
-| Broadcast cursor | 13107 vs max 13108. The gap is this push; the external broadcast cron picks it up. |
-| Prod endpoints (6) | all 200 in 0.11–0.59s |
-| Session crons | 9 of 9 running. This matches the roster. |
+| Prod `/`, `/offers`, `/api/deals` | all 200 (full 7-endpoint sweep at the sitemon 10-16c tick, 25 min earlier: all 200) |
+| Posts per day (IST) | 10-14: 2, 10-15: 3, 10-16: 1 so far (CONTENT-SEO cron runs every 6h) |
+| Posts missing cover / missing SEO fields | 0 / 0 |
+| LIVE deals with null price / null image / PENDING_REVIEW | 0 / 0 / 0 |
+| LIVE deals / DB max id | 12,602 / 13119 |
+| Newest deal age | 72 min (overnight lull, 3 sources returned 0 at this hour) |
+| Broadcast cursor | 13119 = DB max, caught up |
 | Unpushed commits | 0 before this report |
+| Session crons | 9 of 9 match the roster (checked at sitemon 10-16c) |
