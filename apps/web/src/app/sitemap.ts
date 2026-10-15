@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getDeals, getStores, getCategories, getPosts } from "@/lib/api";
+import { getDeals, getStores, getCategories, getPosts, getTopDealSlugs } from "@/lib/api";
 import { SITE_URL, absUrl, dealIndexable } from "@/lib/site";
 import { COMPARISONS } from "@/lib/comparisons";
 import { BEST_TOPICS } from "@/lib/best";
@@ -42,6 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absUrl("/stores"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/coupons"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: absUrl("/freebies"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: absUrl("/best"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     ...BEST_TOPICS.map((t) => ({ url: absUrl(`/best/${t.slug}`), lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
     { url: absUrl("/blog"), lastModified: now, changeFrequency: "daily", priority: 0.6 },
     { url: absUrl("/compare"), lastModified: now, changeFrequency: "weekly", priority: 0.6 },
@@ -56,11 +57,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absUrl("/disclosure"), lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 
-  const [allDeals, stores, categories, posts] = await Promise.all([
+  const [allDeals, stores, categories, posts, topDeals] = await Promise.all([
     fetchAllDeals(),
     getStores(),
     getCategories(),
     getPosts(),
+    getTopDealSlugs(),
   ]);
 
   // If the API blipped during a runtime ISR regen, every getX() returned its
@@ -76,7 +78,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Only submit deals the page itself lets Google index — same helper the
   // robots rule uses in app/[dealSlug]/page.tsx, so the two can't drift.
-  const indexableDeals = allDeals.filter(dealIndexable);
+  const indexableDeals = allDeals.filter((d) => dealIndexable(d, topDeals));
 
   const dealRoutes: MetadataRoute.Sitemap = indexableDeals.map((d) => ({
     url: absUrl(`/${d.slug}`),

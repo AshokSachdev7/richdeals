@@ -143,8 +143,15 @@ export function discountOf(deal: Pick<DealDTO, "discountPct" | "mrp" | "price">)
 //     substantive original writeup (description ≥ 200 chars, our rewrite not a stub)
 //   - AND fresh: created within 120 days (stale deal prices rot + age drags quality)
 export function dealIndexable(
-  deal: Pick<DealDTO, "status" | "price" | "image" | "description" | "discountPct" | "mrp" | "createdAt">,
+  deal: Pick<DealDTO, "slug" | "status" | "price" | "image" | "description" | "discountPct" | "mrp" | "createdAt">,
+  // Owner directive 2026-10-16: only the top 100 deals (by clicks, from
+  // /deals/top-indexable) stay indexed; blogs/hubs carry the rest. The rest
+  // stay live + followed, just noindex and out of the sitemap.
+  // ponytail: API blip → empty set → nothing indexable for <=30 min; safer
+  // than flooding 12k thin pages back into the index.
+  top: Set<string>,
 ): boolean {
+  if (!top.has(deal.slug)) return false;
   if (deal.status === "EXPIRED" || deal.price == null || !deal.image) return false;
   const disc = discountOf(deal);
   const valuable = (disc != null && disc >= 20) || (deal.description?.length ?? 0) >= 200;

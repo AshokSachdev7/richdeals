@@ -54,6 +54,7 @@ ${SITE_NAME} publishes original deal write-ups (never copied), each with the cur
 - [Coupons](${absUrl("/coupons")})
 - [Freebies](${absUrl("/freebies")})
 - [How to get free samples & freebies in India (guide)](${absUrl("/blog/how-to-get-free-samples-freebies-india")})
+- [Best deals buying guides (all topics)](${absUrl("/best")})
 ${BEST_TOPICS.map((t) => `- [${t.h1}](${absUrl(`/best/${t.slug}`)})`).join("\n")}
 - [Forum — community deal votes & reports](${absUrl("/forum")})
 - [Blog](${absUrl("/blog")})

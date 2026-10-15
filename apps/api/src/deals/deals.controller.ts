@@ -31,6 +31,13 @@ export class DealsController {
     });
   }
 
+  // Index-gate candidates (owner directive 2026-10-16: only the top 100 deals
+  // stay indexable). Must stay above ':slug' or Nest routes it as a slug.
+  @Get('top-indexable')
+  topIndexable(): Promise<string[]> {
+    return this.deals.topIndexableSlugs();
+  }
+
   @Get(':slug')
   getOne(@Param('slug') slug: string): Promise<DealDTO> {
     return this.deals.getBySlug(slug);

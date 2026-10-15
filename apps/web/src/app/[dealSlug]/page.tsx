@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ProductImage from "@/components/ProductImage";
-import { getDeal, getDeals } from "@/lib/api";
+import { getDeal, getDeals, getTopDealSlugs } from "@/lib/api";
 import DealGrid from "@/components/DealGrid";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // Hybrid-prune index gate — shared with app/sitemap.ts via one helper so the
   // robots rule and the sitemap can never drift apart. See dealIndexable().
-  const indexable = dealIndexable(deal);
+  const indexable = dealIndexable(deal, await getTopDealSlugs());
 
   return {
     // absolute → skip layout's " | RichDeals" suffix; product+price+discount is

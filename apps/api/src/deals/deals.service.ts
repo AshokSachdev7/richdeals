@@ -60,6 +60,30 @@ export class DealsService {
     return paginateDeals(this.prisma, where, q.cursor, q.limit, q.sort);
   }
 
+  // Top 100 LIVE deals by outbound clicks that also pass the web's quality gate
+  // (price, image, <=120 days, >=20% off or >=200c copy). Clicks = real buyer
+  // demand. ponytail: 400-row scan filtered in JS; fine at this size.
+  async topIndexableSlugs(limit = 100): Promise<string[]> {
+    const rows = await this.prisma.deal.findMany({
+      where: {
+        status: 'LIVE',
+        price: { not: null },
+        image: { not: null },
+        createdAt: { gte: new Date(Date.now() - 120 * 86_400_000) },
+      },
+      orderBy: [{ clickCount: 'desc' }, { id: 'desc' }],
+      take: 400,
+      select: { slug: true, price: true, mrp: true, discountPct: true, description: true },
+    });
+    return rows
+      .filter((d) => {
+        const disc = d.discountPct ?? (d.mrp && d.price != null && d.mrp > d.price ? Math.round((1 - d.price / d.mrp) * 100) : null);
+        return (disc != null && disc >= 20) || (d.description?.length ?? 0) >= 200;
+      })
+      .slice(0, limit)
+      .map((d) => d.slug);
+  }
+
   async getBySlug(slug: string): Promise<DealDTO> {
     const deal = await this.prisma.deal.findFirst({
       // EXPIRED deals stay reachable; DRAFT/PENDING_REVIEW do not.

@@ -72,6 +72,11 @@ export function getDeals(params: DealQuery = {}): Promise<Paginated<DealDTO>> {
   );
 }
 
+// Slugs of the top-100 deals allowed into Google's index (see dealIndexable).
+export async function getTopDealSlugs(): Promise<Set<string>> {
+  return new Set(await apiGet<string[]>(`/deals/top-indexable`, [], 1800));
+}
+
 export function getDeal(slug: string): Promise<DealDTO | null> {
   return apiGet<DealDTO | null>(`/deals/${encodeURIComponent(slug)}`, null);
 }

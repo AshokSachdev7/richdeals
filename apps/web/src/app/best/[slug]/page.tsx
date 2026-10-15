@@ -43,7 +43,7 @@ export default async function BestPage({ params }: Props) {
 
   const crumbs = [
     { name: "Home", href: "/" },
-    { name: "Offers", href: "/offers" },
+    { name: "Buying Guides", href: "/best" },
     { name: t.h1, href: `/best/${t.slug}` },
   ];
 
