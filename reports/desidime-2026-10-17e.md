@@ -27,7 +27,7 @@ Affiliate links: Amazon uses `?tag=ashoksachdev-21`, Flipkart uses `?pid=…&aff
 
 ## Rejected
 
-These are the same 8 rejects as 10-17c; the cards have not moved.
+These are the same 9 rejects as 10-17c; the cards have not moved.
 
 | ID | Item | Card | Product page |
 |---|---|---|---|
