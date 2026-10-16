@@ -54,11 +54,12 @@ for (const list of LISTS) {
 console.log(`discovered ${found.length} cards`);
 
 const out = [];
+const drops = []; // Flipkart /indiafreestuff/p/?pid= cards: affiliate() rejects them, resolved by hand in the tab
 for (const c of found) {
   const final = curlFinal(c.rto);
   const aff = affiliate(final);
   sleep(GAP);
-  if (!aff) { console.log(`  drop ${c.slug.slice(0, 40)} -> ${final.slice(0, 60)}`); continue; }
+  if (!aff) { drops.push({ ...c, final }); console.log(`  drop ${c.slug.slice(0, 40)} -> ${final.slice(0, 60)}`); continue; }
   out.push({ ...c, ...aff, final });
   console.log(`  ok ${aff.store} ${aff.productId}  ₹${c.price ?? '?'}  ${c.title.slice(0, 45)}`);
 }
@@ -70,4 +71,5 @@ for (const d of out.filter((x) => x.store !== 'Amazon')) {
 }
 
 fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
+fs.writeFileSync(OUT.replace(/\.json$/, '') + '-drops.json', JSON.stringify(drops, null, 2));
 console.log(`\nDONE: ${found.length} discovered, ${out.length} resolved to a product, wrote ${OUT}`);
