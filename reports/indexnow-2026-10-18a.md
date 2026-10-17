@@ -11,7 +11,7 @@
 | Hubs | 8 | `/` `/offers` `/blog` `/sitemap.xml` `/feed.xml` `/llms.txt` `/freebies` `/coupons` |
 | **Total** | **66** | `MSYS_NO_PATHCONV=1 node scripts/indexnow-ping.mjs --paths ...` → HTTP 200 |
 
-Not resubmitted: 68 LIVE rows whose only change in the window was `updatedAt` (the click counter, not a content change). `/freebies`, `/coupons` and `/stores` were checked first and all return 200.
+Not resubmitted: 66 LIVE rows whose only change in the window was `updatedAt` (the click counter, not a content change). `/freebies`, `/coupons` and `/stores` were checked first and all return 200.
 
 ## CEO audit (01:23 IST, from the DB)
 
