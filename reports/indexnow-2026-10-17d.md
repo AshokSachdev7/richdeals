@@ -1,27 +1,30 @@
-# INDEXNOW tick 2026-10-17d (07:23 IST)
+# INDEXNOW tick 2026-10-17d (19:23 IST)
 
-**IndexNow HTTP 200 for 32 URLs.** The ping used `--paths` mode with `MSYS_NO_PATHCONV=1`.
+**IndexNow HTTP 200 for 70 URLs.**
 
-## URLs submitted
+## Submitted
 
-| Group | Count | Details |
+| Group | Count | Source |
 |---|---|---|
-| LIVE deals created in the last 6 h (from the DB) | 25 | The first was the boAt Rockerz Trinity Gen2, the newest the Tommy Hilfiger Joshua backpack |
-| Posts created in the last 6 h | 1 | `/blog/full-face-vs-open-face-vs-flip-up-helmet-which-to-buy-india` |
-| Sitemap and hub pages | 6 | `/sitemap.xml`, `/offers`, `/blog`, `/`, `/feed.xml`, `/llms.txt` |
+| LIVE deals created in the last 6 h | 58 | DB, `createdAt >= now-6h` |
+| Posts published in the last 6 h | 1 | DB (id 502, the LED colour-temperature post) |
+| Hubs and feeds | 11 | `/` `/offers` `/blog` `/sitemap.xml` `/feed.xml` `/llms.txt` `/coupons` `/freebies` `/stores` `/categories` `/best` |
+
+The ping was run with `MSYS_NO_PATHCONV=1 node apps/api/scripts/indexnow-ping.mjs --paths …`. In `--paths` mode the script adds nothing, so the hubs were listed explicitly.
 
 ## CEO audit
 
 | Check | Result |
 |---|---|
-| Posts today (IST 10-17) | 2. The daily floor is met |
+| Posts per day (IST) | 10-15: 3, 10-16: 4, 10-17: 4 (cap) |
 | Posts with no cover / no SEO fields | 0 / 0 |
-| LIVE deals | 12,818 |
+| LIVE deals | 12,942 |
 | LIVE deals with null price / null image | 0 / 0 |
 | PENDING_REVIEW | 0 |
-| Broadcast cursor vs DB max | 13340 / 13340, caught up |
+| Newest deal age | 24 min |
+| DB max id / broadcast cursor | 13465 / 13465. Caught up |
 | Prod endpoints (7) | all 200 |
-| Session crons | 9 of 9 (checked against the roster at 07:07) |
+| Session crons | 9 of 9 (CronList) |
 | Unpushed commits | 0 before this report |
 
 No rot found.
