@@ -1,4 +1,4 @@
-# CONTENT-SEO tick 2026-10-17b (06:50 IST)
+# CONTENT-SEO tick 2026-10-17b (06:44 IST)
 
 **1 post published:** `/blog/full-face-vs-open-face-vs-flip-up-helmet-which-to-buy-india` (id 500). Prod HTTP 200, cover present, IndexNow HTTP 200. Today's count (IST) is now 2, which meets the daily floor.
 
