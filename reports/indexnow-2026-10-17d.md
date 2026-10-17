@@ -1,4 +1,4 @@
-# INDEXNOW tick 2026-10-17b (07:23 IST)
+# INDEXNOW tick 2026-10-17d (07:23 IST)
 
 **IndexNow HTTP 200 for 32 URLs.** The ping used `--paths` mode with `MSYS_NO_PATHCONV=1`.
 
