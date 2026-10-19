@@ -129,7 +129,7 @@ export function discountOf(deal: Pick<DealDTO, "discountPct" | "mrp" | "price">)
 }
 
 // SINGLE SOURCE OF TRUTH for "should Google index this deal page?". Used by
-// both app/[dealSlug]/page.tsx (robots.index) AND app/sitemap.ts (which URLs
+// both app/[dealSlug]/page.tsx (robots.index) AND app/sitemaps/deals/sitemap.ts (which URLs
 // ship) — they MUST agree, so they call this, never re-inline the rule.
 //
 // Hybrid prune (owner directive 2026-09-09, chasing AdSense approval without

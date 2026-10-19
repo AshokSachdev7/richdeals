@@ -207,7 +207,7 @@ fabricated facts — the playbook lists the black-hat blocklist). Spawn the
   2. `sitemap.xml` carries the batch — it is ISR `revalidate = 1800`, so
      worst case is 30 min stale, never manually regenerated. If a new STATIC
      route was added, it must be appended to `staticRoutes` in
-     `apps/web/src/app/sitemap.ts` by hand (dynamic deal/post/store/category
+     `apps/web/src/app/sitemaps/pages/sitemap.ts` by hand (dynamic deal/post/store/category
      URLs come from the API automatically).
   3. `llms.txt` carries the batch — `force-dynamic`, rebuilt per request off
      `getDeals()`/`getPosts()`/`getStores()`/`getCategories()`. It only goes

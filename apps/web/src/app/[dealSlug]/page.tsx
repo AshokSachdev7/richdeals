@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonical = absUrl(`/${deal.slug}`);
   const seoTitle = dealSeoTitle(deal);
 
-  // Hybrid-prune index gate — shared with app/sitemap.ts via one helper so the
+  // Hybrid-prune index gate — shared with app/sitemaps/deals/sitemap.ts via one helper so the
   // robots rule and the sitemap can never drift apart. See dealIndexable().
   const indexable = dealIndexable(deal, await getTopDealSlugs());
 

@@ -77,6 +77,22 @@ export async function getTopDealSlugs(): Promise<Set<string>> {
   return new Set(await apiGet<string[]>(`/deals/top-indexable`, [], 1800));
 }
 
+// The top-100 indexable set with full rows, for the deal sitemap and
+// llms-full.txt. 100 slug lookups beat paging all ~13k deals (~220 calls).
+// ponytail: batches of 20 keep the managed PG (~22 slots) unqueued.
+export async function getTopDeals(): Promise<{ top: Set<string>; deals: DealDTO[] }> {
+  const top = await getTopDealSlugs();
+  const slugs = [...top];
+  const deals: DealDTO[] = [];
+  for (let i = 0; i < slugs.length; i += 20) {
+    const batch = await Promise.all(
+      slugs.slice(i, i + 20).map((s) => apiGet<DealDTO | null>(`/deals/${encodeURIComponent(s)}`, null, 1800)),
+    );
+    for (const d of batch) if (d) deals.push(d);
+  }
+  return { top, deals };
+}
+
 export function getDeal(slug: string): Promise<DealDTO | null> {
   return apiGet<DealDTO | null>(`/deals/${encodeURIComponent(slug)}`, null);
 }

@@ -39,7 +39,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 export default async function BlogPage({ searchParams }: Props) {
   const page = pageNum((await searchParams).page);
   const { items } = await getPosts();
-  // Consolidated twins still have rows but their URLs 308 away — sitemap.ts and
+  // Consolidated twins still have rows but their URLs 308 away — sitemaps/blog and
   // llms.txt already filter them; the listing was the one place still linking in.
   const all = items.filter((p) => !(p.slug in POST_REDIRECTS));
   const totalPages = Math.max(1, Math.ceil(all.length / PER_PAGE));

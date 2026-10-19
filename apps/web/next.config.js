@@ -47,7 +47,7 @@ const nextConfig = {
     ];
   },
   // SEO: fold cannibalizing blog duplicates into their keeper. The dead->keeper
-  // map lives in post-redirects.json so sitemap.ts and llms.txt can filter the
+  // map lives in post-redirects.json so sitemaps/blog and llms.txt can filter the
   // same dead slugs out of what we submit (a 308'd URL in a sitemap is a
   // crawl-budget tax, and we were submitting two of them). Keeper chosen on GSC
   // impressions where rows existed, else body depth + sibling slug convention.
