@@ -1,30 +1,30 @@
-# INDEXNOW tick 2026-10-19c (13:24 IST)
+# INDEXNOW — 2026-10-19c
 
-**IndexNow returned HTTP 200 for 56 URLs** (one `--paths` call with `MSYS_NO_PATHCONV=1`).
+**HTTP 200 · 96 URLs submitted in `--paths` mode**
 
-## What went in
+## What was submitted
 
-| Group | Count | Detail |
-|---|---|---|
-| New LIVE deals | 44 | `createdAt` in the last 6 h, from the DB |
-| New posts | 2 | `/blog/power-bank-in-flight-rules-india-mah-wh-limit`<br>`/blog/cold-press-vs-centrifugal-juicer-vs-juicer-mixer-grinder-india` |
-| Hubs | 10 | `/sitemap.xml`, `/`, `/offers`, `/blog`, `/feed.xml`, `/llms.txt`, `/llms-full.txt`, `/stores`, `/categories`, `/best` |
-
-Left out: 396 LIVE rows whose `updatedAt` is in the window only because of click-counter churn. That is not a content change.
-
-## CEO audit (13:24 IST)
-
-| Check | Result |
+| Source | URLs |
 |---|---|
-| Posts per day (IST) | 10-17: 4, 10-18: 4, 10-19: 3 |
-| Posts with no cover / no SEO fields | 0 / 0 |
-| LIVE deals | 13,229 |
-| LIVE deals with null price / null image | 0 / 0 |
-| PENDING_REVIEW | 0 |
-| DB max id / broadcast cursor | 13753 / 13751. The broadcast is nearly caught up. |
-| Newest deal age | 16 min |
-| Prod endpoints (7) | All 200, max 0.68 s (`/blog`) |
-| Unpushed commits | 0 before this report |
-| Session crons | 9 of 9 present (CronList checked at 13:09) |
+| LIVE deals created in the last 6h (from the DB) | 88 |
+| Posts created in the last 6h (from the DB) | 1 |
+| Sitemap and hubs | 7 |
+| **Total** | **96** |
 
-No rot found.
+The 7 sitemap and hub URLs:
+
+- `/sitemap.xml`
+- `/offers`
+- `/blog`
+- `/freebies`
+- `/coupons`
+- `/feed.xml`
+- `/llms.txt`
+
+## CEO audit
+
+- **Posts:** 4 today (IST, cap reached). Coverless 0, seoless 0.
+- **Deals:** 13,318 LIVE. Null-price 0, null-image 0, PENDING_REVIEW 0.
+- **Broadcast cursor:** 13841, which matches the DB max of 13841. Fully caught up.
+- **Prod endpoints:** `/ /offers /blog /sitemap.xml /feed.xml /llms.txt /api/deals` all return 200 (0.11–0.66s).
+- **Housekeeping:** 0 unpushed commits. CronList shows 9 of 9 roster jobs.
