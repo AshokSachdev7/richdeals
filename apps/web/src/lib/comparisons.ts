@@ -32,7 +32,7 @@ export const COMPARISONS: Comparison[] = [
     slug: "qled-vs-oled",
     seoTitle: "QLED vs OLED: Which TV Is Better? (2026 India Guide)",
     seoDesc:
-      "QLED vs OLED explained for Indian buyers: black levels, brightness, burn-in, gaming and price compared, plus which TV to pick for your living room. Updated 2026.",
+      "QLED vs OLED explained for Indian buyers: black levels, brightness, burn-in, gaming and price compared, plus which TV to pick for your living room. 2026.",
     h1: "QLED vs OLED: Which TV Should You Buy?",
     intent: "TV display tech",
     aLabel: "QLED",
@@ -84,7 +84,7 @@ export const COMPARISONS: Comparison[] = [
     slug: "amoled-vs-oled",
     seoTitle: "AMOLED vs OLED: What's the Difference? (2026)",
     seoDesc:
-      "AMOLED vs OLED explained simply: AMOLED is a type of OLED used in phones. See how they differ, what Super AMOLED means, and which is better for your eyes. 2026 guide.",
+      "AMOLED vs OLED: AMOLED is a type of OLED used in phones. See how they differ, what Super AMOLED means, and which is better for your eyes. 2026 guide.",
     h1: "AMOLED vs OLED: What's the Difference?",
     intent: "Phone display tech",
     aLabel: "AMOLED",
@@ -135,7 +135,7 @@ export const COMPARISONS: Comparison[] = [
     slug: "ssd-vs-hdd",
     seoTitle: "SSD vs HDD: Which Should You Buy? (2026 Guide)",
     seoDesc:
-      "SSD vs HDD compared: speed, price, capacity and durability, plus whether to pick an SSD or HDD for your laptop and how much storage you actually need. 2026 guide.",
+      "SSD vs HDD compared: speed, price, capacity and durability, plus whether to use an SSD or HDD for your laptop and how much storage you need. 2026 guide.",
     h1: "SSD vs HDD: Which Storage Should You Buy?",
     intent: "Laptop & PC storage",
     aLabel: "SSD",
@@ -186,7 +186,7 @@ export const COMPARISONS: Comparison[] = [
     slug: "front-load-vs-top-load-washing-machine",
     seoTitle: "Front Load vs Top Load Washing Machine (2026)",
     seoDesc:
-      "Front load vs top load washing machine compared for Indian homes: wash quality, water use, cycle time, price and fabric care — and which one you should buy. 2026 guide.",
+      "Front load vs top load washing machine compared for Indian homes: wash quality, water use, cycle time, price and fabric care, plus which one to buy. 2026 guide.",
     h1: "Front Load vs Top Load Washing Machine: Which to Buy?",
     intent: "Washing machines",
     aLabel: "Front Load",
