@@ -115,7 +115,8 @@ export function dealSeoTitle(
     name = name.slice(0, name.lastIndexOf("(")).replace(/[,\s]+$/, "").trim();
   }
   // the cut above can land on a separator ("Dog Biscuits Mix Flavour," + " @ ₹287") — strip it last
-  name = name.replace(/[,\-–—:;/&+]+$/, "").trim();
+  // …or on a dangling connector ("Analog Watch for" + " @ ₹2,947") — drop those too
+  name = name.replace(/(?:[\s,\-–—:;/&+]+|\s+(?:[fF]or|[wW]ith|[aA]nd|or|of|in|to|by|on|the))+$/, "").trim();
   return `${name}${price}${off}`;
 }
 
