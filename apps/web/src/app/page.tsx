@@ -1,13 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import type { DealFeed } from "@deals/shared";
-import { getDeals } from "@/lib/api";
+import { getDeals, getLatestPosts, getTopDealLinks } from "@/lib/api";
 import Hero from "@/components/Hero";
 import CategoryStrip from "@/components/CategoryStrip";
 import EarnBanner from "@/components/EarnBanner";
 import LoadMoreDeals from "@/components/LoadMoreDeals";
 import JsonLd from "@/components/JsonLd";
-import { absUrl, dealItemListSchema } from "@/lib/site";
+import { absUrl, dealItemListSchema, dealProductName } from "@/lib/site";
+import POST_REDIRECTS from "../../post-redirects.json";
 
 // Always SSR fresh: the landing feed must show the newest deals on every load.
 // (ISR + on-demand revalidation was serving stale deals for up to 5 min.)
@@ -72,11 +73,19 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 export default async function HomePage({ searchParams }: Props) {
   const { feed, cursor } = await searchParams;
   const active: DealFeed = isFeed(feed) ? feed : "latest";
-  const { items, nextCursor } = await getDeals({
-    feed: active,
-    cursor: cursor ? Number(cursor) : undefined,
-    limit: 30,
-  });
+  const [{ items, nextCursor }, posts, topDeals] = await Promise.all([
+    getDeals({
+      feed: active,
+      cursor: cursor ? Number(cursor) : undefined,
+      limit: 30,
+    }),
+    getLatestPosts(20),
+    getTopDealLinks(),
+  ]);
+  // Crawl paths into indexable pages: the feed above is mostly fresh (noindex)
+  // deals, so without these the homepage passed equity to almost nothing indexed.
+  const guides = posts.items.filter((p) => !(p.slug in POST_REDIRECTS)).slice(0, 12);
+  const popular = topDeals.slice(0, 24);
   const heading = HEADINGS[active];
 
   const itemListSchema = dealItemListSchema(items, heading.title);
@@ -158,6 +167,39 @@ export default async function HomePage({ searchParams }: Props) {
       <div className="mt-12">
         <EarnBanner />
       </div>
+
+      {guides.length > 0 && (
+        <section aria-labelledby="guides-heading" className="mt-12 rounded-2xl bg-white p-5 ring-1 ring-gray-200">
+          <h2 id="guides-heading" className="font-display text-lg font-bold text-ink">Latest buying guides</h2>
+          <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+            {guides.map((p) => (
+              <li key={p.slug}>
+                <Link href={`/blog/${p.slug}`} className="text-brand hover:underline">
+                  {p.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link href="/blog" className="mt-3 inline-block text-sm font-semibold text-brand hover:underline">
+            All guides →
+          </Link>
+        </section>
+      )}
+
+      {popular.length > 0 && (
+        <section aria-labelledby="popular-heading" className="mt-6 rounded-2xl bg-white p-5 ring-1 ring-gray-200">
+          <h2 id="popular-heading" className="font-display text-lg font-bold text-ink">Popular deals</h2>
+          <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+            {popular.map((d) => (
+              <li key={d.slug}>
+                <Link href={`/${d.slug}`} className="text-brand hover:underline">
+                  {dealProductName(d)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Why RichDeals */}
       <section aria-labelledby="why-heading" className="mt-16 rounded-3xl bg-ink px-5 py-12 text-white sm:px-10">

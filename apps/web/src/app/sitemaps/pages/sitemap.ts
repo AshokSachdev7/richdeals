@@ -27,7 +27,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absUrl("/blog"), lastModified: now, changeFrequency: "daily", priority: 0.6 },
     { url: absUrl("/compare"), lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: absUrl("/forum"), lastModified: now, changeFrequency: "hourly", priority: 0.6 },
-    { url: absUrl("/submit"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     // Trust pages — AdSense review and Google both look for these.
     { url: absUrl("/about"), lastModified: now, changeFrequency: "monthly", priority: 0.4 },
     { url: absUrl("/contact"), lastModified: now, changeFrequency: "monthly", priority: 0.4 },

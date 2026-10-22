@@ -3,6 +3,7 @@ import type { DealDTO, DealFeed, Paginated } from '@deals/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { dealInclude, toDealDTO } from './deal.mapper';
 import { paginateDeals } from './deal.query';
+import { GSC_PROVEN_SLUGS } from './gsc-proven';
 import { IngestDealDto, mapStatus, toStoreSlug, titleCase } from './deal-ingest.dto';
 
 export interface UpsertResult {
@@ -60,28 +61,32 @@ export class DealsService {
     return paginateDeals(this.prisma, where, q.cursor, q.limit, q.sort);
   }
 
-  // Top 100 LIVE deals by outbound clicks that also pass the web's quality gate
-  // (price, image, <=120 days, >=20% off or >=200c copy). Clicks = real buyer
-  // demand. ponytail: 400-row scan filtered in JS; fine at this size.
-  async topIndexableSlugs(limit = 100): Promise<string[]> {
-    const rows = await this.prisma.deal.findMany({
-      where: {
-        status: 'LIVE',
-        price: { not: null },
-        image: { not: null },
-        createdAt: { gte: new Date(Date.now() - 120 * 86_400_000) },
-      },
-      orderBy: [{ clickCount: 'desc' }, { id: 'desc' }],
-      take: 400,
-      select: { slug: true, price: true, mrp: true, discountPct: true, description: true },
-    });
-    return rows
+  // Top 100 LIVE deals that pass the web's quality gate (price, image,
+  // <=120 days, >=20% off or >=200c copy). GSC-proven pages go first, then
+  // outbound clicks (real buyer demand) fill the rest.
+  // ponytail: 400-row scan filtered in JS; fine at this size.
+  async topIndexable(limit = 100): Promise<{ slug: string; title: string }[]> {
+    const where = {
+      status: 'LIVE' as const,
+      price: { not: null },
+      image: { not: null },
+      createdAt: { gte: new Date(Date.now() - 120 * 86_400_000) },
+    };
+    const select = { slug: true, title: true, price: true, mrp: true, discountPct: true, description: true };
+    const [pinned, byClicks] = await Promise.all([
+      this.prisma.deal.findMany({ where: { ...where, slug: { in: GSC_PROVEN_SLUGS } }, select }),
+      this.prisma.deal.findMany({ where, orderBy: [{ clickCount: 'desc' }, { id: 'desc' }], take: 400, select }),
+    ]);
+    const seen = new Set<string>();
+    return [...pinned, ...byClicks]
       .filter((d) => {
+        if (seen.has(d.slug)) return false;
+        seen.add(d.slug);
         const disc = d.discountPct ?? (d.mrp && d.price != null && d.mrp > d.price ? Math.round((1 - d.price / d.mrp) * 100) : null);
         return (disc != null && disc >= 20) || (d.description?.length ?? 0) >= 200;
       })
       .slice(0, limit)
-      .map((d) => d.slug);
+      .map((d) => ({ slug: d.slug, title: d.title }));
   }
 
   async getBySlug(slug: string): Promise<DealDTO> {

@@ -25,11 +25,12 @@ function toPostDTO(p: {
 export class PostsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async list() {
+  // ?limit=N keeps small consumers (homepage) off the 3.7MB full list.
+  async list(limit = 500) {
     const rows = await this.prisma.post.findMany({
       where: { publishedAt: { not: null } },
       orderBy: { publishedAt: 'desc' },
-      take: 500,
+      take: Math.min(limit, 500),
     });
     return { items: rows.map(toPostDTO), nextCursor: null, total: rows.length };
   }

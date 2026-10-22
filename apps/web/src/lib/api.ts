@@ -77,6 +77,11 @@ export async function getTopDealSlugs(): Promise<Set<string>> {
   return new Set(await apiGet<string[]>(`/deals/top-indexable`, [], 1800));
 }
 
+// Top-100 indexable deals as {slug,title}, for the homepage's popular-deals links.
+export function getTopDealLinks(): Promise<{ slug: string; title: string }[]> {
+  return apiGet<{ slug: string; title: string }[]>(`/deals/top-indexable?titles=1`, [], 1800);
+}
+
 // The top-100 indexable set with full rows, for the deal sitemap and
 // llms-full.txt. 100 slug lookups beat paging all ~13k deals (~220 calls).
 // ponytail: batches of 20 keep the managed PG (~22 slots) unqueued.
@@ -141,6 +146,11 @@ export interface PostDTO {
 
 export function getPosts(): Promise<Paginated<PostDTO>> {
   return apiGet(`/posts`, emptyPage<PostDTO>());
+}
+
+// Small slice for the homepage's guide links — the full list is ~3.7MB.
+export function getLatestPosts(n: number): Promise<Paginated<PostDTO>> {
+  return apiGet(`/posts?limit=${n}`, emptyPage<PostDTO>());
 }
 
 export function getPost(slug: string): Promise<PostDTO | null> {

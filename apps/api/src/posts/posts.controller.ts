@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
@@ -6,8 +6,8 @@ export class PostsController {
   constructor(private readonly posts: PostsService) {}
 
   @Get()
-  list() {
-    return this.posts.list();
+  list(@Query('limit') limit?: string) {
+    return this.posts.list(Number(limit) || undefined);
   }
 
   @Get(':slug')
