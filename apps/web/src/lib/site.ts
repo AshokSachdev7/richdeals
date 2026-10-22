@@ -109,7 +109,12 @@ export function dealSeoTitle(
   const off = disc != null ? ` (${disc}% Off)` : "";
   // budget the name against the price+off suffix so the whole <title> stays ≤60
   const cap = Math.min(48, 60 - price.length - off.length);
-  if (name.length > cap) name = name.slice(0, cap).replace(/\s+\S*$/, "").trim();
+  if (name.length > cap) {
+    name = name.slice(0, cap).replace(/\s+\S*$/, "").trim();
+    // a cut mid-clause leaves a stub ("Toy for Kids, 24" ← "24 Slides"); end on the last comma clause instead
+    const c = name.lastIndexOf(",");
+    if (c >= 24) name = name.slice(0, c);
+  }
   // truncation can cut inside a "(…)" — drop a dangling unbalanced open paren + its trailing ","
   if (name.lastIndexOf("(") > name.lastIndexOf(")")) {
     name = name.slice(0, name.lastIndexOf("(")).replace(/[,\s]+$/, "").trim();

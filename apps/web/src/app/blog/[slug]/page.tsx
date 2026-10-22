@@ -79,9 +79,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = post.seoDesc || post.excerpt || `${post.title} — ${SITE_NAME} blog.`;
   const canonical = absUrl(`/blog/${post.slug}`);
   return {
-    // ponytail: past 53 chars the " | RichDeals" suffix pushes <title> over 65 and SERPs
+    // ponytail: past 48 chars the " | RichDeals" suffix pushes <title> over 60 and SERPs
     // truncate it mid-word; drop the suffix there, the brand is still in og:site_name.
-    title: metaTitle.length > 53 ? { absolute: metaTitle } : metaTitle,
+    title: metaTitle.length > 48 ? { absolute: metaTitle } : metaTitle,
     description,
     alternates: { canonical },
     openGraph: {
