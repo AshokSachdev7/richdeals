@@ -39,7 +39,7 @@ Before this tick there was 1 post for IST 2026-10-22 (#516). The target is 2–3
 ## CEO audit
 
 - **Prod:** `/`, `/offers`, `/blog`, `/sitemap.xml`, `/feed.xml` and `/api/deals` all return 200. The post itself returns 200.
-- **Feed:** `feed.xml` does not list post 517 yet. This is ISR lag, not a fault; INDEXNOW 07:23 will re-check.
+- **Feed:** `feed.xml` does not list post 517, and it never will: the route builds from `getDeals()` only and lists no blog posts at all. This is by design, not rot. (An earlier version of this line called it ISR lag; corrected at TG 10-22g.) Post 517 is also not in `sitemaps/blog/sitemap.xml` yet, which is inside the 30-minute ISR window; INDEXNOW 07:23 will re-check.
 - **Deals:** 13,536 LIVE. 0 have a null price, 0 have a null image, and 0 are in PENDING_REVIEW. The highest deal ID is 14065.
 - **Broadcast cursor:** 14065, matching the highest deal ID.
 - **Posts (IST 2026-10-22):** 2. The minimum is met; the next CONTENT-SEO run can add a 3rd. 0 posts lack a cover and 0 lack SEO fields.
