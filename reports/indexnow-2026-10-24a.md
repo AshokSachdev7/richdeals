@@ -1,6 +1,6 @@
 # INDEXNOW — 2026-10-24a (01:23 IST)
 
-**IndexNow returned HTTP 200 for 70 URLs in 2 batches: the 57 deals pushed since the last INDEXNOW tick (#14464–#14520), the 3 newest posts at their `/blog/` paths, and 10 hub and feed URLs.**
+**IndexNow returned HTTP 200 for 70 URLs in 2 batches: the 57 deals pushed since the last INDEXNOW tick (#14464–#14520), the 3 newest posts at their `/blog/` paths, and 9 unique hub and feed URLs. `/sitemap.xml` went in both batches, so 69 URLs are unique.**
 
 | Batch | Mode | URLs | HTTP |
 |---|---|---|---|
