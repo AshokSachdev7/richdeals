@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getStores, getCategories } from "@/lib/api";
 import { SITE_URL, absUrl } from "@/lib/site";
 import { COMPARISONS } from "@/lib/comparisons";
+import { ALTERNATIVES } from "@/lib/alternatives";
 import { BEST_TOPICS } from "@/lib/best";
 import { hasStoreSeo } from "@/lib/store-seo";
 
@@ -26,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...BEST_TOPICS.map((t) => ({ url: absUrl(`/best/${t.slug}`), lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
     { url: absUrl("/blog"), lastModified: now, changeFrequency: "daily", priority: 0.6 },
     { url: absUrl("/compare"), lastModified: now, changeFrequency: "weekly", priority: 0.6 },
+    { url: absUrl("/alternatives"), lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: absUrl("/forum"), lastModified: now, changeFrequency: "hourly", priority: 0.6 },
     // Trust pages — AdSense review and Google both look for these.
     { url: absUrl("/about"), lastModified: now, changeFrequency: "monthly", priority: 0.4 },
@@ -57,5 +59,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...storeRoutes, ...categoryRoutes, ...compareRoutes];
+  const alternativeRoutes: MetadataRoute.Sitemap = ALTERNATIVES.map((a) => ({
+    url: absUrl(`/alternatives/${a.slug}`),
+    lastModified: new Date(a.updated),
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...storeRoutes, ...categoryRoutes, ...compareRoutes, ...alternativeRoutes];
 }

@@ -51,6 +51,7 @@ ${SITE_NAME} publishes original deal write-ups (never copied), each with the cur
 - [All Stores](${absUrl("/stores")})
 - [All Categories](${absUrl("/categories")})
 - [Price Compare](${absUrl("/compare")})
+- [Deal Site Alternatives](${absUrl("/alternatives")}): alternatives to DesiDime, FreeKaaMaal, IndiaFreeStuff, DealsMagnet
 - [Coupons](${absUrl("/coupons")})
 - [Freebies](${absUrl("/freebies")})
 - [How to get free samples & freebies in India (guide)](${absUrl("/blog/how-to-get-free-samples-freebies-india")})
