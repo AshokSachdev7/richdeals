@@ -95,6 +95,9 @@ const cutoff = Date.now() - 24 * 3600e3;
 const fresh = out.filter((d) => !have.has(d.productId) && !(rej[d.productId] > cutoff));
 fresh.forEach((d) => console.log(`  ${d.verify && d.verify !== 'ok' ? 'SKIP(' + d.verify + ')' : 'ok'} ${d.store} ${d.productId}  ₹${d.price ?? '?'}  ${d.title.slice(0, 45)}`));
 
+// stage-1 verify failures (drift/OOS/no ld+json) feed the 24h skip too — Amazon rejects are added by the tick
+for (const d of fresh) if (d.verify && d.verify !== 'ok') rej[d.productId] = Date.now();
+fs.writeFileSync(REJ, JSON.stringify(rej, null, 1));
 fs.writeFileSync(DEAD, JSON.stringify([...dead]));
 fs.writeFileSync(OUT, JSON.stringify(fresh, null, 2));
 console.log(`\nDONE: ${found.length} discovered, ${out.length} product-resolved, ${out.length - fresh.length} already in DB, ${fresh.length} fresh -> ${OUT}`);
