@@ -1,4 +1,4 @@
-# CONTENT-SEO — 2026-10-24b (06:41–07:05 IST)
+# CONTENT-SEO — 2026-10-24b (06:41–06:45 IST)
 
 **1 post shipped (#2 of IST 2026-10-24): a waterproof mattress protector buying guide. It is live on prod with a cover, alt text and Article, BreadcrumbList, FAQPage and HowTo JSON-LD, and IndexNow returned HTTP 200. No rot.**
 
@@ -44,7 +44,7 @@
 - **`llms.txt`:** force-dynamic, so it already lists the post.
 - **Prod:** `/blog/<slug>` returns 200 on richdeals.in, and the inserted copy is present.
 
-## CEO audit (07:05 IST)
+## CEO audit (06:45 IST)
 
 - **Prod:** `/`, `/offers`, `/blog`, `/sitemap.xml`, `/feed.xml` and `/api/deals` all return 200 on both hosts.
 - **Deals:** 14,004 LIVE, matching the API total of 14,004. 0 have a null price, 0 have a null image, and 0 are in PENDING_REVIEW. The highest deal ID is 14535.
