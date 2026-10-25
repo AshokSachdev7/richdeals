@@ -49,7 +49,9 @@ export function affiliate(finalUrl) {
   // The tail is the product; the head is a redirect artifact. Without this the
   // nested copy still contains '/p/itm', so it passed the product check below
   // and produced a 404 affiliate link.
-  const nested = finalUrl.lastIndexOf('http');
+  // Only look before '?': an encoded url=https%3A... query param is not a nested link,
+  // and slicing there turned valid /dp/ASIN URLs into null (silent drop).
+  const nested = finalUrl.split('?')[0].lastIndexOf('http');
   if (nested > 0) finalUrl = finalUrl.slice(nested);
 
   let u; try { u = new URL(finalUrl); } catch { return null; }
