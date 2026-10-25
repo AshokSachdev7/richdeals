@@ -19,7 +19,7 @@ There were no fresh candidates, so there was nothing to push and no IndexNow pin
 ## Fix: `affiliate()` silently dropped valid Amazon URLs
 
 - **What happened.** In run 1, the STANLEY 87-369 adjustable wrench card resolved to an `amazon.in/STANLEY-87-369-Adjustable-Lightweight-…` URL. It was still dropped as "not a product" and added to `dd-dead.json`. The wrench is not in the DB.
-- **Root cause.** `scripts/lib/ingest-common.mjs` `affiliate()` handles Flipkart's nested deeplinks by slicing at `finalUrl.lastIndexOf('http')`. It searched the whole URL, so an encoded `url=https%3A…` query param also triggered the slice. A valid `/dp/ASIN?…&url=https%3A…` URL then became garbage and returned `null`.
+- **Probable cause.** This is not confirmed for STANLEY, because the log cut the URL at 60 characters and the card is gone. It is the only path in `affiliate()` that returns `null` for an amazon.in product URL. `scripts/lib/ingest-common.mjs` `affiliate()` handles Flipkart's nested deeplinks by slicing at `finalUrl.lastIndexOf('http')`. It searched the whole URL, so an encoded `url=https%3A…` query param also triggered the slice. A valid `/dp/ASIN?…&url=https%3A…` URL then became garbage and returned `null`.
 - **Fix.** The search now only covers the part before `?`. Asserts checked three cases:
   - an Amazon `/dp/` URL with an `https%3A` param → returns the ASIN;
   - the Flipkart `dl.flipkart.com/dlhttps://…/p/itm…` nested link → still resolves;
