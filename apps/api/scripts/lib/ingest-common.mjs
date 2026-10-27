@@ -85,6 +85,13 @@ export function affiliate(finalUrl) {
   // shipped as live deals with price:null before this check. A real PDP is
   // /<id> or /<brand>/<name>/<id>/buy.
   if (/myntra\.com/.test(h) && !/^\/(\d+|.+\/\d+\/buy)\/?$/.test(u.pathname)) return null;
+  // Myntra: key on the numeric style id (what TG/IFS store) and link the bare
+  // /<id> — the /…/<id>/buy redirect carries DesiDime's campaign_id/pub_id.
+  const myn = /myntra\.com/.test(h) && u.pathname.match(/(\d+)(?:\/buy)?\/?$/);
+  if (myn) {
+    const page = `https://www.myntra.com/${myn[1]}`;
+    return { store: 'Myntra', productId: myn[1], affiliateUrl: inr(page), page };
+  }
   const clean = `${u.origin}${u.pathname}${u.search.replace(/[?&](utm_[^&]*|affid|affiliate_id|affExtParam\d|ascsubtag|tag|ref|social_share|cjdata|gad_[^&]*|gbraid|click_id|pwsvid|sessionid|sid)=[^&]*/g, '').replace(/^[?&]+$/, '').replace(/^&/, '?')}`;
   const name = h.split('.')[0].replace(/^(m|www|shop)$/, h.split('.')[1] || h);
   return {
