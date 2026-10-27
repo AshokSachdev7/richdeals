@@ -79,7 +79,8 @@ export function affiliate(finalUrl) {
   }
 
   // any other merchant — still has to be a single product page
-  if (NOT_A_PRODUCT.test(u.pathname + u.search) || u.pathname === '/') return null;
+  // Myntra is exempt: its PDP shape is enforced below, and IFS links /a/b/c/<id>/buy (the /c/ tripped this).
+  if (!/myntra[.]com/.test(h) && (NOT_A_PRODUCT.test(u.pathname + u.search) || u.pathname === '/')) return null;
   // Myntra category landings are bare slugs (/hand-towels, /personal-care,
   // /boroplus) — no product id, so they can never carry a price. 81 of them
   // shipped as live deals with price:null before this check. A real PDP is
