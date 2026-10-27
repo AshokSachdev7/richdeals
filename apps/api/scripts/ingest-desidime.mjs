@@ -92,7 +92,9 @@ await p.$disconnect();
 const REJ = new URL('../../../data/dd-rejected.json', import.meta.url);
 const rej = fs.existsSync(REJ) ? JSON.parse(fs.readFileSync(REJ, 'utf8')) : {};
 const cutoff = Date.now() - 24 * 3600e3;
-const fresh = out.filter((d) => !have.has(d.productId) && !(rej[d.productId] > cutoff));
+// ticks write epoch ms, ISO strings or {at} — normalize, else string > number is always false
+const rejAt = (v) => new Date(v && typeof v === 'object' ? v.at : v).getTime();
+const fresh = out.filter((d) => !have.has(d.productId) && !(rejAt(rej[d.productId]) > cutoff));
 fresh.forEach((d) => console.log(`  ${d.verify && d.verify !== 'ok' ? 'SKIP(' + d.verify + ')' : 'ok'} ${d.store} ${d.productId}  ₹${d.price ?? '?'}  ${d.title.slice(0, 45)}`));
 
 // stage-1 verify failures (drift/OOS/no ld+json) feed the 24h skip too — Amazon rejects are added by the tick
