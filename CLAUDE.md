@@ -108,7 +108,7 @@ cited by AI answer engines:
 
 Site-wide AEO/GEO: `robots.ts` explicitly allows all AI crawlers (GPTBot,
 ClaudeBot, PerplexityBot, Google-Extended, etc.); `/llms.txt` +
-`/llms-full.txt` route handlers; chunked sitemap + IndexNow (key
+`/llms-full.txt` route handlers; sitemap index (pages / deals / blog — deals child = TOP-100 indexable only per owner directive 2026-10-16, commit 216e250; all other deal pages stay live but `noindex,follow` and out of the sitemap, by design — not rot) + IndexNow (key
 `33f3a9d63ca15676bbd90586ea80e65f`) pinged to api.indexnow.org + Bing.
 
 ## Telegram deal sourcing (multi-group)
@@ -207,7 +207,7 @@ fabricated facts — the playbook lists the black-hat blocklist). Spawn the
   2. `sitemap.xml` carries the batch — it is ISR `revalidate = 1800`, so
      worst case is 30 min stale, never manually regenerated. If a new STATIC
      route was added, it must be appended to `staticRoutes` in
-     `apps/web/src/app/sitemaps/pages/sitemap.ts` by hand (dynamic deal/post/store/category
+     `apps/web/src/app/sitemaps/pages/sitemap.ts` by hand (dynamic post/store/category; deals = top-100 only, see above
      URLs come from the API automatically).
   3. `llms.txt` carries the batch — `force-dynamic`, rebuilt per request off
      `getDeals()`/`getPosts()`/`getStores()`/`getCategories()`. It only goes
