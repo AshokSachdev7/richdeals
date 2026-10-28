@@ -1,0 +1,262 @@
+{
+  "summary": {
+    "health_score": 69,
+    "projected_health_score_after_fixes": 73,
+    "business_type": "Affiliate deals/coupon aggregator (publisher, India)",
+    "fix_commit": "a169b7a",
+    "top_findings": [
+      "Duplicate post body (Raksha Bandhan = GIF guide) — FIXED 308",
+      "Mobile LCP 9-11s from opacity gate + oversized images + early modal — FIXED",
+      "Deal pages claimed live price on months-old data — FIXED",
+      "21 cannibal clusters / 49 posts",
+      "91 posts link only to thin YMYL /offers"
+    ],
+    "quick_wins": [
+      "Merge cannibal clusters via post-redirects.json",
+      "Relink /offers-only posts to deal hubs",
+      "Weekly top-100 price re-verify",
+      "Trim /maharishi-ayurveda title",
+      "favicon.ico + manifest"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 80,
+      "what_works": [
+        "HTTPS/HSTS",
+        "sitemap index + IndexNow",
+        "200s across sampled URLs",
+        "AI bots allowed"
+      ],
+      "findings": [
+        {
+          "title": "/api/out/ disallowed for agents",
+          "severity": "Medium",
+          "description": "CTA redirect under disallowed /api/",
+          "recommendation": "FIXED: allow /api/out/"
+        },
+        {
+          "title": "404 inherits canonical",
+          "severity": "Low",
+          "description": "not-found had root canonical",
+          "recommendation": "FIXED"
+        },
+        {
+          "title": "Uncached HTML",
+          "severity": "Medium",
+          "description": "no-store on ISR routes; /blog TTFB ~1s",
+          "recommendation": "Edge-cache public HTML"
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 58,
+      "what_works": [
+        "Template FAQs from real fields",
+        "daily fresh posts"
+      ],
+      "findings": [
+        {
+          "title": "Post body mismatches title",
+          "severity": "Critical",
+          "description": "raksha-bandhan post = GIF guide body",
+          "recommendation": "FIXED: 308"
+        },
+        {
+          "title": "Cannibal clusters",
+          "severity": "High",
+          "description": "21 clusters / 49 posts",
+          "recommendation": "Merge + 308"
+        },
+        {
+          "title": "/offers-only commercial link",
+          "severity": "High",
+          "description": "91 posts",
+          "recommendation": "Relink to deal/store pages"
+        },
+        {
+          "title": "No named people / contact",
+          "severity": "Medium",
+          "description": "All posts by RichDeals Editorial",
+          "recommendation": "Owner: named editor + email"
+        },
+        {
+          "title": "Missing Amazon Associates statement",
+          "severity": "Medium",
+          "description": "Not on any page",
+          "recommendation": "FIXED: footer + /disclosure"
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 75,
+      "what_works": [
+        "Unique deal titles/descs",
+        "canonicals"
+      ],
+      "findings": [
+        {
+          "title": "Duplicate category meta desc",
+          "severity": "Medium",
+          "description": "Template desc identical",
+          "recommendation": "FIXED: unique per category"
+        },
+        {
+          "title": "Long store title",
+          "severity": "Low",
+          "description": "/maharishi-ayurveda 70 chars",
+          "recommendation": "Trim to ≤60"
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 74,
+      "what_works": [
+        "Product/Offer/Breadcrumb/FAQPage on deals",
+        "Article on posts"
+      ],
+      "findings": [
+        {
+          "title": "Product+Offer on list pages",
+          "severity": "Medium",
+          "description": "30-40 Product items per hub",
+          "recommendation": "FIXED: url-only ItemList"
+        },
+        {
+          "title": "Stale priceValidUntil",
+          "severity": "High",
+          "description": "Not tied to check date",
+          "recommendation": "FIXED: check+14d"
+        },
+        {
+          "title": "Organization lacks contactPoint",
+          "severity": "Low",
+          "description": "sameAs only Telegram/Medium",
+          "recommendation": "Owner: email + profiles"
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 62,
+      "what_works": [
+        "CLS 0",
+        "desktop 75-96"
+      ],
+      "findings": [
+        {
+          "title": "Mobile LCP 9-11s",
+          "severity": "High",
+          "description": "opacity-0 until onLoad; 1500px card imgs",
+          "recommendation": "FIXED; re-measure"
+        },
+        {
+          "title": "Early modal",
+          "severity": "Medium",
+          "description": "Telegram modal at 2.5s",
+          "recommendation": "FIXED: 12s, no blur"
+        },
+        {
+          "title": "Eager AdSense/GTM",
+          "severity": "Medium",
+          "description": "Third-party on critical path",
+          "recommendation": "Lazy-load after interaction"
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 61,
+      "what_works": [
+        "All AI crawlers allowed",
+        "llms.txt + llms-full.txt",
+        "agentic UX 86"
+      ],
+      "findings": [
+        {
+          "title": "Weak brand authority",
+          "severity": "High",
+          "description": "No off-site mentions",
+          "recommendation": "Owner-approved Reddit/YouTube presence"
+        },
+        {
+          "title": "No source citations",
+          "severity": "Medium",
+          "description": "36/425 posts cite externally",
+          "recommendation": "Cite primary sources"
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "score": 70,
+      "what_works": [
+        "Alt text present",
+        "marketplace CDN"
+      ],
+      "findings": [
+        {
+          "title": "Oversized card images",
+          "severity": "Medium",
+          "description": "1500px into 240px",
+          "recommendation": "FIXED: _SL400_"
+        },
+        {
+          "title": "Covers not WebP",
+          "severity": "Low",
+          "description": "PNG/JPEG covers",
+          "recommendation": "WebP regen"
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Phase 1: Critical Fixes",
+        "timeframe": "Week 1",
+        "items": [
+          "DONE: duplicate post 308",
+          "DONE: LCP fixes",
+          "DONE: price-claim honesty + schema"
+        ]
+      },
+      {
+        "name": "Phase 2: High-Impact Improvements",
+        "timeframe": "Weeks 2-3",
+        "items": [
+          "Merge 21 cannibal clusters",
+          "Relink 91 /offers-only posts",
+          "Weekly top-100 price re-verify"
+        ]
+      },
+      {
+        "name": "Phase 3: Content & Authority",
+        "timeframe": "Month 2",
+        "items": [
+          "Named editor + contact (owner)",
+          "Loot hub + smartwatch guide hub",
+          "priceHistory on deal pages",
+          "WebP covers",
+          "Edge-cache HTML"
+        ]
+      },
+      {
+        "name": "Phase 4: Monitoring & Iteration",
+        "timeframe": "Ongoing",
+        "items": [
+          "Lighthouse re-measure 24h post-deploy",
+          "SITEMON hourly + SEO-AUDIT-FIX daily crons"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}
