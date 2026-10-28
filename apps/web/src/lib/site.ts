@@ -26,12 +26,9 @@ export function itemListSchema(paths: string[]) {
   };
 }
 
-// AEO/GEO: an ItemList that embeds a full Product + Offer per deal (name,
-// image, INR price, availability, seller) instead of a bare url — so answer
-// engines and Google's listing parsers can read prices straight off a listing
-// page without crawling each deal. Mirrors the single-deal Product schema.
-// Price-less deals still list (name + url + image), just without an Offer,
-// since a bare item inside an ItemList is valid where a lone Product isn't.
+// ItemList of deal URLs for listing pages. Deliberately NO nested Product/Offer:
+// Google's product guidelines bar product markup on multi-product listing pages
+// (claude-seo audit 2026-10-28). Each deal page carries its own Product schema.
 export function dealItemListSchema(
   deals: (Pick<DealDTO, "title" | "slug" | "price" | "image" | "status" | "createdAt"> & {
     store: { name: string };
@@ -43,25 +40,12 @@ export function dealItemListSchema(
     "@type": "ItemList",
     name,
     numberOfItems: deals.length,
-    itemListElement: deals.map((d, i) => {
-      const url = absUrl(`/${d.slug}`);
-      const product: Record<string, unknown> = { "@type": "Product", name: dealProductName(d), url };
-      if (d.image) product.image = [d.image];
-      if (d.price != null) {
-        product.offers = {
-          "@type": "Offer",
-          priceCurrency: "INR",
-          eligibleRegion: { "@type": "Country", name: "IN" },
-          price: String(d.price),
-          ...(d.status === "EXPIRED" ? {} : { priceValidUntil: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10) }),
-          validFrom: d.createdAt.slice(0, 10),
-          availability: d.status === "EXPIRED" ? "https://schema.org/Discontinued" : "https://schema.org/InStock",
-          url,
-          seller: { "@type": "Organization", name: d.store.name },
-        };
-      }
-      return { "@type": "ListItem", position: i + 1, url, item: product };
-    }),
+    itemListElement: deals.map((d, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: absUrl(`/${d.slug}`),
+      name: dealProductName(d),
+    })),
   };
 }
 
@@ -276,16 +260,25 @@ export function dealSummary(
   return parts.join(" ");
 }
 
+// When the price was last confirmed against the store (newest PriceHistory row,
+// else creation). Past 14 days we stop calling it "live" — schema and copy both.
+export function dealPriceCheck(deal: Pick<DealDTO, "createdAt" | "priceHistory">): { iso: string; label: string; stale: boolean } {
+  const iso = deal.priceHistory?.[0]?.postedAt ?? deal.createdAt;
+  const label = new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" });
+  return { iso, label, stale: Date.now() - new Date(iso).getTime() > 14 * 86400000 };
+}
+
 // AEO/GEO: build a small, genuinely-useful FAQ from a deal's real fields so
 // deal pages carry FAQPage schema (rich results + AI-answer citations) with
 // visible matching copy. Questions vary by product category + discount so no
 // two deal pages share the same FAQ. No fabricated facts.
 export function dealFaq(
-  deal: Pick<DealDTO, "title" | "price" | "mrp" | "discountPct" | "couponNote" | "status"> & {
+  deal: Pick<DealDTO, "title" | "price" | "mrp" | "discountPct" | "couponNote" | "status" | "createdAt" | "priceHistory"> & {
     store: { name: string };
   },
 ): { q: string; a: string }[] {
   const name = dealProductName(deal);
+  const check = dealPriceCheck(deal);
   const store = deal.store.name;
   const expired = deal.status === "EXPIRED";
   const disc = discountOf(deal);
@@ -304,7 +297,7 @@ export function dealFaq(
     a: price
       ? expired
         ? `${name} was last tracked at ${price}${cheaper} on ${store}. That offer has ended, so the current price on the ${store} listing will be higher — the figure is kept here for price reference.`
-        : `${name} is available for ${price}${cheaper} through ${SITE_NAME}'s ${store} link. Prices change quickly during sales, so confirm the live price before you order.`
+        : `${name} is available for ${price}${cheaper} through the ${SITE_NAME} ${store} link. Prices change quickly during sales, so confirm the live price before you order.`
       : `Tap Get Deal to see the current live price of ${name} on ${store}. ${SITE_NAME} always links to the latest marketplace price.`,
   });
 
@@ -400,7 +393,9 @@ export function dealFaq(
     q: `Is this ${name} deal still available?`,
     a: expired
       ? `No — this offer has ended. The page stays up so you can see what ${name} sold for, and the ${store} link still opens the same product if you want the current price.`
-      : `Yes — this deal is live on ${SITE_NAME} right now. Offers like this can sell out or expire once the promotion ends, so grab it soon if the price works for you.`,
+      : check.stale
+        ? `We last confirmed this price on ${store} on ${check.label}. Store prices move often, so tap Get Deal to see today's price before you buy.`
+        : `Yes — ${SITE_NAME} confirmed this price on ${store} on ${check.label}. Offers like this can sell out or expire once the promotion ends, so grab it soon if the price works for you.`,
   });
   faqs.push({
     q: expired ? `Where can I still buy ${name}?` : `How do I get this ${store} deal safely?`,

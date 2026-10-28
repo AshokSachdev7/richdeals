@@ -19,6 +19,10 @@ const STORE_LOGOS: Record<string, string> = {
   firstcry: "/stores/firstcry.svg",
 };
 
+// Amazon CDN images carry a size token (._SL1500_. / ._AC_SL1200_.); cards render ≤240px.
+const cardImage = (src: string) =>
+  src.includes("m.media-amazon.com") ? src.replace(/\._[A-Z0-9_,]+_\.(jpe?g|png|webp)$/i, "._SL400_.$1") : src;
+
 export default function DealCard({ deal }: { deal: DealDTO }) {
   const discount = discountOf(deal);
   const save = deal.mrp != null && deal.price != null && deal.mrp > deal.price ? deal.mrp - deal.price : null;
@@ -34,7 +38,7 @@ export default function DealCard({ deal }: { deal: DealDTO }) {
       >
         {deal.image ? (
           <ProductImage
-            src={deal.image}
+            src={cardImage(deal.image)}
             alt={deal.title}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 240px"
             className="object-contain p-4 group-hover:scale-[1.06]"

@@ -20,6 +20,9 @@ export default function DisclosurePage() {
             {SITE_NAME} is a free deals and coupons website. To keep it free, we participate in affiliate
             programs run by retailers such as Amazon, Flipkart and others, and via affiliate networks.
           </p>
+          <p>
+            <strong>As an Amazon Associate {SITE_NAME} earns from qualifying purchases.</strong>
+          </p>
           <h2 className="pt-2 text-base font-bold text-ink">How affiliate links work</h2>
           <p>
             When you click a &ldquo;Grab Deal&rdquo; button and buy something, we may earn a small commission

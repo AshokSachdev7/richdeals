@@ -162,7 +162,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <div className="border-t border-gray-200 py-5 text-center text-xs leading-relaxed text-gray-400">
             © {new Date().getFullYear()} {SITE_NAME}. All prices &amp; offers are subject to change and were accurate at the time of publishing.
-            <br className="sm:hidden" /> As an affiliate we may earn a commission on qualifying purchases.
+            <br className="sm:hidden" /> As an Amazon Associate {SITE_NAME} earns from qualifying purchases; we may also earn commissions from other stores.
           </div>
         </footer>
       </body>

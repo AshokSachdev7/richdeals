@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-// next/image with a shimmer skeleton shown until the image finishes loading.
+// next/image over a shimmer skeleton (the image paints on top as it decodes).
 // Parent must be `relative` (the skeleton + image are absolutely filled).
 export default function ProductImage({
   src,
@@ -45,7 +45,8 @@ export default function ProductImage({
         fetchPriority={priority ? "high" : undefined}
         onLoad={() => setLoaded(true)}
         onError={() => setLoaded(true)}
-        className={`${className} transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+        // Always visible: an opacity-0 gate held LCP until hydration + onLoad.
+        className={className}
       />
     </>
   );

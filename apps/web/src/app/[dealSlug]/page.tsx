@@ -8,7 +8,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import CopyCode from "@/components/CopyCode";
 import ForumThread from "@/components/ForumThread";
-import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle, dealFaq, dealProductName, dealSummary, dealIndexable } from "@/lib/site";
+import { SITE_NAME, absUrl, formatINR, discountOf, dealSeoTitle, dealFaq, dealProductName, dealSummary, dealIndexable, dealPriceCheck } from "@/lib/site";
 
 // Always SSR fresh: ISR + broken on-demand revalidation was serving stale deal
 // pages (old prices, removed UI) for far longer than the revalidate window.
@@ -97,8 +97,8 @@ const TRUST: { label: string; sub: string; icon: React.ReactNode }[] = [
     icon: <path d="M9 12.5l2 2 4-4.5M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />,
   },
   {
-    label: "Live price",
-    sub: "Pulled straight from the store",
+    label: "Store price",
+    sub: "Checked against the store's own listing",
     icon: <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z" />,
   },
   {
@@ -134,8 +134,11 @@ export default async function DealPage({ params }: Props) {
   // block at all; BreadcrumbList + FAQPage still carry the page.
   // No price → no Offer (never fall back to MRP: schema would contradict the page).
   const offerPrice = deal.price;
-  // Expired deals carry no future validity; validFrom is when the deal was posted, not render time.
-  const priceValidUntil = expired ? undefined : new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
+  // Validity runs 14d from the last real price check, never from render time —
+  // a stale (or expired) price gets no priceValidUntil rather than a fake future one.
+  const check = dealPriceCheck(deal);
+  const priceValidUntil =
+    expired || check.stale ? undefined : new Date(new Date(check.iso).getTime() + 14 * 86400000).toISOString().slice(0, 10);
   const validFrom = deal.createdAt.slice(0, 10);
   // Google Merchant Listings caps Product 'name' at 150 chars; the raw deal
   // title (with its "at ₹X – Store" tail) overran it on long items. Use the
@@ -172,8 +175,9 @@ export default async function DealPage({ params }: Props) {
             availability: expired
               ? "https://schema.org/Discontinued"
               : "https://schema.org/InStock",
+            // No `seller`: we're an affiliate, not the merchant — naming Amazon as
+            // seller on our page reads as a misrepresented offer to merchant listings.
             url: canonical,
-            seller: { "@type": "Organization", name: deal.store.name },
           },
         };
   const breadcrumbSchema = {
@@ -363,7 +367,11 @@ export default async function DealPage({ params }: Props) {
                 <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 text-brand" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <path d="M8 2v3M8 11v3M2 8h3M11 8h3" strokeLinecap="round" />
                 </svg>
-                Live price on {deal.store.name} — grab it before it changes
+                {expired
+                  ? `Deal ended — check today's price on ${deal.store.name}`
+                  : check.stale
+                    ? `Price checked on ${deal.store.name} on ${check.label} — confirm today's price`
+                    : `Price checked on ${deal.store.name} on ${check.label} — grab it before it changes`}
               </p>
 
               {/* Coupon */}

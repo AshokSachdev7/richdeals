@@ -1,10 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_NAME } from "@/lib/site";
 
 // ponytail: Next's built-in 404 is a dead end — no links, no crawl paths out.
 // This keeps the layout chrome and hands both users and crawlers the hubs.
-// Canonical/robots stay with the root layout: Next emits its own
-// <meta name="robots" content="noindex"> for not-found, which wins.
+// Own title, no canonical: the 404 must not inherit the homepage's. Next adds
+// its own noindex for not-found, so no robots here (it would double up).
+export const metadata: Metadata = {
+  title: "Page not found",
+  alternates: { canonical: null },
+};
+
 const LINKS = [
   { href: "/offers", label: "All live deals" },
   { href: "/categories", label: "Browse categories" },

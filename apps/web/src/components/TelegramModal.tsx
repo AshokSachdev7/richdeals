@@ -17,7 +17,9 @@ export default function TelegramModal() {
     if (localStorage.getItem(JOINED)) return;               // already joined → done
     const count = Number(localStorage.getItem(COUNT) || "0");
     if (count >= MAX_SHOWS) return;                          // dismissed 7 times → stop
-    const t = setTimeout(() => setOpen(true), 2500);        // show on landing
+    // 12s, not on landing: an early full-screen overlay became the mobile LCP
+    // element and reads as an intrusive interstitial.
+    const t = setTimeout(() => setOpen(true), 12000);
     return () => clearTimeout(t);
   }, []);
 
@@ -42,7 +44,7 @@ export default function TelegramModal() {
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex items-end justify-center bg-black/50 p-4 backdrop-blur-sm sm:items-center"
+      className="fixed inset-0 z-[1000] flex items-end justify-center bg-black/50 p-4 sm:items-center"
       role="dialog"
       aria-modal="true"
       aria-labelledby="tg-modal-title"

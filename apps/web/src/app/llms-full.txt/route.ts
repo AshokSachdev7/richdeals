@@ -1,5 +1,5 @@
 import { getDeals, getStores, getCategories, getTopDeals } from "@/lib/api";
-import { absUrl, SITE_NAME, formatINR, discountOf, dealIndexable } from "@/lib/site";
+import { absUrl, SITE_NAME, formatINR, discountOf, dealIndexable, dealProductName } from "@/lib/site";
 
 // Always render live so a deploy-time API blip never caches an empty file.
 export const dynamic = "force-dynamic";
@@ -28,7 +28,7 @@ export async function GET() {
       // Per-deal date: without it an assistant can't tell a price checked an
       // hour ago from one checked last month.
       const verified = new Date(d.priceHistory?.[0]?.postedAt ?? d.createdAt).toISOString().slice(0, 10);
-      return `### ${d.title}${status}
+      return `### ${dealProductName(d)}${status}
 - Price: ${price}${mrp}
 - Store: ${d.store.name}
 - Price last verified: ${verified}

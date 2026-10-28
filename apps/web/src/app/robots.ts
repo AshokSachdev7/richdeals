@@ -9,8 +9,8 @@ const AI_BOTS = [
   "OAI-SearchBot",
   "ChatGPT-User",
   "ClaudeBot",
-  "Claude-Web",
-  "anthropic-ai",
+  "Claude-SearchBot",
+  "Claude-User",
   "PerplexityBot",
   "Perplexity-User",
   "Google-Extended",
@@ -23,7 +23,8 @@ const AI_BOTS = [
 ];
 
 export default function robots(): MetadataRoute.Robots {
-  const allowRules = { allow: "/", disallow: ["/search", "/api/", "/admin"] };
+  // /api/out/ is the deal CTA redirect — agents following "Get Deal" must not hit a Disallow.
+  const allowRules = { allow: ["/", "/api/out/"], disallow: ["/search", "/api/", "/admin"] };
   return {
     rules: [
       // Explicit allow for each AI crawler (belt-and-suspenders over the wildcard).

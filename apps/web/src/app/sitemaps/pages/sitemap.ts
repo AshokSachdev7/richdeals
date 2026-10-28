@@ -29,12 +29,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absUrl("/compare"), lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: absUrl("/alternatives"), lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: absUrl("/forum"), lastModified: now, changeFrequency: "hourly", priority: 0.6 },
-    // Trust pages — AdSense review and Google both look for these.
-    { url: absUrl("/about"), lastModified: now, changeFrequency: "monthly", priority: 0.4 },
-    { url: absUrl("/contact"), lastModified: now, changeFrequency: "monthly", priority: 0.4 },
-    { url: absUrl("/privacy"), lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    { url: absUrl("/terms"), lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    { url: absUrl("/disclosure"), lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    // Trust pages — AdSense review and Google both look for these. No lastmod:
+    // they rarely change, and a lastmod that is always "now" gets ignored.
+    { url: absUrl("/about"), changeFrequency: "monthly", priority: 0.4 },
+    { url: absUrl("/contact"), changeFrequency: "monthly", priority: 0.4 },
+    { url: absUrl("/privacy"), changeFrequency: "yearly", priority: 0.3 },
+    { url: absUrl("/terms"), changeFrequency: "yearly", priority: 0.3 },
+    { url: absUrl("/disclosure"), changeFrequency: "yearly", priority: 0.3 },
   ];
 
   const [stores, categories] = await Promise.all([getStores(), getCategories()]);

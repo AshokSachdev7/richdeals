@@ -34,7 +34,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const name = cat?.name || titleize(slug);
   const label = CATEGORY_TYPE_LABEL[type];
   const title = `${name} ${label} Deals & Offers`;
-  const description = `Best ${name} deals, offers & coupons in India — live prices verified from Amazon, Flipkart, Myntra & 100+ stores, updated fresh every day on ${SITE_NAME}.`;
+  const description = `Best ${name} deals, offers & coupons in India — prices checked against Amazon, Flipkart, Myntra & 100+ stores on ${SITE_NAME}.`;
   return {
     title,
     description,
@@ -61,7 +61,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   const crumbs = [
     { name: "Home", href: "/" },
-    { name: CATEGORY_TYPE_LABEL[type], href: "/" },
+    { name: CATEGORY_TYPE_LABEL[type], href: "/categories" },
     { name, href: `/category/${type}/${slug}` },
   ];
 
@@ -75,7 +75,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       <h1 className="text-2xl font-extrabold">{name} Deals</h1>
       <p className="mt-1 text-sm text-gray-500">
         Discover the latest {name} offers, discounts and coupon codes handpicked by {SITE_NAME}.
-        Prices refresh throughout the day — grab them before they expire.
+        Each deal shows the date its price was last checked — confirm on the store before you buy.
       </p>
       <div className="mb-5 mt-4 flex justify-end">
         <SortControl />

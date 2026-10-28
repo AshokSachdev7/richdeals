@@ -203,7 +203,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* Hero */}
       {cover.type === "image" ? (
-        <LazyImage src={cover.src} alt={post.title} className="mt-6 aspect-[16/9] w-full rounded-2xl" />
+        <LazyImage priority src={cover.src} alt={post.title} className="mt-6 aspect-[16/9] w-full rounded-2xl" />
       ) : (
         <div className={`mt-6 flex aspect-[21/9] w-full items-center justify-center rounded-2xl bg-gradient-to-br ${cover.gradient}`} aria-hidden="true">
           <span className="font-display text-7xl font-black text-white/90">%</span>
@@ -251,7 +251,7 @@ export default async function BlogPostPage({ params }: Props) {
           <h2 id="related-heading" className="mb-5 font-display text-2xl font-bold text-ink">Keep reading</h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((p) => (
-              <BlogCard key={p.slug} post={p} />
+              <BlogCard key={p.slug} post={p} heading="h3" />
             ))}
           </div>
         </section>
