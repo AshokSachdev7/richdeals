@@ -70,9 +70,18 @@ console.log(`discovered ${found.length} cards, ${junk.length} junk/other-store d
 const out = [];
 const byProduct = new Set();
 for (const c of keep) {
-  const final = curlFinal(c.buy);
-  const aff = affiliate(final);
+  let final = curlFinal(c.buy);
+  let aff = affiliate(final);
   sleep(GAP);
+  // Since 10-28 DesiDime's Flipkart links resolve to /p/itm<hash> with NO ?pid=,
+  // so affiliate() nulled them and 8 real PDPs/sweep went to dd-dead for good.
+  // The PDP names its own pid far more often than any related listing — take the mode.
+  if (!aff && /flipkart\.com\/[^?]+\/p\/itm[a-z0-9]+/i.test(final) && !/[?&]pid=/.test(final)) {
+    const ids = (curl(final.split('?')[0]).match(/"productId":"[A-Z0-9]{16}"/g) || []);
+    const pid = Object.entries(ids.reduce((m, s) => ((m[s] = (m[s] || 0) + 1), m), {})).sort((a, b) => b[1] - a[1])[0]?.[0].slice(13, 29);
+    if (pid) { final = `${final.split('?')[0]}?pid=${pid}`; aff = affiliate(final); }
+    sleep(GAP);
+  }
   if (!aff) { dead.add(c.id); console.log(`  drop ${c.title.slice(0, 40)} -> ${final.slice(0, 60)}`); continue; }
   if (byProduct.has(aff.productId)) continue; // same product posted twice on the listing
   byProduct.add(aff.productId);
