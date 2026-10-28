@@ -54,8 +54,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const joined = raw.length >= 110 ? raw : raw ? `${raw.replace(/[.\s]+$/, "")}. ${tail}` : tail;
   // Description-less deals with a short name still landed ~100c (159 live rows) — pad with the verify line.
   const full = joined.length < 110 ? `${joined} Price checked on the live store page before listing.` : joined;
-  const description =
-    full.length > 160 ? full.slice(0, 160).replace(/\s+\S*$/, "").replace(/[\s,;:–—-]+$/, "") + "…" : full;
+  // A cut that lands on a sentence end keeps its full stop and gets no "…" (671 live rows read "Foot.…").
+  const cut = full.slice(0, 160).replace(/\s+\S*$/, "").replace(/[\s,;:–—-]+$/, "");
+  const description = full.length <= 160 ? full : /[.!?]$/.test(cut) ? cut : cut + "…";
   const canonical = absUrl(`/${deal.slug}`);
   const seoTitle = dealSeoTitle(deal);
 
