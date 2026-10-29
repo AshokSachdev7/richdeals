@@ -12,7 +12,7 @@
 | Fresh candidates | 0 |
 | **Pushed LIVE** | **0** |
 
-The DesiDime feed has not changed since 10-29c, apart from the Sony XM6 card (rejected in 10-29c for price drift) no longer being fresh because it is now in `dd-rejected.json`.
+Compared with 10-29c, the 1 fresh card is gone: 17 of 17 resolved products are dedup hits. The log does not name the silent dedup hits, so it is unconfirmed whether that card was the Sony XM6 (B0GZNZCR9Y), which is now stamped in `dd-rejected.json`.
 
 ## Duplicate re-verify (logged-in Playwright Amazon tab, `#corePriceDisplay .a-price-whole`)
 | DB row | Product | DB ₹ | Card ₹ | PDP ₹ | Action |
