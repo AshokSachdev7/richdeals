@@ -1,4 +1,4 @@
-# DESIDIME-INGEST: 2026-10-29e (~14:00 IST)
+# DESIDIME-INGEST: 2026-10-29e (~08:30 IST)
 
 **Result: 0 pushed. The 1 fresh candidate was rejected for price drift and the 2 named dups match the DB to the rupee, so no ping was needed. CEO audit clean.**
 
