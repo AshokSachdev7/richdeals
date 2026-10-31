@@ -102,7 +102,7 @@ const REJ = new URL('../../../data/dd-rejected.json', import.meta.url);
 const rej = fs.existsSync(REJ) ? JSON.parse(fs.readFileSync(REJ, 'utf8')) : {};
 const cutoff = Date.now() - 24 * 3600e3;
 // ticks write epoch ms, ISO strings or {at} — normalize, else string > number is always false
-const rejAt = (v) => new Date(v && typeof v === 'object' ? v.at : v).getTime();
+const rejAt = (v) => { const x = v && typeof v === 'object' ? v.at : v; return new Date(typeof x === 'string' && /^\d+$/.test(x) ? +x : x).getTime(); }; // digit-string epoch-ms = NaN otherwise
 const fresh = out.filter((d) => !have.has(d.productId) && !(rejAt(rej[d.productId]) > cutoff));
 // name the dedup hits — a repost of a LIVE row usually means its price moved (dup-repost-reverify)
 out.filter((d) => have.has(d.productId)).forEach((d) => console.log(`  dup ${d.store} ${d.productId}  ₹${d.price ?? '?'}  ${d.title.slice(0, 45)}`));
