@@ -1,4 +1,4 @@
-# CONTENT-SEO: 2026-10-31c (~18:43 IST)
+# CONTENT-SEO: 2026-10-31c (~13:13 IST)
 
 **Result: 1 TOFU explainer published (#582). It returns 200 on prod with Article and FAQPage JSON-LD, the cover is on DO Spaces, and IndexNow returned 200. 10-31 IST is now at 3 of the 4-post cap. CEO audit clean.**
 
@@ -64,7 +64,7 @@ The post has no in-body images, so the cover's alt comes from `post.title`.
 | LIVE with null price / null image | 0 / 0 |
 | Posts | 453 total, 0 coverless, 0 seo-less |
 | Posts per day (IST) | 10-26: 4, 10-27: 3, 10-28: 4, 10-29: 4, 10-30: 4, 10-31: **3** |
-| Broadcast cursor vs DB max | `lastId` 15,760 vs 15,789. The file's ts is 5 minutes old (18:39 IST). It is draining the IFS 10-31g batch (#15756–#15789), so this is not rot |
+| Broadcast cursor vs DB max | `lastId` 15,760 vs 15,789. The file's ts is 5 minutes old (13:09 IST). It is draining the IFS 10-31g batch (#15756–#15789), so this is not rot |
 | Unpushed commits | 0 before this report (after `git fetch`) |
 | Session crons | 9/9 match `.claude/cron-schedules.md` |
 
