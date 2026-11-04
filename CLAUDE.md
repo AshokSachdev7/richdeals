@@ -90,7 +90,8 @@ Every deal page (`/{deal-slug}`, `apps/web/src/app/[dealSlug]/page.tsx`)
 ships three JSON-LD blocks + matching visible copy so it ranks AND gets
 cited by AI answer engines:
 - **Product + Offer** schema (price, INR currency, `priceValidUntil` +14d,
-  availability = InStock / Discontinued when expired, seller = store). Offer
+  availability = InStock / Discontinued when expired; NO `seller` by design —
+  we're an affiliate, not the merchant, see `[dealSlug]/page.tsx:178`). Offer
   omitted entirely when there's no price (invalid schema otherwise).
 - **BreadcrumbList** schema.
 - **FAQPage** schema — built by `dealFaq(deal)` in `lib/site.ts` from the
