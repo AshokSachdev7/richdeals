@@ -27,7 +27,7 @@ export const inr = (url) =>
 export const JUNK = /free\s*(on|with|above)\b|gift\s*card|cashback|quiz|answers|loot|free\s*fire|diamonds|recharge|refer|coupon|play\s*store|app\s*download|whatsapp|telegram\s*channel|blinkit|bigbasket|zepto|instamart|swiggy|zomato|prime\s*membership|subscription|upto\s*\d+%|flat\s*\d+%\s*off|buy\s*\d+\s*get|sale\s*is\s*live|up\s*to\s*\d+%|deals?\s*up\s*to|\bhaul\b|\bfest\b|starting\s*from\s*(rs|₹)/i;
 
 // Groceries and perishables: low ticket, location-locked, price swings daily.
-export const GROCERY = /\b(oil|atta|maida|rice|dal|pulses|masala|saunf|fennel|jeera|haldi|rambutan|mango|banana|fruits?|vegetable|dry\s*fruits|almond|cashew|kaju|badam|ghee|sugar|salt|milk|paneer|honey|biscuit|namkeen|noodles|juice|tea|coffee|chana|makhana|namkeen|snacks?|poha|besan|detergent)\b/i;
+export const GROCERY = /\b(oil|atta|maida|rice|dal|pulses|masala|saunf|fennel|jeera|haldi|rambutan|mango|banana|fruits?|vegetable|dry\s*fruits|almond|cashew|kaju|badam|ghee|sugar|salt|milk|paneer|honey|biscuit|cakes?|cookies?|rusk|namkeen|noodles|juice|tea|coffee|chana|makhana|namkeen|snacks?|poha|besan|detergent)\b/i;
 
 // ADS-REST-03/07: AdSense restricts weapons and unapproved health supplements.
 // Pages carrying these products can't run ads and risk the whole account at
