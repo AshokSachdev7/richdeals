@@ -57,7 +57,7 @@ Posts per day (IST): 11-10 3, 11-11 3, 11-12 3, 11-13 2, 11-14 2, 11-15 2, **11-
 
 ## Still open
 
-- **The IFS source is blocked.** The next IFS tick (14:23 IST) probes one fresh `?rto=` before running the full sweep. If it still redirects to `/`, it records 0 and stops. If it is still dead after 11-17, find a replacement source; until then TG and DesiDime carry the deal flow.
+- **The IFS source is blocked.** The next IFS tick (14:53 IST) probes one fresh `?rto=` before running the full sweep. If it still redirects to `/`, it records 0 and stops. If it is still dead after 11-17, find a replacement source; until then TG and DesiDime carry the deal flow.
 - #9689 Haier washer has no buy box; on watch.
 - #14635 (Mivi, Flipkart) has no priceValidUntil.
 - #11896: Flipkart drift, lapses 11-18.
