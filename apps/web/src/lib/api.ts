@@ -99,7 +99,9 @@ export async function getTopDeals(): Promise<{ top: Set<string>; deals: DealDTO[
 }
 
 export function getDeal(slug: string): Promise<DealDTO | null> {
-  return apiGet<DealDTO | null>(`/deals/${encodeURIComponent(slug)}`, null);
+  // revalidate 0: the deal page is force-dynamic, but a cached read served the
+  // pre-sync Offer price once after a direct prisma price sync (schema-audit 11-16).
+  return apiGet<DealDTO | null>(`/deals/${encodeURIComponent(slug)}`, null, 0);
 }
 
 export function getStores(): Promise<StoreDTO[]> {
