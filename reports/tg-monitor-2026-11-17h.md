@@ -75,4 +75,4 @@ Posts per day (IST): 11-11 3, 11-12 3, 11-13 2, 11-14 2, 11-15 2, 11-16 3, **11-
 - **ASIN reuse:** #2351, #15344 and #6989. B0C7BM7L45 has two LIVE pages (#5577, #7673).
 - **DO API token:** still needs rotating (owner action).
 
-The next TELEGRAM-DEAL-MONITOR run is at about 08:07 IST (11-17), per CronList. Daytime yield should pick up from around 09:00 IST. Session crons auto-expire around 11-19; to re-arm them, the owner says "restore all crons".
+The next TELEGRAM-DEAL-MONITOR run is at about 08:03 IST (11-17), per CronList. Daytime yield should pick up from around 09:00 IST. Session crons auto-expire around 11-19; to re-arm them, the owner says "restore all crons".
