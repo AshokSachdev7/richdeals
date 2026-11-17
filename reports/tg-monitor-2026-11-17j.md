@@ -94,7 +94,7 @@ Posts per day (IST): 11-11 3, 11-12 3, 11-13 2, 11-14 2, 11-15 2, 11-16 3, **11-
 
 ## Still open
 
-- **Bulk push leaves discountPct null:** the `/admin/deals/bulk` endpoint does not compute it from price and M.R.P. Until the endpoint is fixed, every push needs a manual follow-up.
+- **discountPct on bulk pushes:** `/admin/deals/bulk` stores `discountPct` only when the payload sends it; it does not derive it from price and M.R.P. This tick's payload left it out. Push files must carry `discountPct` on every row.
 - **IFS source dead:** twelve dry ticks in a row (redirector down since 11-16). DesiDime and Telegram carry ingest. If it is still dead after 11-17, the IFS slot should move to another source.
 - **Same-price confirms:** they write no priceHistory row, so 94.2% of LIVE deals carry no priceValidUntil.
 - **No buy box, on watch:** #9689, #15663, #14424.
