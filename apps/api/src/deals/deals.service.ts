@@ -64,24 +64,25 @@ export class DealsService {
   // Top 100 LIVE deals that pass the web's quality gate (price, image,
   // <=120 days, >=20% off or >=200c copy). GSC-proven pages go first, then
   // outbound clicks (real buyer demand) fill the rest.
+  // Pins skip the age gate and the discount/copy filter: Google already
+  // ranks them, so ageing them out of the sitemap at day 120 would drop
+  // the only deal pages with impressions (2026-11-11).
   // ponytail: 400-row scan filtered in JS; fine at this size.
   async topIndexable(limit = 100): Promise<{ slug: string; title: string }[]> {
-    const where = {
-      status: 'LIVE' as const,
-      price: { not: null },
-      image: { not: null },
-      createdAt: { gte: new Date(Date.now() - 120 * 86_400_000) },
-    };
+    const pinWhere = { status: 'LIVE' as const, price: { not: null }, image: { not: null } };
+    const where = { ...pinWhere, createdAt: { gte: new Date(Date.now() - 120 * 86_400_000) } };
     const select = { slug: true, title: true, price: true, mrp: true, discountPct: true, description: true };
     const [pinned, byClicks] = await Promise.all([
-      this.prisma.deal.findMany({ where: { ...where, slug: { in: GSC_PROVEN_SLUGS } }, select }),
+      this.prisma.deal.findMany({ where: { ...pinWhere, slug: { in: GSC_PROVEN_SLUGS } }, select }),
       this.prisma.deal.findMany({ where, orderBy: [{ clickCount: 'desc' }, { id: 'desc' }], take: 400, select }),
     ]);
+    const pins = new Set(pinned.map((d) => d.slug));
     const seen = new Set<string>();
     return [...pinned, ...byClicks]
       .filter((d) => {
         if (seen.has(d.slug)) return false;
         seen.add(d.slug);
+        if (pins.has(d.slug)) return true;
         const disc = d.discountPct ?? (d.mrp && d.price != null && d.mrp > d.price ? Math.round((1 - d.price / d.mrp) * 100) : null);
         return (disc != null && disc >= 20) || (d.description?.length ?? 0) >= 200;
       })
