@@ -103,4 +103,4 @@ Posts per day (IST): 11-09 3, 11-10 3, 11-11 3, 11-12 3, 11-13 2, 11-14 2, 11-15
 - **ASIN reuse:** #2351, #15344 and #6989. B0C7BM7L45 has two LIVE pages (#5577, #7673).
 - **DO API token:** still needs rotating (owner action).
 
-CronList next runs (IST, 11-18): SITEMON 14:50, DEAL-INGEST 14:53, TG 15:03, DESIDIME 15:43, CONTENT-SEO 18:39, INDEXNOW 19:05. On 11-19: SCHEMA-AUDIT 04:39 and SEO-AUDIT-FIX 05:58. AI-OVERVIEW runs 11-25 at 11:39. Session crons auto-expire around 11-19; to re-arm them, the owner says "restore all crons".
+CronList next runs (IST, 11-18): SITEMON 14:50, DEAL-INGEST 14:53, TG 15:03, DESIDIME 16:43, CONTENT-SEO 18:39, INDEXNOW 19:05. On 11-19: SCHEMA-AUDIT 04:39 and SEO-AUDIT-FIX 05:58. AI-OVERVIEW runs 11-25 at 11:39. Session crons auto-expire around 11-19; to re-arm them, the owner says "restore all crons".
