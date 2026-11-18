@@ -127,11 +127,9 @@ export function discountOf(deal: Pick<DealDTO, "discountPct" | "mrp" | "price">)
 // low-value / thin / stale long tail. Those pages stay LIVE (never 404) and
 // keep working in the affiliate flow — they just drop out of Google's index so
 // ~9k near-identical merchant-style pages stop reading as scaled thin content.
-// Gate = must have price + image + not expired, AND:
-//   - real saving (discountOf ≥ 20%, computed from discountPct or MRP/price so
-//     Amazon PDPs with hidden MRP still qualify off their own %), OR a
-//     substantive original writeup (description ≥ 200 chars, our rewrite not a stub)
-//   - AND fresh: created within 120 days (stale deal prices rot + age drags quality)
+// Gate (applied in DealsService.topIndexable, which builds `top`): price +
+// image + not expired, AND >=20% off or a >=200-char writeup, AND created
+// within 120 days. GSC-proven pins skip the last two.
 export function dealIndexable(
   deal: Pick<DealDTO, "slug" | "status" | "price" | "image" | "description" | "discountPct" | "mrp" | "createdAt">,
   // Owner directive 2026-10-16: only the top 100 deals (by clicks, from
@@ -141,13 +139,11 @@ export function dealIndexable(
   // than flooding 12k thin pages back into the index.
   top: Set<string>,
 ): boolean {
+  // The quality/age gate lives in DealsService.topIndexable() only. Re-checking
+  // it here noindexed the GSC-proven pins (which skip it by design) the day
+  // they turned 120 days old (2026-11-18: 10 of 59 pins, incl. #1016).
   if (!top.has(deal.slug)) return false;
-  if (deal.status === "EXPIRED" || deal.price == null || !deal.image) return false;
-  const disc = discountOf(deal);
-  const valuable = (disc != null && disc >= 20) || (deal.description?.length ?? 0) >= 200;
-  if (!valuable) return false;
-  const ageDays = (Date.now() - new Date(deal.createdAt).getTime()) / 86_400_000;
-  return ageDays <= 120;
+  return deal.status !== "EXPIRED" && deal.price != null && !!deal.image;
 }
 
 // Clean marketplace product name — strips the " at ₹X – Store" tail + pipe junk.
