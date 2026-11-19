@@ -56,6 +56,10 @@ between requests to desidime.com and to merchants). Read the JSON, then push.
    header `x-admin-key: dev-admin-key-change-me`. Slug = kebab title + the
    lowercased productId. No manual review gate — auto-approve is the standing
    owner directive.
+6. **Dup hits (`dup …` lines) on a LIVE row: re-read the PDP.** A repost
+   usually means the price moved. If it did, `prisma.deal.update` the price
+   (and the ₹ in the title), then `prisma.priceHistory.create({data:{dealId,
+   price}})` — a reprice without its priceHistory row breaks the price chart.
 
 ## Hard rules
 
