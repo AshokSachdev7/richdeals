@@ -10,7 +10,10 @@ const BUCKET = process.env.SPACES_BUCKET || 'richdeals';
 const CDN = process.env.SPACES_CDN || `https://${BUCKET}.${REGION}.digitaloceanspaces.com`;
 if (!KEY || !SECRET) { console.error('missing SPACES_KEY/SECRET'); process.exit(1); }
 
-const s3 = new S3Client({ endpoint: `https://${REGION}.digitaloceanspaces.com`, region: 'us-east-1', forcePathStyle: false, credentials: { accessKeyId: KEY, secretAccessKey: SECRET } });
+const ENDPOINT = process.env.SPACES_ENDPOINT || `https://${REGION}.digitaloceanspaces.com`;
+// GCS uniform access rejects per-object ACLs; Spaces needs public-read.
+const ACL = ENDPOINT.includes('digitaloceanspaces') ? 'public-read' : undefined;
+const s3 = new S3Client({ endpoint: ENDPOINT, region: 'us-east-1', forcePathStyle: false, requestChecksumCalculation: 'WHEN_REQUIRED', credentials: { accessKeyId: KEY, secretAccessKey: SECRET } });
 
 const GRADS = [['#f14b57', '#c1121f'], ['#e63946', '#7a0c15'], ['#f77f00', '#c1121f'], ['#c1121f', '#0f172a'], ['#f59e0b', '#c1121f']];
 const hash = (s) => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h); };
@@ -55,7 +58,7 @@ let done = 0;
 for (const post of posts) {
   const png = await sharp(Buffer.from(svg(post.title, category(post.title), post.slug))).png().toBuffer();
   const key = `og/${post.slug}.png`;
-  await s3.send(new PutObjectCommand({ Bucket: BUCKET, Key: key, Body: png, ContentType: 'image/png', ACL: 'public-read', CacheControl: 'public, max-age=31536000' }));
+  await s3.send(new PutObjectCommand({ Bucket: BUCKET, Key: key, Body: png, ContentType: 'image/png', ACL, CacheControl: 'public, max-age=31536000' }));
   const url = `${CDN}/${key}`;
   await p.post.update({ where: { id: post.id }, data: { cover: url } });
   done++;
