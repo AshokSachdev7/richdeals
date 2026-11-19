@@ -47,6 +47,7 @@ export interface DealDTO {
   // NOTE: affiliateUrl is NOT exposed raw. Web links to /out/:id on the API,
   // which logs the click then 302s to the affiliate URL (rel=sponsored).
   outUrl: string; // e.g. `${API_URL}/out/${id}`
+  submittedBy?: string | null; // admin list only: member name/email; null = bot ingest
 }
 
 export interface Paginated<T> {

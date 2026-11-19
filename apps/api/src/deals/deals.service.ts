@@ -190,7 +190,16 @@ export class DealsService {
       take: Math.min(opts.limit ?? 50, 100),
       include: dealInclude,
     });
-    return rows.map(toDealDTO);
+    // submittedById has no Prisma relation — one extra lookup for the page's submitters.
+    const ids = [...new Set(rows.map((r) => r.submittedById).filter((x): x is number => x != null))];
+    const users = ids.length
+      ? await this.prisma.user.findMany({ where: { id: { in: ids } }, select: { id: true, name: true, email: true } })
+      : [];
+    const who = new Map(users.map((u) => [u.id, u.name || u.email]));
+    return rows.map((r) => ({
+      ...toDealDTO(r),
+      submittedBy: r.submittedById != null ? (who.get(r.submittedById) ?? `user #${r.submittedById}`) : null,
+    }));
   }
 
   async setStatus(id: number, status: string): Promise<DealDTO> {

@@ -88,6 +88,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         </form>
       </div>
 
+      {sp.err && <p className="mb-2 rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">{sp.err}</p>}
       <p className="mb-2 text-sm text-gray-500">{deals.length} deal(s)</p>
 
       <div className="overflow-x-auto rounded-lg border border-gray-200">
@@ -100,6 +101,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               <th className="px-3 py-2">Store</th>
               <th className="px-3 py-2">Price</th>
               <th className="px-3 py-2">Status</th>
+              <th className="px-3 py-2">By</th>
               <th className="px-3 py-2 text-right">Actions</th>
             </tr>
           </thead>
@@ -129,9 +131,15 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                 <td className="px-3 py-2">
                   <StatusBadge status={d.status} />
                 </td>
+                <td className="px-3 py-2 text-xs text-gray-600">{d.submittedBy ?? <span className="text-gray-400">bot</span>}</td>
                 <td className="px-3 py-2">
                   <div className="flex items-center justify-end gap-1">
-                    {d.status !== "LIVE" && (
+                    {d.status !== "LIVE" && (!d.image || d.price == null) && (
+                      <span className="rounded bg-gray-200 px-2 py-1 text-xs font-semibold text-gray-500" title="Add an image and a price before approving">
+                        No {!d.image ? "image" : "price"}
+                      </span>
+                    )}
+                    {d.status !== "LIVE" && d.image && d.price != null && (
                       <form action={setStatus.bind(null, d.id, "LIVE")}>
                         <button className="rounded bg-green-600 px-2 py-1 text-xs font-semibold text-white hover:bg-green-700">
                           Approve
