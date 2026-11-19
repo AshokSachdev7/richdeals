@@ -14,9 +14,12 @@ const { SPACES_KEY: KEY, SPACES_SECRET: SECRET } = process.env;
 const REGION = process.env.SPACES_REGION || 'sfo3';
 const BUCKET = process.env.SPACES_BUCKET || 'richdeals';
 const CDN = process.env.SPACES_CDN || `https://${BUCKET}.${REGION}.digitaloceanspaces.com`;
+// GCS uniform access rejects per-object ACLs; Spaces needs public-read.
+const ENDPOINT = process.env.SPACES_ENDPOINT || `https://${REGION}.digitaloceanspaces.com`;
+const ACL = ENDPOINT.includes('digitaloceanspaces') ? 'public-read' : undefined;
 if (!KEY || !SECRET) { console.error('missing SPACES_KEY/SECRET'); process.exit(1); }
 
-const s3 = new S3Client({ endpoint: `https://${REGION}.digitaloceanspaces.com`, region: 'us-east-1', forcePathStyle: false, credentials: { accessKeyId: KEY, secretAccessKey: SECRET } });
+const s3 = new S3Client({ endpoint: ENDPOINT, requestChecksumCalculation: 'WHEN_REQUIRED', region: 'us-east-1', forcePathStyle: false, credentials: { accessKeyId: KEY, secretAccessKey: SECRET } });
 const prisma = new PrismaClient();
 
 const ext = (u) => (u.split('?')[0].match(/\.(png|jpe?g|webp|svg)$/i)?.[1] || 'png').toLowerCase();
@@ -54,7 +57,7 @@ async function rehost(slug, src) {
     const buf = Buffer.from(await res.arrayBuffer());
     const e = ext(src);
     const key = `stores/${slug}.${e}`;
-    await s3.send(new PutObjectCommand({ Bucket: BUCKET, Key: key, Body: buf, ContentType: ctype(e), ACL: 'public-read', CacheControl: 'public, max-age=31536000' }));
+    await s3.send(new PutObjectCommand({ Bucket: BUCKET, Key: key, Body: buf, ContentType: ctype(e), ACL, CacheControl: 'public, max-age=31536000' }));
     return `${CDN}/${key}`;
   } catch { return null; }
 }

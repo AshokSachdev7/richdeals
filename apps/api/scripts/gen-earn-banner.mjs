@@ -11,12 +11,15 @@ const { SPACES_KEY: KEY, SPACES_SECRET: SECRET } = process.env;
 const REGION = process.env.SPACES_REGION || 'sfo3';
 const BUCKET = process.env.SPACES_BUCKET || 'richdeals';
 const CDN = process.env.SPACES_CDN || `https://${BUCKET}.${REGION}.digitaloceanspaces.com`;
+// GCS uniform access rejects per-object ACLs; Spaces needs public-read.
+const ENDPOINT = process.env.SPACES_ENDPOINT || `https://${REGION}.digitaloceanspaces.com`;
+const ACL = ENDPOINT.includes('digitaloceanspaces') ? 'public-read' : undefined;
 const BOT = process.env.TG_BOT || '8677395510:AAFV59MGu5fEiU65zAouKSqs_92mP2yxnSI';
 const CHAT = process.env.TG_CHANNEL || '-1004416895404';
 if (!KEY || !SECRET) { console.error('missing SPACES_KEY/SECRET'); process.exit(1); }
 
 const s3 = new S3Client({
-  endpoint: `https://${REGION}.digitaloceanspaces.com`, region: 'us-east-1',
+  endpoint: ENDPOINT, requestChecksumCalculation: 'WHEN_REQUIRED', region: 'us-east-1',
   forcePathStyle: false, credentials: { accessKeyId: KEY, secretAccessKey: SECRET },
 });
 
@@ -92,7 +95,7 @@ const png = await sharp(Buffer.from(svg())).png().toBuffer();
 const key = 'banners/earn-points.png';
 await s3.send(new PutObjectCommand({
   Bucket: BUCKET, Key: key, Body: png, ContentType: 'image/png',
-  ACL: 'public-read', CacheControl: 'public, max-age=86400',
+  ACL, CacheControl: 'public, max-age=86400',
 }));
 const url = `${CDN}/${key}`;
 console.log(`banner -> ${url}`);
