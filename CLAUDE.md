@@ -255,11 +255,13 @@ fabricated facts — the playbook lists the black-hat blocklist). Spawn the
 
 - CEO MODE / SHIP WITHOUT ASKING (owner directive 2026-07-27): run the whole
   business, don't wait to be told. Standing authorization — **push to
-  `origin/master` and deploy to production without asking**. Deploy path:
-  the DO app builds from GitHub `master`, so `git push origin master` FIRST,
-  then kill whatever listens on :4000 (managed PG has ~22 connection slots),
-  then `doctl apps create-deployment cd95718d-e1e8-4912-bcba-c9b97ce54b9c
-  --force-rebuild`, then restart the local API. Same for content: publish
+  `origin/master` and deploy to production without asking**. Deploy path
+  (since 2026-11-19 prod is the owner's GCP VM 34.14.145.203, aaPanel, pm2
+  `rd-api`/`rd-web`; the DO app is deleted): `git push origin master` FIRST,
+  then `ssh -i /c/ssh/gcp_root -o IdentitiesOnly=yes root@34.14.145.203
+  'bash /opt/richdeals-deploy.sh'` (pull + build + pm2 restart, ~5 min, ends
+  "api 200 / web 308"). Local DB = `C:\ssh\rd-db-tunnel.ps1` (15432 → prod
+  PG, so local writes ARE prod writes). Same for content: publish
   blogs and deals on cadence, backfill missing data, fix what is broken.
   Report what was done, don't ask permission first.
   Still ask before: anything that spends the owner's money, touches
