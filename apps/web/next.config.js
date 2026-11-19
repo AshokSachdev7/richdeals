@@ -13,6 +13,7 @@ const nextConfig = {
       { protocol: "https", hostname: "images.indiafreestuff.in" },
       { protocol: "https", hostname: "**.digitaloceanspaces.com" },
       { protocol: "https", hostname: "**.cdn.digitaloceanspaces.com" },
+      { protocol: "https", hostname: "richdeals.in", pathname: "/media/**" },
       { protocol: "https", hostname: "**.myntassets.com" },
       { protocol: "https", hostname: "**.ajio.com" },
       { protocol: "https", hostname: "**.nykaa.com" },

@@ -9,6 +9,9 @@ import crypto from 'node:crypto';
 const REGION = process.env.SPACES_REGION || 'sfo3';
 const BUCKET = process.env.SPACES_BUCKET || 'richdeals';
 const CDN = process.env.SPACES_CDN || `https://${BUCKET}.${REGION}.digitaloceanspaces.com`;
+const ENDPOINT = process.env.SPACES_ENDPOINT || `https://${REGION}.digitaloceanspaces.com`;
+// GCS buckets with uniform access reject per-object ACLs; Spaces needs public-read.
+const ACL = ENDPOINT.includes('digitaloceanspaces') ? ('public-read' as const) : undefined;
 
 const TYPES: Record<string, string> = {
   'image/jpeg': 'jpg',
@@ -22,8 +25,10 @@ function s3(): S3Client {
   const { SPACES_KEY, SPACES_SECRET } = process.env;
   if (!SPACES_KEY || !SPACES_SECRET) throw new BadRequestException('Image upload is not configured.');
   client ??= new S3Client({
-    endpoint: `https://${REGION}.digitaloceanspaces.com`,
+    endpoint: ENDPOINT,
     region: 'us-east-1',
+    // ponytail: GCS S3-interop chokes on the SDK's default flexible checksums.
+    requestChecksumCalculation: 'WHEN_REQUIRED',
     credentials: { accessKeyId: SPACES_KEY, secretAccessKey: SPACES_SECRET },
   });
   return client;
@@ -47,7 +52,7 @@ export async function uploadDataUrl(dataUrl: string, userId: number): Promise<st
       Key: key,
       Body: body,
       ContentType: m[1],
-      ACL: 'public-read',
+      ACL,
       CacheControl: 'public, max-age=31536000',
     }),
   );

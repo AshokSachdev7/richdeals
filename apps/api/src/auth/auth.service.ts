@@ -138,7 +138,9 @@ export class AuthService {
     };
     // Only our own CDN — an off-site <img> src from a form is an open redirect for hotlinks.
     const own = text(body?.image, 400);
-    const image = own && /^https:\/\/[\w.-]*digitaloceanspaces\.com\//.test(own) ? own : null;
+    const cdn = process.env.SPACES_CDN;
+    const image =
+      own && (/^https:\/\/[\w.-]*digitaloceanspaces\.com\//.test(own) || (cdn && own.startsWith(`${cdn}/`))) ? own : null;
     const given = {
       title: text(body?.title, 140),
       description: text(body?.description, 2000),
