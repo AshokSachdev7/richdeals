@@ -1,6 +1,6 @@
 # SEO-AUDIT-FIX daily tick — 2026-11-23
 
-`apps/api/_seo1123.cjs` audited 51 production pages on richdeals.in across 5 page types and checked the crawl surfaces (sitemap, robots, llms). It is an unchanged copy of `_seo1120.cjs`. The tick also re-read the four GSC top deal pages on their merchant product pages, because their `priceValidUntil` was due to lapse on 11-26. Run at about 21:15–22:20 IST on 11-23.
+`apps/api/_seo1123.cjs` audited 51 production pages on richdeals.in across 5 page types and checked the crawl surfaces (sitemap, robots, llms). It is an unchanged copy of `_seo1120.cjs`. The tick also re-read the four GSC top deal pages on their merchant product pages, because their `priceValidUntil` was due to lapse on 11-26. Run at about 21:10–21:20 IST on 11-23.
 
 There were no SEO-AUDIT-FIX ticks on 11-21 or 11-22 (no session was running).
 
@@ -96,7 +96,7 @@ The soap page also shows "₹57.80", which is a per-100 g rate and not the M.R.P
 
 | Check | Value | Status |
 |---|---|---|
-| Prod endpoints (`/`, `/offers`, `/blog`, `/sitemap.xml`, `/feed.xml`, `/api/deals`, `/llms.txt`) | All 200 at about 22:20 IST | OK |
+| Prod endpoints (`/`, `/offers`, `/blog`, `/sitemap.xml`, `/feed.xml`, `/api/deals`, `/llms.txt`) | All 200 at about 21:20 IST | OK |
 | DB LIVE vs API total | 16,472 = 16,472 (16,929 rows in total) | OK |
 | PENDING_REVIEW / null price / null image | 0 / 0 / 0 | OK |
 | Max deal id vs broadcast cursor | 17,079 vs 17,058 | OK; the external cron has moved from 17,048 since SCHEMA-AUDIT |
