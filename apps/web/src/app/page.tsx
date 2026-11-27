@@ -7,6 +7,7 @@ import CategoryStrip from "@/components/CategoryStrip";
 import EarnBanner from "@/components/EarnBanner";
 import LoadMoreDeals from "@/components/LoadMoreDeals";
 import JsonLd from "@/components/JsonLd";
+import { BEST_TOPICS } from "@/lib/best";
 import { absUrl, dealItemListSchema, dealProductName } from "@/lib/site";
 import POST_REDIRECTS from "../../post-redirects.json";
 
@@ -200,6 +201,21 @@ export default async function HomePage({ searchParams }: Props) {
           </ul>
         </section>
       )}
+
+      {/* /best/* hubs sat 2 clicks deep and GSC had them all "Discovered - currently not
+          indexed" (2026-11-27); a direct homepage link gives Google a reason to crawl them. */}
+      <section aria-labelledby="best-heading" className="mt-6 rounded-2xl bg-white p-5 ring-1 ring-gray-200">
+        <h2 id="best-heading" className="font-display text-lg font-bold text-ink">Deals by product</h2>
+        <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+          {BEST_TOPICS.map((t) => (
+            <li key={t.slug}>
+              <Link href={`/best/${t.slug}`} className="text-brand hover:underline">
+                {t.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       {/* Why RichDeals */}
       <section aria-labelledby="why-heading" className="mt-16 rounded-3xl bg-ink px-5 py-12 text-white sm:px-10">
