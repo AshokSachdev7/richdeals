@@ -63,7 +63,7 @@ export class DealsService {
 
   // Top 100 LIVE deals that pass the web's quality gate (price, image,
   // <=120 days, >=20% off or >=200c copy). GSC-proven pages go first, then
-  // outbound clicks (real buyer demand) fill the rest.
+  // outbound clicks fill only if fewer than 100 pins qualify (pins = full set now).
   // Pins skip the age gate and the discount/copy filter: Google already
   // ranks them, so ageing them out of the sitemap at day 120 would drop
   // the only deal pages with impressions (2026-11-11).
