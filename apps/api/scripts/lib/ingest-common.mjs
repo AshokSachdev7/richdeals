@@ -38,7 +38,9 @@ export const GROCERY = /\b(oil|atta|maida|rice|dal|pulses|masala|saunf|fennel|je
 export const RESTRICTED = /\b(air\s*gun|airgun|air\s*rifle|pellet\s*gun|bb\s*gun|pistol|revolver|firearm|ammunition|\bammo\b|bullets?|shotgun|rifle|machete|dagger|katana|\bsword\b|switchblade|butterfly\s*knife|hunting\s*knife|combat\s*knife|brass\s*knuckle|pepper\s*spray|stun\s*gun|\btaser\b|crossbow|nunchaku|knuckle\s*duster)\b|\b(whey|protein\s*powder|mass\s*gainer|weight\s*gainer|creatine|\bbcaa\b|pre[-\s]?workout|fat\s*burner|testosterone|steroids?|anabolic|nootropic|condoms?|personal lubricant|dietary\s*supplement|nutrition(al)?\s*supplement|ayurvedic\s*(medicine|capsule|tablet|churna)|sexual\s*wellness|\bviagra\b|penis|\bcbd\b|cannabis)\b/i;
 
 // Redirect hops and non-shops that survive a URL resolve.
-const NOT_A_STORE = /play\.google|apps\.apple|youtube|t\.me|telegram|facebook|instagram|whatsapp|tracking\.|icubeswire|links?redirect|cuelinks|\bgo\./i;
+// desidime: an unresolved visit.desidime.com hop (403/CF) came back as "store Visit" and got Cuelinks-wrapped.
+// smartbuy: HDFC bank card-offer pages.
+const NOT_A_STORE = /play\.google|apps\.apple|youtube|t\.me|telegram|facebook|instagram|whatsapp|tracking\.|icubeswire|links?redirect|cuelinks|\bgo\.|desidime|smartbuy/i;
 // Search results, category nodes, brand landings and sale hubs — not a product page.
 const NOT_A_PRODUCT = /\/(s|search|b|events?|promotion|gp\/browse|offers?|store|deals|brand|shop|c|discover|collections?)\/|\/s\?|\/b\?|[?&](k|rf|q|node)=|\/h\/rewards\/|sale\.html|-sale\b/i;
 

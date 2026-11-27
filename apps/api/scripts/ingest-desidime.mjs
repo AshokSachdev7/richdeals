@@ -82,7 +82,8 @@ for (const c of keep) {
     if (pid) { final = `${final.split('?')[0]}?pid=${pid}`; aff = affiliate(final); }
     sleep(GAP);
   }
-  if (!aff) { dead.add(c.id); console.log(`  drop ${c.title.slice(0, 40)} -> ${final.slice(0, 60)}`); continue; }
+  // still on visit.desidime = CF 403, transient — retry next tick instead of killing the card forever
+  if (!aff) { if (!/desidime\.com/.test(final)) dead.add(c.id); console.log(`  drop ${c.title.slice(0, 40)} -> ${final.slice(0, 60)}`); continue; }
   if (byProduct.has(aff.productId)) continue; // same product posted twice on the listing
   byProduct.add(aff.productId);
   out.push({ ...c, ...aff, final });
