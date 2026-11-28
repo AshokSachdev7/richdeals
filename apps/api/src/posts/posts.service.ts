@@ -26,11 +26,12 @@ export class PostsService {
   constructor(private readonly prisma: PrismaService) {}
 
   // ?limit=N keeps small consumers (homepage) off the 3.7MB full list.
-  async list(limit = 500) {
+  // ponytail: 5000 cap is all posts today (512); slug-only sitemap query if the full list outgrows it.
+  async list(limit = 5000) {
     const rows = await this.prisma.post.findMany({
       where: { publishedAt: { not: null } },
       orderBy: { publishedAt: 'desc' },
-      take: Math.min(limit, 500),
+      take: Math.min(limit, 5000),
     });
     return { items: rows.map(toPostDTO), nextCursor: null, total: rows.length };
   }
